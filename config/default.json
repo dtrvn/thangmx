@@ -1,0 +1,6 @@
+{
+    "mongoURI": "mongodb+srv://dtr:thienhadenhat121@cluster0.3at1g.mongodb.net/nonWebDB?retryWrites=true&w=majority",
+    "jwtSecret":"tulenhquankhu",
+    "githubClientId":"8d4a0dad7e60ff37a212",
+    "githubSecret":"23ba84ef60fd1a185cd2e3d1d07d3df8b005f545"
+}
