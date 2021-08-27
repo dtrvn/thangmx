@@ -1,6 +1,7 @@
 import {
   GET_PERSONINSHIFT,
   GET_PERSONINSHIFTS,
+  GET_PERSONINSHIFTS_PREVWEEK,
   UPDATE_PERSONINSHIFT,
   ADD_PERSONINSHIFT,
   PERSONINSHIFT_ERROR,
@@ -10,6 +11,7 @@ import {
 const initialState = {
   personInShifts: [],
   personInShift: [],
+  personInShiftsPrevWeek: [],
   loading: true,
   error: {},
 };
@@ -22,6 +24,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         personInShifts: payload,
+        loading: false,
+      };
+    case GET_PERSONINSHIFTS_PREVWEEK:
+      return {
+        ...state,
+        personInShiftsPrevWeek: payload,
         loading: false,
       };
     case GET_PERSONINSHIFT:

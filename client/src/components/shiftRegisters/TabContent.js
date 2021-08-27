@@ -7,7 +7,7 @@ import moment from "moment";
 import { getShiftRegisters, addUserShiftRegister, deleteUserShiftRegister } from "../../actions/shiftRegister";
 import { getAllBranchs } from "../../actions/branch";
 import Spinner from "../layout/Spinner";
-import { getPersonInShift, copyPersonInShifts } from "../../actions/personInShift";
+import { getPersonInShift, getPreWeekPersonInShift, copyPersonInShifts } from "../../actions/personInShift";
 import ShiftRegisterModal from "./shiftRegisters/ShiftRegisterModal";
 // import Modal from 'react-modal';
 import { Modal } from 'react-bootstrap';
@@ -35,9 +35,10 @@ const TabContent = ({
     addUserShiftRegister,
     deleteUserShiftRegister,
     getPersonInShift,
+    getPreWeekPersonInShift,
     copyPersonInShifts,
     shiftRegister: { shiftRegisters },
-    personInShift: { personInShifts },
+    personInShift: { personInShifts, personInShiftsPrevWeek },
     auth: { user },
     // branch: { branchs },
     // getAllBranchs,
@@ -1017,16 +1018,177 @@ const TabContent = ({
         setCount(count + 1);
         setDayRegist(day);
         setCurrentUserId(curUserId);
+        // handleShow();
     }
 
     const onCopyPersonInShifts = () => {
-        copyPersonInShifts(branchs[activeTab], moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+        getPreWeekPersonInShift(branchs[activeTab]._id, moment(startDate).subtract(7, "days").format('MM-DD-YYYY'), moment(endDate).subtract(7, "days").format('MM-DD-YYYY'));
+        
+        var data = {
+            branchId: branchs[activeTab]._id,
+            startDate: moment(startDate).format('MM-DD-YYYY'),
+            endDate: moment(endDate).format('MM-DD-YYYY'),
+            currentDate: "",
+            shiftId0: "",
+            shiftId1: "",
+            shiftId2: "",
+            personNo0: "",
+            personNo1: "",
+            personNo2: "",
+            flagCheckLastRecord: "",
+        };
+
+        let getIndex = "";
+
+        personInShiftsPrevWeek.map((ele) => {
+            // Thứ 2
+            if(moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(7, "days").format('MM-DD-YYYY')){
+                data.currentDate = moment(monday).format('MM-DD-YYYY');
+                ele.personShift.map((per) => {
+                    getIndex = shifts.findIndex(x => x._id === per._id);
+                    if(getIndex === 0){
+                        data.shiftId0 = per._id;
+                        data.personNo0 = per.personNumber;
+                    }
+                    if(getIndex === 1){
+                        data.shiftId1 = per._id;
+                        data.personNo1 = per.personNumber;
+                    }
+                    if(getIndex === 2){
+                        data.shiftId2 = per._id;
+                        data.personNo2 = per.personNumber;
+                    }
+                })
+                copyPersonInShifts(data);
+            }
+            // Thứ 3
+            if(moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(6, "days").format('MM-DD-YYYY')){
+                data.currentDate = moment(tuesday).format('MM-DD-YYYY');
+                ele.personShift.map((per) => {
+                    getIndex = shifts.findIndex(x => x._id === per._id);
+                    if(getIndex === 0){
+                        data.shiftId0 = per._id;
+                        data.personNo0 = per.personNumber;
+                    }
+                    if(getIndex === 1){
+                        data.shiftId1 = per._id;
+                        data.personNo1 = per.personNumber;
+                    }
+                    if(getIndex === 2){
+                        data.shiftId2 = per._id;
+                        data.personNo2 = per.personNumber;
+                    }
+                })
+                copyPersonInShifts(data);
+            }
+            // Thứ 4
+            if(moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(5, "days").format('MM-DD-YYYY')){
+                data.currentDate = moment(wednesday).format('MM-DD-YYYY');
+                ele.personShift.map((per) => {
+                    getIndex = shifts.findIndex(x => x._id === per._id);
+                    if(getIndex === 0){
+                        data.shiftId0 = per._id;
+                        data.personNo0 = per.personNumber;
+                    }
+                    if(getIndex === 1){
+                        data.shiftId1 = per._id;
+                        data.personNo1 = per.personNumber;
+                    }
+                    if(getIndex === 2){
+                        data.shiftId2 = per._id;
+                        data.personNo2 = per.personNumber;
+                    }
+                })
+                copyPersonInShifts(data);
+            }
+            // Thứ 5
+            if(moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(4, "days").format('MM-DD-YYYY')){
+                data.currentDate = moment(thursday).format('MM-DD-YYYY');
+                ele.personShift.map((per) => {
+                    getIndex = shifts.findIndex(x => x._id === per._id);
+                    if(getIndex === 0){
+                        data.shiftId0 = per._id;
+                        data.personNo0 = per.personNumber;
+                    }
+                    if(getIndex === 1){
+                        data.shiftId1 = per._id;
+                        data.personNo1 = per.personNumber;
+                    }
+                    if(getIndex === 2){
+                        data.shiftId2 = per._id;
+                        data.personNo2 = per.personNumber;
+                    }
+                })
+                copyPersonInShifts(data);
+            }
+            // Thứ 6
+            if(moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(3, "days").format('MM-DD-YYYY')){
+                data.currentDate = moment(friday).format('MM-DD-YYYY');
+                ele.personShift.map((per) => {
+                    getIndex = shifts.findIndex(x => x._id === per._id);
+                    if(getIndex === 0){
+                        data.shiftId0 = per._id;
+                        data.personNo0 = per.personNumber;
+                    }
+                    if(getIndex === 1){
+                        data.shiftId1 = per._id;
+                        data.personNo1 = per.personNumber;
+                    }
+                    if(getIndex === 2){
+                        data.shiftId2 = per._id;
+                        data.personNo2 = per.personNumber;
+                    }
+                })
+                copyPersonInShifts(data);
+            }
+            // Thứ 7
+            if(moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(2, "days").format('MM-DD-YYYY')){
+                data.currentDate = moment(saturday).format('MM-DD-YYYY');
+                ele.personShift.map((per) => {
+                    getIndex = shifts.findIndex(x => x._id === per._id);
+                    if(getIndex === 0){
+                        data.shiftId0 = per._id;
+                        data.personNo0 = per.personNumber;
+                    }
+                    if(getIndex === 1){
+                        data.shiftId1 = per._id;
+                        data.personNo1 = per.personNumber;
+                    }
+                    if(getIndex === 2){
+                        data.shiftId2 = per._id;
+                        data.personNo2 = per.personNumber;
+                    }
+                })
+                copyPersonInShifts(data);
+            }
+            // Chủ nhật
+            if(moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(3, "days").format('MM-DD-YYYY')){
+                data.currentDate = moment(sunday).format('MM-DD-YYYY');
+                ele.personShift.map((per) => {
+                    getIndex = shifts.findIndex(x => x._id === per._id);
+                    if(getIndex === 0){
+                        data.shiftId0 = per._id;
+                        data.personNo0 = per.personNumber;
+                    }
+                    if(getIndex === 1){
+                        data.shiftId1 = per._id;
+                        data.personNo1 = per.personNumber;
+                    }
+                    if(getIndex === 2){
+                        data.shiftId2 = per._id;
+                        data.personNo2 = per.personNumber;
+                    }
+                })
+                data.flagCheckLastRecord = "1";
+                copyPersonInShifts(data);
+            }
+        })
     }
 
-    const [show, setShow] = useState(false);
+    // const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    // const handleClose = () => setShow(false);
+    // const handleShow = () => setShow(true);
 
     return (
         <Fragment>
@@ -1050,13 +1212,13 @@ const TabContent = ({
                             <Link to={`/modifer-personInShift/${moment(startDate).format('MM-DD-YYYY')}/${moment(endDate).format('MM-DD-YYYY')}/${createBranchId}`} className="btn btn-success">
                                 <i className="fas fa-users"></i> Điều chỉnh số người trong ca
                             </Link>
-                            {/* <button
+                            <button
                                 type="button"
                                 class="btn btn-sm btn-info"
                                 onClick={() => onCopyPersonInShifts()}
                             >
-                                <i class="far fa-copy"></i>{"  "}Sao chép dữ liệu tuần trước
-                            </button> */}
+                                <i class="far fa-copy"></i>{"  "}Sao chép số người trong ca tuần trước
+                            </button>
                         </div>
 
                         : ""}
@@ -1078,7 +1240,6 @@ const TabContent = ({
                     ) : ""} */}
 
                     <div className="card-group">
-
                         {deleteButton === 1 ? (
                             <button
                                 type="button"
@@ -1240,18 +1401,19 @@ const TabContent = ({
                             typeUsers={typeUsers}
                             shiftRegisters={shiftRegisters}
                             showShiftRegisterModal={showShiftRegisterModal}
-                            count={count} />
+                            count={count}
+                            />
                     ) : ""}
 
 
 
-                    <Button variant="primary" onClick={handleShow}>
+                    {/* <Button variant="primary" onClick={handleShow}>
                         Launch demo modal
                     </Button>
 
                     <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Modal heading</Modal.Title>
+                            <Modal.Title>Đăng kí ca cho ngày (<Moment format="DD/MM">{dayRegist}</Moment>)</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
                         <Modal.Footer>
@@ -1262,7 +1424,7 @@ const TabContent = ({
                                 Save Changes
                             </Button>
                         </Modal.Footer>
-                    </Modal>
+                    </Modal> */}
                 </Fragment>
             )}
         </Fragment>
@@ -1303,6 +1465,6 @@ const mapStateToProps = (state) => ({
     // branch: state.branch,
 });
 
-export default connect(mapStateToProps, { getShiftRegisters, addUserShiftRegister, deleteUserShiftRegister, getAllBranchs, getPersonInShift, copyPersonInShifts })(
+export default connect(mapStateToProps, { getShiftRegisters, getPreWeekPersonInShift, addUserShiftRegister, deleteUserShiftRegister, getAllBranchs, getPersonInShift, copyPersonInShifts })(
     TabContent
 );

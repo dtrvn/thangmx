@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
+import { setAlertShiftRegister } from "./alertShiftRegister";
 
 import {
   GET_SHIFT_REGISTERS,
@@ -144,7 +145,7 @@ export const updateShiftRegister =
           type: GET_SHIFT_REGISTERS,
           payload: res.data,
         });
-        dispatch(setAlert("Cập nhật ca thành công", "success"));
+        dispatch(setAlertShiftRegister("Cập nhật ca thành công", "success"));
 
 
       } catch (err) {

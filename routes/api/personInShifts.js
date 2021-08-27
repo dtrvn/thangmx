@@ -125,7 +125,7 @@ router.get("/weeks/:branchId/:dateFrom/:dateTo", async (req, res) => {
 });
 
 // @route       GET api/shiftRegisters
-// @desc        Get Person in Shift by dateFrom and dateTo
+// @desc        Get Person in Shift by dateFrom and dateTo and date
 // @access      Public
 router.get("/:branchId/:dateFrom/:dateTo/:date", async (req, res) => {
   try {

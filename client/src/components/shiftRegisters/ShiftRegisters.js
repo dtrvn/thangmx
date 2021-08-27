@@ -1,24 +1,19 @@
 import React, { Fragment, useState, useEffect, createElement } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Link, withRouter } from "react-router-dom";
-import { setAlert } from "../../actions/alert";
 import Moment from "react-moment";
 import moment from "moment";
 import { getAllShifts } from "../../actions/shift";
 import { getAllBranchs } from "../../actions/branch";
 import { getAllUsers } from "../../actions/user";
 import { getPersonInShift } from "../../actions/personInShift";
-import PersonInShiftList from "./personInShifts/PersonInShiftList";
 import { getShiftRegisters } from "../../actions/shiftRegister";
 import { getNextWeekActive, addNextWeekActive, deleteNextWeekActive } from "../../actions/nextWeekActive";
 import { getAllJobs } from "../../actions/job";
 import { getAllTypeUsers } from "../../actions/typeUser";
-import styled from 'styled-components';
 import TabContent from "./TabContent";
 
 const ShiftRegisters = ({
-  setAlert,
   getAllShifts,
   getAllUsers,
   getAllBranchs,
