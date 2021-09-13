@@ -8,14 +8,15 @@ import Job from "./Job";
 import Branch from "./Branch";
 import Shift from "./Shift";
 import TypeUser from "./TypeUser";
+import PermissionShiftRegist from "./PermissionShiftRegist";
 import ChangePassForm from "../memberChange-forms/ChangePassForm";
-import Education from "./Education";
 import { getCurrentUser } from "../../actions/user";
 import { getAllJobs } from "../../actions/job";
 import { getAllBranchs } from "../../actions/branch";
 import { getAllShifts } from "../../actions/shift";
 import { getAllTypeUsers } from "../../actions/typeUser";
 import { getAllUsers } from "../../actions/user";
+import { getAllPermitShifts } from "../../actions/permitShiftRegist";
 
 const Dashboard = ({
   getCurrentUser,
@@ -24,12 +25,13 @@ const Dashboard = ({
   getAllShifts,
   getAllTypeUsers,
   getAllUsers,
-  deleteEducation,
+  getAllPermitShifts,
   auth: { user },
   profile: { profile, loading },
   job: { jobs },
   branch: { branchs },
   typeUser: { typeUsers },
+  permitShiftRegist: { permitShiftRegists } ,
 }) => {
   useEffect(() => {
     // getCurrentUser();
@@ -38,6 +40,7 @@ const Dashboard = ({
     getAllShifts();
     getAllTypeUsers();
     getAllUsers();
+    getAllPermitShifts();
   }, [
     // getCurrentUser,
     getAllJobs,
@@ -45,6 +48,7 @@ const Dashboard = ({
     getAllShifts,
     getAllTypeUsers,
     getAllUsers,
+    getAllPermitShifts,
   ]);
 
   const [displayChangePass, toggleChangePass] = useState(false);
@@ -137,6 +141,18 @@ const Dashboard = ({
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="card">
+                  <div className="card-header">
+                    <h4 class="m-b-0">Số ca được phép đăng kí</h4>
+                  </div>
+                  <div class="card-body">
+                    <PermissionShiftRegist branchs={branchs}/>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Fragment>
         )}
       </Fragment>
@@ -151,6 +167,7 @@ Dashboard.propTypes = {
   getAllShifts: PropTypes.func.isRequired,
   getAllTypeUsers: PropTypes.func.isRequired,
   getAllUsers: PropTypes.func.isRequired,
+  getAllPermitShifts: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
@@ -164,7 +181,7 @@ const mapStateToProps = (state) => ({
   branch: state.branch,
   shift: state.shift,
   typeUser: state.typeUser,
-  // user: state.user,
+  permitShiftRegist: state.permitShiftRegist,
 });
 
 export default connect(mapStateToProps, {
@@ -174,4 +191,5 @@ export default connect(mapStateToProps, {
   getAllShifts,
   getAllTypeUsers,
   getAllUsers,
+  getAllPermitShifts,
 })(Dashboard);

@@ -49,6 +49,59 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+// @route       POST api/shiftRegisters/updateUser
+// @desc        Update user in shift register
+// @access      Private
+router.post(
+  "/updateUser",
+  auth,
+  async (req, res) => {
+    const {
+      userId,
+    } = req.body;
+
+    // Build shiftRegister object
+    const shiftRegisterFields = {};
+    if (userId) shiftRegisterFields.userId = userId;
+    try {
+      let shiftRegist = await ShiftRegister2.findOne({ _id: req.body.id });
+      if (shiftRegist) {
+        // Update
+        shiftRegist = await ShiftRegister2.findOneAndUpdate(
+          { _id: req.body.id },
+          { $set: shiftRegisterFields },
+          { new: true }
+        );
+        return res.json(shiftRegist);
+      }
+    } catch (shiftRegist) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
+// @route       GET api/shiftRegisters/:id
+// @desc        Get shiftRegisters by ID
+// @access      Private
+router.get("/getById/:id", auth, async (req, res) => {
+  try {
+    const shiftRegist = await ShiftRegister2.findById(req.params.id);
+
+    if (!shiftRegist) {
+      return res.status(404).json({ msg: "Shift Register not found" });
+    }
+
+    res.json(shiftRegist);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Shift Register not found" });
+    }
+    res.status(500).send("Server Error");
+  }
+});
+
 // @route       DELETE api/shiftRegisters/:id
 // @desc        Delete a Shift Register
 // @access      Private

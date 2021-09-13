@@ -23,7 +23,9 @@ const Navbar = ({ auth: { isAuthenticated, loading, user }, logout }) => {
       <li>
         <Link to="/shiftRegisters">Đăng ký ca</Link>
       </li>
-
+      <li>
+        <Link to="/salary-personal">Lương</Link>
+      </li>
       <li>
         <Link to="/dashboard">
           <i className="fas fa-user" />{" "}

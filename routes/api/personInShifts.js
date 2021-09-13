@@ -110,13 +110,12 @@ router.get("/weeks/:branchId/:dateFrom/:dateTo", async (req, res) => {
     const branchId = req.params.branchId;
     const dateFrom = req.params.dateFrom;
     const dateTo = req.params.dateTo;
-
     // console.log("server "+branchId+" - "+dateFrom+" - "+dateTo);
-
     const personInShift = await PersonInShift.find({ $and: [{ branchId: branchId }, { dateFrom: dateFrom }, { dateTo: dateTo }] })
       .sort({ date: 1 });
 
     res.json(personInShift);
+
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -140,6 +139,7 @@ router.get("/:branchId/:dateFrom/:dateTo/:date", async (req, res) => {
       .sort({ date: 1 });
 
     res.json(personInShift);
+
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -192,15 +192,46 @@ router.get("/:branchId/:dateFrom/:dateTo/:date", async (req, res) => {
 // @route       DELETE api/personInShift/:id
 // @desc        Delete a PersonInShift
 // @access      Private
-router.delete("/:id", auth, async (req, res) => {
-  try {
-    const personInShift = await PersonInShift.findById(req.params.id);
+// router.delete("/:id", auth, async (req, res) => {
+//   try {
+//     const personInShift = await PersonInShift.findById(req.params.id);
 
-    if (!personInShift) {
+//     if (!personInShift) {
+//       return res.status(404).json({ msg: "Person In Shift not found" });
+//     }
+
+//     await personInShift.remove();
+
+//     res.json({ msg: "Person In Shift removed" });
+//   } catch (err) {
+//     if (err.kind === "ObjectId") {
+//       return res.status(404).json({ msg: "Person In Shift not found" });
+//     }
+//     res.status(500).send("Server Error");
+//   }
+// });
+
+// @route       DELETE api/personInShifts/:branchId/:dateFrom/:dateTo
+// @desc        Delete Person in shift
+// @access      Private
+router.delete("/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
+  try {
+    const branchId = req.params.branchId;
+    const dateFrom = req.params.dateFrom;
+    const dateTo = req.params.dateTo;
+
+    const personInShiftList = await PersonInShift.find({ $and: [{ branchId: branchId }, { dateFrom: dateFrom }, { dateTo: dateTo }] })
+      .sort({ date: 1 });
+    // console.log("list "+personInShiftList);
+    if (personInShiftList.length === 0) {
       return res.status(404).json({ msg: "Person In Shift not found" });
     }
 
-    await personInShift.remove();
+    // await personInShiftList.remove();
+
+    personInShiftList.map((ele) => {
+      ele.remove();
+    })
 
     res.json({ msg: "Person In Shift removed" });
   } catch (err) {
@@ -286,7 +317,7 @@ router.put("/personShift", async (req, res) => {
         const removeIndex0 = personInShift.personShift
           .map((item) => item.shiftId)
           .indexOf(shiftId0);
-        if (removeIndex0 > 0) {
+        if (removeIndex0 >= 0) {
           personInShift.personShift.splice(removeIndex0, 1);
 
           await personInShift.save();
@@ -302,7 +333,7 @@ router.put("/personShift", async (req, res) => {
         const removeIndex1 = personInShift.personShift
           .map((item) => item.shiftId)
           .indexOf(shiftId1);
-        if (removeIndex1 > 0) {
+        if (removeIndex1 >= 0) {
           personInShift.personShift.splice(removeIndex1, 1);
 
           await personInShift.save();
@@ -310,7 +341,7 @@ router.put("/personShift", async (req, res) => {
         personInShift.personShift.unshift(newRegister1);
         await personInShift.save();
       }
-
+      
       // Add ca 3
       newRegister2.shiftId = shiftId2;
       newRegister2.personNumber = personNo2;
@@ -318,7 +349,7 @@ router.put("/personShift", async (req, res) => {
         const removeIndex2 = personInShift.personShift
           .map((item) => item.shiftId)
           .indexOf(shiftId2);
-        if (removeIndex2 > 0) {
+        if (removeIndex2 >= 0) {
           personInShift.personShift.splice(removeIndex2, 1);
 
           await personInShift.save();

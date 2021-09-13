@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import moment from "moment";
 import { connect } from "react-redux";
-import { getPersonInShiftDate } from "../../../actions/personInShift";
+import { getPersonInShiftDate, clearPersonInShift } from "../../../actions/personInShift";
 import ViewPersonInShift from "./ViewPersonInShift"
 import { getAllShifts } from "../../../actions/shift";
 
@@ -24,6 +24,7 @@ const PersonInShiftList = ({
     shift: { shifts },
     // branchId,
     getPersonInShiftDate,
+    clearPersonInShift,
     personInShift: { personInShift },
     match
 }) => {
@@ -177,6 +178,10 @@ const PersonInShiftList = ({
         setCurrentDate(moment(match.params.startDate).add(6, "days").format('MM-DD-YYYY'));
         getPersonInShiftDate(match.params.branchId, moment(match.params.startDate).format('MM-DD-YYYY'), moment(match.params.endDate).format('MM-DD-YYYY'), moment(match.params.endDate).format('MM-DD-YYYY'));
 
+    }
+
+    const clearData = () => {
+        clearPersonInShift();
     }
 
     return (
@@ -387,7 +392,7 @@ const PersonInShiftList = ({
                             </div>
                         </div>
                         <div className="card-footer">
-                            <Link className="btn btn-inverse waves-effect waves-light" to="/shiftRegisters">
+                            <Link className="btn btn-inverse waves-effect waves-light" to="/shiftRegisters" onClick={() => clearData()}>
                                 Trở về
                             </Link>
                         </div>
@@ -505,6 +510,6 @@ const mapStateToProps = (state) => ({
     shift: state.shift,
 });
 
-export default connect(mapStateToProps, { getAllShifts, getPersonInShiftDate })(
+export default connect(mapStateToProps, { getAllShifts, getPersonInShiftDate, clearPersonInShift })(
     PersonInShiftList
 );

@@ -269,6 +269,7 @@ export const copyPersonInShifts =
         await axios.put("/api/personInShifts/personShift", dataAdd, config);
 
         if (formData.flagCheckLastRecord !== "") {
+          dispatch(getPersonInShift(formData.branchId, formData.startDate, formData.endDate));
           dispatch(setAlert("Cập nhật thành công", "success"));
         }
 
@@ -289,12 +290,14 @@ export const copyPersonInShifts =
 // Get person in Shift by dateFrom and dateTo
 export const getPreWeekPersonInShift = (branchId, dateFrom, dateTo) => async (dispatch) => {
   try {
-    const res = await axios.get(`/api/personInShifts/weeks/${branchId}/${dateFrom}/${dateTo}`);
-    dispatch({
-      type: GET_PERSONINSHIFTS_PREVWEEK,
-      payload: res.data,
-    });
-    return Promise.resolve(res.data);
+    if (branchId) {
+      const res = await axios.get(`/api/personInShifts/weeks/${branchId}/${dateFrom}/${dateTo}`);
+      dispatch({
+        type: GET_PERSONINSHIFTS_PREVWEEK,
+        payload: res.data,
+      });
+      return Promise.resolve(res.data);
+    }
 
   } catch (err) {
     dispatch({
@@ -304,19 +307,22 @@ export const getPreWeekPersonInShift = (branchId, dateFrom, dateTo) => async (di
   }
 };
 
+
 // Get person in Shift by dateFrom and dateTo
 export const getPersonInShift = (branchId, dateFrom, dateTo) => async (dispatch) => {
   try {
     // console.log("in ra "+branchId+" - "+dateFrom+" - "+dateTo);
     // if (branchId) {
-    const res = await axios.get(`/api/personInShifts/weeks/${branchId}/${dateFrom}/${dateTo}`);
-    // console.log("in ra 2 "+JSON.stringify(res.data));
-    dispatch({
-      type: GET_PERSONINSHIFTS,
-      payload: res.data,
-    });
-    return Promise.resolve(res.data);
-    // }
+    if (branchId) {
+      const res = await axios.get(`/api/personInShifts/weeks/${branchId}/${dateFrom}/${dateTo}`);
+      // console.log("in ra 2 "+JSON.stringify(res.data));
+
+      dispatch({
+        type: GET_PERSONINSHIFTS,
+        payload: res.data,
+      });
+      return Promise.resolve(res.data);
+    }
 
   } catch (err) {
     dispatch({
@@ -347,4 +353,9 @@ export const getPersonInShiftDate = (branchId, dateFrom, dateTo, date) => async 
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
+};
+
+// Clear Person In Shift
+export const clearPersonInShift = () => async (dispatch) => {
+  dispatch({ type: CLEAR_PERSONINSHIFT });
 };

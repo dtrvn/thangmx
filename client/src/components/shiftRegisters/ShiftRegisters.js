@@ -6,7 +6,7 @@ import moment from "moment";
 import { getAllShifts } from "../../actions/shift";
 import { getAllBranchs } from "../../actions/branch";
 import { getAllUsers } from "../../actions/user";
-import { getPersonInShift } from "../../actions/personInShift";
+import { getPersonInShift, getPreWeekPersonInShift } from "../../actions/personInShift";
 import { getShiftRegisters } from "../../actions/shiftRegister";
 import { getNextWeekActive, addNextWeekActive, deleteNextWeekActive } from "../../actions/nextWeekActive";
 import { getAllJobs } from "../../actions/job";
@@ -20,6 +20,7 @@ const ShiftRegisters = ({
   getAllJobs,
   getAllTypeUsers,
   getPersonInShift,
+  getPreWeekPersonInShift,
   getShiftRegisters,
   getNextWeekActive,
   addNextWeekActive,
@@ -30,7 +31,7 @@ const ShiftRegisters = ({
   branch: { branchs },
   job: { jobs },
   typeUser: { typeUsers },
-  personInShift: { personInShifts },
+  personInShift: { personInShifts, personInShiftsPrevWeek },
   shiftRegister: { shiftRegisters },
   nextWeekActive: { nextWeekDB },
   history,
@@ -86,14 +87,14 @@ const ShiftRegisters = ({
           setHiddenButtonDeleteNexWeek(1);
         }
       }
-      if (user && user.roles === "Admin") {
-        if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
-          setHiddenButtonDeleteNexWeek(0);
-        }
-      }
+      // if (user && user.roles === "Admin") {
+      //   if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
+      //     setHiddenButtonDeleteNexWeek(0);
+      //   }
+      // }
     }
 
-  }, [nextWeekDB]);
+  }, [nextWeekDB, user]);
 
   useEffect(() => {
     branchs.map((ele, idx) => {
@@ -101,6 +102,7 @@ const ShiftRegisters = ({
         return branchId = ele._id
       }
     });
+    getPreWeekPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'));
     getPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
     getShiftRegisters(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
   }, [branchs]);
@@ -142,11 +144,11 @@ const ShiftRegisters = ({
         setHiddenButtonDeleteNexWeek(1);
       }
     }
-    if (user && user.roles === "Admin") {
-      if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
-        setHiddenButtonDeleteNexWeek(0);
-      }
-    }
+    // if (user && user.roles === "Admin") {
+    //   if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
+    //     setHiddenButtonDeleteNexWeek(0);
+    //   }
+    // }
   };
 
   const onNextWeek = () => {
@@ -176,12 +178,23 @@ const ShiftRegisters = ({
     if (moment(currentFirstWeek).format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).format('MM-DD-YYYY')) {
       setHiddenButton(1);
       if (user && user.roles === "Admin") {
-        if (moment(currentFirstWeek).format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
-          setHiddenButtonAddNexWeek(0);
-        } else {
+        // if (moment(currentFirstWeek).format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
+        //   setHiddenButtonAddNexWeek(0);
+        // } else {
+        //   setHiddenButtonAddNexWeek(1);
+        // }
+        // setHiddenButtonDeleteNexWeek(1);
+        if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
           setHiddenButtonAddNexWeek(1);
+          setHiddenButtonDeleteNexWeek(0);
+        } else {
+          setHiddenButtonAddNexWeek(0);
+          setHiddenButtonDeleteNexWeek(1);
         }
-        setHiddenButtonDeleteNexWeek(1);
+        
+        
+        // setHiddenButtonAddNexWeek(0);
+        // setHiddenButtonDeleteNexWeek(1);
       }
     } else {
       setHiddenButton(0);
@@ -190,11 +203,11 @@ const ShiftRegisters = ({
         setHiddenButtonDeleteNexWeek(1);
       }
     }
-    if (user && user.roles === "Admin") {
-      if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
-        setHiddenButtonDeleteNexWeek(0);
-      }
-    }
+    // if (user && user.roles === "Admin") {
+    //   if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
+    //     setHiddenButtonDeleteNexWeek(0);
+    //   }
+    // }
   };
 
   const onCurrentWeek = () => {
@@ -234,11 +247,11 @@ const ShiftRegisters = ({
         setHiddenButtonDeleteNexWeek(1);
       }
     }
-    if (user && user.roles === "Admin") {
-      if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
-        setHiddenButtonDeleteNexWeek(0);
-      }
-    }
+    // if (user && user.roles === "Admin") {
+    //   if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')) {
+    //     setHiddenButtonDeleteNexWeek(0);
+    //   }
+    // }
   };
 
   const {
@@ -380,17 +393,17 @@ const ShiftRegisters = ({
                         class="btn btn-sm btn-info"
                         onClick={() => onDeleteNextWeekActive()}
                       >
-                        Xoá tuần tiếp theo
+                        Xoá tạo tuần tiếp theo
                       </button>
                     )}
-                  <button
+                  {/* <button
                     type="button"
                     class="btn btn-sm btn-info"
                     data-toggle="modal"
                     data-target="#exampleModalCenter"
                   >
                     Tạo ca làm
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
@@ -669,6 +682,7 @@ ShiftRegisters.propTypes = {
   getAllShifts: PropTypes.func.isRequired,
   getAllUsers: PropTypes.func.isRequired,
   getPersonInShift: PropTypes.func.isRequired,
+  getPreWeekPersonInShift: PropTypes.func.isRequired,
   getAllBranchs: PropTypes.func.isRequired,
   getAllJobs: PropTypes.func.isRequired,
   getAllTypeUsers: PropTypes.func.isRequired,
@@ -694,6 +708,7 @@ export default connect(mapStateToProps, {
   getAllShifts,
   getAllUsers,
   getPersonInShift,
+  getPreWeekPersonInShift,
   getAllBranchs,
   getAllJobs,
   getAllTypeUsers,

@@ -230,14 +230,14 @@ const ViewPersonInShift = ({
                 </div>
             </form>
             {/* </div> */}
-            <div className="jq-toast-wrap top-right">
+            {/* <div className="jq-toast-wrap top-right">
                 <div className="jq-toast-single jq-has-icon jq-icon-success" style={{ textAlign: 'left', display: 'none' }}>
                     <span className="jq-toast-loader jq-toast-loaded" style={{ WebkitTransition: 'width 3.1s ease-in', OTransition: 'width 3.1s ease-in', transition: 'width 3.1s ease-in', backgroundColor: '#ff6849' }} />
                     <span className="close-jq-toast-single">×</span>
                     <h2 className="jq-toast-heading">Welcome to Material Pro admin</h2>
                     Use the predefined ones, or specify a custom position object.
                 </div>
-            </div>
+            </div> */}
         </Fragment>
 
     )

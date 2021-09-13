@@ -17774,10 +17774,12 @@ pre code {
 .col-md,
 .col-md-1,
 .col-md-1-5,
+.col-md-1-7,
 .col-md-10,
 .col-md-11,
 .col-md-12,
 .col-md-2,
+.col-md-2-5,
 .col-md-3,
 .col-md-4,
 .col-md-4-5,
@@ -17786,6 +17788,7 @@ pre code {
 .col-md-7,
 .col-md-8,
 .col-md-9,
+.col-md-9-5,
 .col-md-auto,
 .col-sm,
 .col-sm-1,
@@ -18157,9 +18160,17 @@ pre code {
 		flex: 0 0 10%;
 		max-width: 10%
 	}
+	.col-md-1-7 {
+		flex: 0 0 12.5%;
+		max-width: 12.5%
+	}
 	.col-md-2 {
 		flex: 0 0 16.66667%;
 		max-width: 16.66667%
+	}
+	.col-md-2-5 {
+		flex: 0 0 20%;
+		max-width: 20%
 	}
 	.col-md-3 {
 		flex: 0 0 25%;
@@ -18192,6 +18203,10 @@ pre code {
 	.col-md-9 {
 		flex: 0 0 75%;
 		max-width: 75%
+	}
+	.col-md-9-5 {
+		flex: 0 0 80%;
+		max-width: 80%
 	}
 	.col-md-10 {
 		flex: 0 0 83.33333%;

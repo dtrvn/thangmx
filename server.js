@@ -19,6 +19,7 @@ app.use("/api/typeUsers", require("./routes/api/typeUsers"));
 app.use("/api/branchs", require("./routes/api/branchs"));
 app.use("/api/jobs", require("./routes/api/jobs"));
 app.use("/api/shifts", require("./routes/api/shifts"));
+app.use("/api/permissionShiftNumbers", require("./routes/api/permissionShiftNumbers"));
 app.use("/api/personInShifts", require("./routes/api/personInShifts"));
 app.use("/api/shiftManagers", require("./routes/api/shiftManagers"));
 // app.use("/api/shiftRegisters", require("./routes/api/shiftRegisters"));

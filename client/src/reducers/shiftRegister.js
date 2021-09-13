@@ -42,6 +42,20 @@ export default function (state = initialState, action) {
         shiftRegisters: [...state.shiftRegisters, payload],
         loading: false,
       };
+    case UPDATE_SHIFT_REGISTERS:
+      return {
+        ...state,
+        shiftRegisters: [
+          ...state.shiftRegisters.filter((shiftRegist) => shiftRegist._id !== payload._id),
+          { ...payload, status: 0 },
+        ],
+      };
+    case CLEAR_SHIFT_REGISTER:
+      return {
+        ...state,
+        shiftRegisters: [],
+        loading: false,
+      };
     default:
       return state;
   }

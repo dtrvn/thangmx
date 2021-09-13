@@ -4,10 +4,9 @@ import Moment from "react-moment";
 import { connect } from "react-redux";
 import moment from "moment";
 import { updateShiftRegister } from "../../../actions/shiftRegister";
-import { Modal } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
 import Switch from './Switch';
 import AlertShiftRegister from '../../layout/AlertShiftRegister';
+import { clearPersonInShift } from "../../../actions/personInShift";
 
 const ShiftRegisterModal = ({
     currentDay,
@@ -20,17 +19,19 @@ const ShiftRegisterModal = ({
     users,
     typeUsers,
     shiftRegisters,
-    showShiftRegisterModal,
+    permitShiftRegists,
     updateShiftRegister,
+    clearPersonInShift,
     count,
     auth: { user },
-    show,
-    handleClose,
+    personInShift,
 }) => {
     const [formData, setFormData] = useState({
         id: null,
         // userId1: userId,
         branchId: branchId,
+        listShifts: [],
+        listShiftsName: [],
         dateFrom: 0,
         dateTo: 0,
         date: 0,
@@ -46,9 +47,13 @@ const ShiftRegisterModal = ({
         cost0: 0,
         cost1: 0,
         cost2: 0,
+        personInShift0: 0,
+        personInShift1: 0,
+        personInShift2: 0,
         shiftFlag0: "",
         shiftFlag1: "",
         shiftFlag2: "",
+        permitShiftRegistFlag: true,
     });
 
     const [value0, setValue0] = useState(false);
@@ -67,9 +72,11 @@ const ShiftRegisterModal = ({
     let getRegisterId0 = null;
     let getRegisterId1 = null;
     let getRegisterId2 = null;
+    let countShiftRegistedNo = 0;
     shiftRegisters.map((ele) => {
         if (ele.userId === currentUserLineId && ele.branchId === branchId) {
             ele.register.map((reg) => {
+                countShiftRegistedNo = countShiftRegistedNo + 1;
                 if (moment(reg.date).format('MM-DD-YYYY') === moment(currentDay).format('MM-DD-YYYY')) {
                     shiftCurrentList.push(reg.shiftId);
                     jobCurrentList.push(reg.jobId);
@@ -93,7 +100,7 @@ const ShiftRegisterModal = ({
         }
     })
 
-    const [showModal, setShowModal] = useState(true);
+    // const [showModal, setShowModal] = useState(true);
 
 
     let getIndex = null;
@@ -104,6 +111,8 @@ const ShiftRegisterModal = ({
     let getJobIdOld1 = null;
     let getJobIdOld2 = null;
     let getJobId0, getJobId1, getJobId2 = null;
+    let getLishShifts = [];
+    let getLishShiftsName = [];
     useEffect(() => {
         shifts.map((ele, idx) => {
             getIndex = shiftCurrentList.indexOf(ele._id);
@@ -143,14 +152,19 @@ const ShiftRegisterModal = ({
                     getJobId2 = jobs[0]._id;
                 }
             }
+            getLishShifts.push(ele._id);
+            getLishShiftsName.push(ele.shiftName);
         })
 
         setFormData({
             ...formData,
             id: getId,
+            listShifts: getLishShifts,
+            listShiftsName: getLishShiftsName,
             dateFrom: moment(dateFrom).format('MM-DD-YYYY'),
             dateTo: moment(dateTo).format('MM-DD-YYYY'),
-            date: moment(currentDay).toDate().toString(),
+            // date: moment(currentDay).toDate().toString(),
+            date: moment(currentDay).format('MM-DD-YYYY'),
             registerId0: getRegisterId0,
             registerId1: getRegisterId1,
             registerId2: getRegisterId2,
@@ -318,10 +332,43 @@ const ShiftRegisterModal = ({
             }
         })
 
+        getIndex = 0;
+        personInShift.map((ele) => {
+            ele.personShift.map((reg) => {
+                getIndex = formData.listShifts.indexOf(reg.shiftId);
+                if (getIndex === 0) formData.personInShift0 = reg.personNumber;
+                if (getIndex === 1) formData.personInShift1 = reg.personNumber;
+                if (getIndex === 2) formData.personInShift2 = reg.personNumber;
+            })
+        })
+
+        if (user.roles === "User") {
+            // Kiểm tra số ca đăng kí có vượt quá số ca cho phép đăng kí của từng nhân viên
+            let getShiftNoPermit = permitShiftRegists.find(({ branchId }) => branchId === branchId).shiftNoPermit;
+            let countNo = 0;
+            if (formData.shiftFlag0 === "2") {
+                countNo = countNo + 1;
+            }
+            if (formData.shiftFlag1 === "2") {
+                countNo = countNo + 1;
+            }
+            if (formData.shiftFlag2 === "2") {
+                countNo = countNo + 1;
+            }
+            if ((countShiftRegistedNo + countNo) > getShiftNoPermit) {
+                formData.permitShiftRegistFlag = false;
+            } else {
+                formData.permitShiftRegistFlag = true;
+            }
+        }
+
         updateShiftRegister(formData);
-        setShowModal(false);
-        // handleClose();
+        clearPersonInShift();
     };
+
+    const clearData = () => {
+        clearPersonInShift();
+    }
 
     return (
         <Fragment>
@@ -338,7 +385,7 @@ const ShiftRegisterModal = ({
                             {/* <div className="alert alert-success">
                                 Đăng kí thành công
                             </div> */}
-                            <AlertShiftRegister/>
+                            <AlertShiftRegister />
 
                             <div className="modal-body">
 
@@ -421,7 +468,7 @@ const ShiftRegisterModal = ({
 
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-default waves-effect" data-dismiss="modal">Đóng</button>
+                                <button type="button" className="btn btn-default waves-effect" data-dismiss="modal" onClick={() => clearData()}>Đóng</button>
                                 <button type="submit" className="btn btn-danger waves-effect waves-light">Lưu thay đổi</button>
                             </div>
                         </form>
@@ -542,9 +589,11 @@ ShiftRegisterModal.propTypes = {
     jobs: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
     typeUsers: PropTypes.object.isRequired,
+    permitShiftRegists: PropTypes.object.isRequired,
     shiftRegisters: PropTypes.object.isRequired,
     showShiftRegisterModal: PropTypes.object.isRequired,
     count: PropTypes.object.isRequired,
+    personInShift: PropTypes.object.isRequired,
     updateShiftRegister: PropTypes.func.isRequired,
 };
 
@@ -552,6 +601,6 @@ const mapStateToProps = (state) => ({
     auth: state.auth,
 });
 
-export default connect(mapStateToProps, { updateShiftRegister })(
+export default connect(mapStateToProps, { updateShiftRegister, clearPersonInShift })(
     ShiftRegisterModal
 );
