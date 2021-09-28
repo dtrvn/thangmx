@@ -6,10 +6,14 @@ import {
   SHIFT_REGISTER_ERROR,
   CLEAR_SHIFT_REGISTER,
   GET_SHIFT_REGISTER,
+  CLEAR_SHIFT_REGISTER_VIEW_SALARY,
+  SET_CURRENT_DAY,
 } from "../actions/types";
 
 const initialState = {
   shiftRegisters: [],
+  shiftRegister: [],
+  currentDay: null,
   loading: true,
   error: {},
 };
@@ -50,10 +54,29 @@ export default function (state = initialState, action) {
           { ...payload, status: 0 },
         ],
       };
+    case GET_SHIFT_REGISTER:
+      return {
+        ...state,
+        shiftRegister: payload,
+        loading: false,
+      };
+    case SET_CURRENT_DAY:
+      return {
+        ...state,
+        currentDay: payload,
+      };
     case CLEAR_SHIFT_REGISTER:
       return {
         ...state,
         shiftRegisters: [],
+        shiftRegister: [],
+        currentDay: null,
+        loading: false,
+      };
+    case CLEAR_SHIFT_REGISTER_VIEW_SALARY:
+      return {
+        ...state,
+        shiftRegister: [],
         loading: false,
       };
     default:

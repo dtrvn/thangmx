@@ -24,6 +24,7 @@ app.use("/api/personInShifts", require("./routes/api/personInShifts"));
 app.use("/api/shiftManagers", require("./routes/api/shiftManagers"));
 // app.use("/api/shiftRegisters", require("./routes/api/shiftRegisters"));
 app.use("/api/shiftRegisters2", require("./routes/api/shiftRegisters2"));
+app.use("/api/shiftRegisterManagers", require("./routes/api/shiftRegisterManagers"));
 app.use("/api/nextWeekActive", require("./routes/api/nextWeekActive"));
 app.use("/api/auth", require("./routes/api/auth"));
 

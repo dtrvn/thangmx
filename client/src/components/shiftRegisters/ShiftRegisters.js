@@ -12,6 +12,7 @@ import { getNextWeekActive, addNextWeekActive, deleteNextWeekActive } from "../.
 import { getAllJobs } from "../../actions/job";
 import { getAllTypeUsers } from "../../actions/typeUser";
 import TabContent from "./TabContent";
+import { addUpdateShiftRegisterManager, getShiftRegisterManagers } from "../../actions/shiftRegisterManager";
 
 const ShiftRegisters = ({
   getAllShifts,
@@ -25,6 +26,7 @@ const ShiftRegisters = ({
   getNextWeekActive,
   addNextWeekActive,
   deleteNextWeekActive,
+  getShiftRegisterManagers,
   user: { users },
   auth: { user },
   shift: { shifts },
@@ -33,6 +35,7 @@ const ShiftRegisters = ({
   typeUser: { typeUsers },
   personInShift: { personInShifts, personInShiftsPrevWeek },
   shiftRegister: { shiftRegisters },
+  shiftRegisterManager: { shiftRegisterManagers },
   nextWeekActive: { nextWeekDB },
   history,
 }) => {
@@ -96,16 +99,17 @@ const ShiftRegisters = ({
 
   }, [nextWeekDB, user]);
 
-  useEffect(() => {
-    branchs.map((ele, idx) => {
-      if (idx === activeTab) {
-        return branchId = ele._id
-      }
-    });
-    getPreWeekPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'));
-    getPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
-    getShiftRegisters(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
-  }, [branchs]);
+  // useEffect(() => {
+  //   branchs.map((ele, idx) => {
+  //     if (idx === activeTab) {
+  //       return branchId = ele._id
+  //     }
+  //   });
+    // getPreWeekPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'));
+    // getPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
+    // getShiftRegisters(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
+    // getShiftRegisterManagers(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
+  // }, [branchs]);
 
   const onPrevWeek = () => {
     const currentFirstWeek = createDate.firstdayOfThisWeek.subtract(7, "days");
@@ -191,8 +195,8 @@ const ShiftRegisters = ({
           setHiddenButtonAddNexWeek(0);
           setHiddenButtonDeleteNexWeek(1);
         }
-        
-        
+
+
         // setHiddenButtonAddNexWeek(0);
         // setHiddenButtonDeleteNexWeek(1);
       }
@@ -272,31 +276,6 @@ const ShiftRegisters = ({
   let shiftsSize = shifts.length;
   let shiftsArray = [];
   shifts.map((ele) => shiftsArray.push(ele._id));
-  // console.log("in ra " + shiftsSize + " - " + JSON.stringify(shiftsArray));
-  // let elmPersonInShifts = [];
-  // personInShifts.map((ele) => {
-  //   if (moment(createDate.monday).format('MM-DD-YYYY') === moment(ele.date).format('MM-DD-YYYY')) {
-  //     elmPersonInShifts.push(<td colspan="1">{ele.personNumber}</td>);
-  //   }
-  //   if (moment(createDate.tuesday).format('MM-DD-YYYY') === moment(ele.date).format('MM-DD-YYYY')) {
-  //     elmPersonInShifts.push(<td colspan="1">{ele.personNumber}</td>);
-  //   }
-  //   if (moment(createDate.wednesday).format('MM-DD-YYYY') === moment(ele.date).format('MM-DD-YYYY')) {
-  //     elmPersonInShifts.push(<td colspan="1">{ele.personNumber}</td>);
-  //   }
-  //   if (moment(createDate.thursday).format('MM-DD-YYYY') === moment(ele.date).format('MM-DD-YYYY')) {
-  //     elmPersonInShifts.push(<td colspan="1">{ele.personNumber}</td>);
-  //   }
-  //   if (moment(createDate.friday).format('MM-DD-YYYY') === moment(ele.date).format('MM-DD-YYYY')) {
-  //     elmPersonInShifts.push(<td colspan="1">{ele.personNumber}</td>);
-  //   }
-  //   if (moment(createDate.saturday).format('MM-DD-YYYY') === moment(ele.date).format('MM-DD-YYYY')) {
-  //     elmPersonInShifts.push(<td colspan="1">{ele.personNumber}</td>);
-  //   }
-  //   if (moment(createDate.sunday).format('MM-DD-YYYY') === moment(ele.date).format('MM-DD-YYYY')) {
-  //     elmPersonInShifts.push(<td colspan="1">{ele.personNumber}</td>);
-  //   }
-  // })
 
   let getUsers = users.filter((ele) => ele.roles === "User");
 
@@ -325,10 +304,6 @@ const ShiftRegisters = ({
   }
 
   const onDeleteNextWeekActive = () => {
-    // const dataWeekBefore = {
-    //   currentFirstWeek: moment(nextWeekDB.startDateNextWeek).subtract(7, "days").format('MM-DD-YYYY'),
-    //   currentLastWeek: moment(nextWeekDB.endDateNextWeek).subtract(7, "days").format('MM-DD-YYYY')
-    // }
     deleteNextWeekActive(nextWeekDB._id);
     if (moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).format('MM-DD-YYYY')) {
       onPrevWeek();
@@ -448,231 +423,10 @@ const ShiftRegisters = ({
                       jobs={jobs} />
                   </div>
                 </div>
-
-
               </div>
-
             </div>
           </div>
         </div>
-
-
-
-        {/* Old source */}
-        {/* <h1 className="large text-primary">Đăng ký ca</h1>
-        <p class="card-category">
-          Tuần: <Moment format="DD/MM/YYYY">{firstdayOfThisWeek}</Moment>
-          {" - "}
-          <Moment format="DD/MM/YYYY">{lastdayOfThisWeek}</Moment>
-          <button
-            type="button"
-            class="btn btn-primary"
-            style={{ marginLeft: "100px" }}
-            onClick={() => onPrevWeek()}
-          >
-            Tuần trước
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            onClick={() => onCurrentWeek()}
-          >
-            Tuần hiện tại
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            onClick={() => onNextWeek()}
-          >
-            Tuần tới
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-toggle="modal"
-            data-target="#exampleModalCenter"
-          >
-            Tạo ca làm
-          </button>
-        </p>
-        <br />
-        <div class="container">
-          <div class="table-responsive-sm">
-            <table class="table-shiftRegister">
-              <thead class=" text-primary">
-                <th colspan="3">Họ và Tên</th>
-                <th colspan="3">
-                  Thứ 2 (<Moment format="DD/MM">{monday}</Moment>)
-                </th>
-                <th colspan="3">
-                  Thứ 3 (<Moment format="DD/MM">{tuesday}</Moment>)
-                </th>
-                <th colspan="3">
-                  Thứ 4 (<Moment format="DD/MM">{wednesday}</Moment>)
-                </th>
-                <th colspan="3">
-                  Thứ 5 (<Moment format="DD/MM">{thursday}</Moment>)
-                </th>
-                <th colspan="3">
-                  Thứ 6 (<Moment format="DD/MM">{friday}</Moment>)
-                </th>
-                <th colspan="3">
-                  Thứ 7 (<Moment format="DD/MM">{saturday}</Moment>)
-                </th>
-                <th colspan="3">
-                  Chủ nhật (<Moment format="DD/MM">{sunday}</Moment>)
-                </th>
-                <th colspan="3">
-                  Hành động
-                </th>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="3">Ca</td>
-                  {elmShiftsTable}
-                  {elmShiftsTable}
-                  {elmShiftsTable}
-                  {elmShiftsTable}
-                  {elmShiftsTable}
-                  {elmShiftsTable}
-                  {elmShiftsTable}
-                </tr>
-                <tr>
-                  <td colspan="3">Số người</td>
-                  {elmPersonInShifts.length > 0 ? (
-                    elmPersonInShifts
-                  ) : (
-                    <Fragment>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                      <td colspan="1"></td>
-                    </Fragment>
-                  )
-
-                  }
-
-                  <td colspan="3">
-                    <button
-
-                      className="btn btn-success"
-                    >
-                      Chỉnh sửa
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-
-                {elmUsers}
-              </tbody>
-            </table>
-          </div> */}
-
-
-
-        {/* Test table flex */}
-        {/* <div className="wrapper">
-            <div className="Rtable Rtable--5cols Rtable--collapse">
-              <div className="Rtable-row Rtable-row--head">
-                <div className="Rtable-cell date-cell column-heading">Họ và tên</div>
-                <div className="Rtable-cell header-cell-1  column-heading">Thứ 2 (<Moment format="DD/MM">{monday}</Moment>)</div>
-                <div className="Rtable-cell header-cell-allnot1 column-heading">Thứ 3 (<Moment format="DD/MM">{tuesday}</Moment>)</div>
-                <div className="Rtable-cell header-cell-allnot1 column-heading">Thứ 4 (<Moment format="DD/MM">{wednesday}</Moment>)</div>
-                <div className="Rtable-cell header-cell-allnot1 column-heading">Thứ 5 (<Moment format="DD/MM">{thursday}</Moment>)</div>
-                <div className="Rtable-cell header-cell-allnot1 column-heading">Thứ 6 (<Moment format="DD/MM">{friday}</Moment>)</div>
-                <div className="Rtable-cell header-cell-allnot1 column-heading">Thứ 7 (<Moment format="DD/MM">{saturday}</Moment>)</div>
-                <div className="Rtable-cell header-cell-allnot1 column-heading">Chủ nhật (<Moment format="DD/MM">{sunday}</Moment>)</div>
-                <div className="Rtable-cell action-cell column-heading">Hành động</div>
-              </div>
-              <div className="Rtable-row">
-                <div className="Rtable-cell date-cell">
-                  <div className="Rtable-cell--content date-content"><span className="webinar-date">August 2nd, 2016</span><br />6:00 pm (CDT)</div>
-                </div>
-                <div className="Rtable-cell monday-cell">
-                  <div className="Rtable-cell--content access-link-content"><a href="#0"><i className="ion-link" />Thứ 2</a></div>
-                </div>
-                <div className="Rtable-cell tuesday-cell">
-                  <div className="Rtable-cell--content access-link-content"><a href="#0"><i className="ion-link" />Thứ 2</a></div>
-                </div>
-                <div className="Rtable-cell wednesday-cell">
-                  <div className="Rtable-cell--content access-link-content"><a href="#0"><i className="ion-link" />Thứ 2</a></div>
-                </div>
-                <div className="Rtable-cell thursday-cell">
-                  <div className="Rtable-cell--content access-link-content"><a href="#0"><i className="ion-link" />Thứ 2</a></div>
-                </div>
-                <div className="Rtable-cell friday-cell">
-                  <div className="Rtable-cell--content access-link-content"><a href="#0"><i className="ion-link" />Thứ 2</a></div>
-                </div>
-                <div className="Rtable-cell saturday-cell">
-                  <div className="Rtable-cell--content access-link-content"><a href="#0"><i className="ion-link" />Thứ 2</a></div>
-                </div>
-                <div className="Rtable-cell sunday-cell">
-                  <div className="Rtable-cell--content access-link-content"><a href="#0"><i className="ion-link" />Thứ 2</a></div>
-                </div>
-                <div className="Rtable-cell action-cell">
-                  <div className="Rtable-cell--content access-link-content"><a href="#0"><i className="ion-link" />Thứ 2</a></div>
-                </div>
-              </div>
-              <div className="Rtable-row is-striped">
-                <div className="Rtable-cell date-cell">
-                  <div className="Rtable-cell--content date-content"><span className="webinar-date">Ca</span></div>
-                </div>
-                <div className="Rtable-cell monday-cell">
-                  {elmShifts}
-                </div>
-                <div className="Rtable-cell tuesday-cell">
-                  {elmShifts}
-                </div>
-                <div className="Rtable-cell wednesday-cell">
-                  {elmShifts}
-                </div>
-                <div className="Rtable-cell thursday-cell">
-                  {elmShifts}
-                </div>
-                <div className="Rtable-cell friday-cell">
-                  {elmShifts}
-                </div>
-                <div className="Rtable-cell saturday-cell">
-                  {elmShifts}
-                </div>
-                <div className="Rtable-cell sunday-cell">
-                  {elmShifts}
-                </div>
-                <div className="Rtable-cell action-cell">
-                  {elmShifts}
-                </div>
-              </div>
-
-
-            </div>
-          </div> */}
-        {/* End of add table flex */}
-
-
-
-
-        {/* </div> */}
       </div>
     </Fragment>
   );
@@ -690,6 +444,7 @@ ShiftRegisters.propTypes = {
   getNextWeekActive: PropTypes.func.isRequired,
   addNextWeekActive: PropTypes.func.isRequired,
   deleteNextWeekActive: PropTypes.func.isRequired,
+  getShiftRegisterManagers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -701,6 +456,7 @@ const mapStateToProps = (state) => ({
   typeUser: state.typeUser,
   personInShift: state.personInShift,
   shiftRegister: state.shiftRegister,
+  shiftRegisterManager: state.shiftRegisterManager,
   nextWeekActive: state.nextWeekActive,
 });
 
@@ -715,5 +471,6 @@ export default connect(mapStateToProps, {
   getShiftRegisters,
   getNextWeekActive,
   addNextWeekActive,
-  deleteNextWeekActive
+  deleteNextWeekActive,
+  getShiftRegisterManagers
 })(ShiftRegisters);

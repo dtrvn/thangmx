@@ -13,6 +13,7 @@ import EditPassWordForm from "../../components/user-forms/EditPassWordForm";
 import AddEducation from "../../components/profile-forms/AddEducation";
 import PersonInShiftList  from "../../components/shiftRegisters/personInShifts/PersonInShiftList";
 import SalaryPersonal from "../../components/salary/SalaryPersonal";
+import SalaryAllMember from "../../components/salary/SalaryAllMember";
 // import Profiles from "../../components/profiles/Profiles";
 // import Profile from "../../components/profile/Profile";
 import Posts from "../../components/posts/Posts";
@@ -37,7 +38,8 @@ const Routes = () => {
         <PrivateRoute exact path="/edit-user/:id" component={EditUserForm} />
         <PrivateRoute exact path="/edit-pass" component={EditPassWordForm} />
         <PrivateRoute exact path="/modifer-personInShift/:startDate/:endDate/:branchId" component={PersonInShiftList} />
-        <PrivateRoute exact path="/salary-personal" component={SalaryPersonal} />
+        <PrivateRoute exact path="/salarys" component={SalaryAllMember} />
+        <PrivateRoute exact path="/salarys/:id/:firstDayOfFirstWeekInMonth/:lastDayOfLastWeekInMonth/:currentDay" component={SalaryPersonal} />
         <PrivateRoute exact path="/add-education" component={AddEducation} />
         <PrivateRoute exact path="/posts" component={Posts} />
         <PrivateRoute exact path="/posts/:id" component={Post} />

@@ -17732,6 +17732,18 @@ pre code {
 	margin-left: -10px
 }
 
+.rowSalary {
+	display: flex;
+	height: 70px;
+	flex-wrap: wrap;
+	margin-right: -20px;
+	margin-left: -10px
+}
+
+.label-salary{
+	height: 19px;
+}
+
 .no-gutters {
 	margin-right: 0;
 	margin-left: 0
@@ -17997,6 +18009,22 @@ pre code {
 
 .offset-11 {
 	margin-left: 91.66667%
+}
+
+.col-salary-md-4 {
+	position: relative;
+	/* width: 100%; */
+	flex: 0 0 30%;
+	max-width: 30%
+}
+.col-salary-md-8 {
+	position: relative;
+	/* width: 70%; */
+	margin-right: 5px;
+	margin-left: 2px;
+	padding-left: 2px;
+	flex: 0 0 60%;
+	max-width: 60%
 }
 
 @media (min-width:576px) {
@@ -18593,15 +18621,48 @@ pre code {
 	color: #212529
 }
 
+.table-salary {
+	width: 100%;
+	margin-bottom: 1rem;
+	color: #212529
+}
+
 .col-form-label,
 .form-check-label {
 	margin-bottom: 0
 }
 
+/* .table-salary .salaryLine{
+	padding: 0.5rem;
+	vertical-align: center;
+	border-top: 1px solid #e9ecef;
+} */
+
+.table-salary td {
+	padding: 0.3rem;
+	vertical-align: center;
+	border-top: 1px solid #e9ecef
+}
+
+.table-salary th {
+	padding: 1rem;
+	vertical-align: center;
+	border-top: 1px solid #e9ecef
+}
+
+.table-salary thead th {
+	vertical-align: bottom;
+	border-bottom: 2px solid #e9ecef
+}
+
+.table-salary tbody+tbody {
+	border-top: 2px solid #e9ecef
+}
+
 .table td,
 .table th {
 	padding: 1rem;
-	vertical-align: top;
+	vertical-align: center;
 	border-top: 1px solid #e9ecef
 }
 
@@ -41617,6 +41678,15 @@ ul.list-style-none li a:hover {
 	font-size: 75%
 }
 
+.label-manager {
+	padding: 3px 10px;
+	line-height: 30px;
+	color: #fff;
+	font-weight: 400;
+	border-radius: .25rem;
+	font-size: 100%
+}
+
 .label-rounded {
 	border-radius: 60px
 }
@@ -42466,6 +42536,11 @@ table th {
 }
 
 .label {
+	/* display: inline-block */
+	display: block
+}
+
+.label-manager {
 	/* display: inline-block */
 	display: block
 }

@@ -9,10 +9,11 @@ import { getAllBranchs } from "../../actions/branch";
 import { getAllPermitShifts } from "../../actions/permitShiftRegist";
 import Spinner from "../layout/Spinner";
 import { getPersonInShift, getPreWeekPersonInShift, copyPersonInShifts, getPersonInShiftDate } from "../../actions/personInShift";
+import { addUpdateShiftRegisterManager, getShiftRegisterManagers } from "../../actions/shiftRegisterManager";
 import ShiftRegisterModal from "./shiftRegisters/ShiftRegisterModal";
 import UpdateDeleteUserModal from "./update-deleteUser/UpdateDeleteUserModal";
 import AddUserForm from "./addUser-forms/AddUserForm";
-import { Button, Modal } from 'react-bootstrap';
+import AddManagerModal from "./addUpdateDeleteManager/AddManagerModal";
 
 const TabContent = ({
     branchTabName,
@@ -38,12 +39,14 @@ const TabContent = ({
     getPersonInShift,
     getPreWeekPersonInShift,
     getPersonInShiftDate,
+    getShiftRegisterManagers,
     copyPersonInShifts,
     getAllPermitShifts,
     shiftRegister: { shiftRegisters },
+    shiftRegisterManager: { shiftRegisterManagers },
     personInShift: { personInShifts, personInShiftsPrevWeek, personInShift },
     auth: { user },
-    permitShiftRegist: { permitShiftRegists } ,
+    permitShiftRegist: { permitShiftRegists },
     // branch: { branchs },
     // getAllBranchs,
 }) => {
@@ -53,6 +56,7 @@ const TabContent = ({
     let elmShiftRegisters = [];
     let elmShiftRegisters1 = [];
     let elmPersonInShifts = [];
+    let elmShiftRegisterManagers = [];
     let findUser = null;
     // let saveShiftRegisters = [];
 
@@ -67,6 +71,8 @@ const TabContent = ({
 
     const [showUpdateOrDeleteModal, setShowUpdateOrDeleteModal] = useState(0);
 
+    const [showAddManagerModal, setShowAddManagerModal] = useState(0);
+
     const [showButtonCopyPersonInShift, setShowButtonCopyPersonInShift] = useState("0");
 
     const [dayRegist, setDayRegist] = useState(0);
@@ -79,11 +85,15 @@ const TabContent = ({
 
     const [countCallUpdateDeleteUserModal, setCountCallUpdateDeleteUserModal] = useState(0);
 
+    const [countCallAddManagerModal, setCountCallAddManagerModal] = useState(0);
+
     const [createBranchId, setCreateBranchId] = useState("");
 
     const [currentUserId, setCurrentUserId] = useState("");
 
     const [idUpdate, setIdUpdate] = useState("");
+
+    const [currentDay, setCurrentDay] = useState(0);
 
     useEffect(() => {
 
@@ -92,16 +102,16 @@ const TabContent = ({
                 return branchId = ele._id
             }
         });
-
+        console.log("chay lai " + branchId);
         if (branchs && branchId !== null) {
             setCreateBranchId(branchId);
         }
-        // console.log("chay lai ham " + activeTab + " - " + branchId);
         getPersonInShift(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
         getPreWeekPersonInShift(branchId, moment(startDate).subtract(7, "days").format('MM-DD-YYYY'), moment(endDate).subtract(7, "days").format('MM-DD-YYYY'));
         getShiftRegisters(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+        getShiftRegisterManagers(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
         setViewFormPersonInShiftRegist(false);
-    }, [activeTab]);
+    }, [activeTab, branchs]);
 
     useEffect(() => {
         if (personInShifts.length > 0) {
@@ -115,14 +125,14 @@ const TabContent = ({
         getAllPermitShifts();
     }, []);
 
-    useEffect(() => {
-        branchs.map((ele, idx) => {
-            if (idx === activeTab) {
-                setCreateBranchId(ele._id)
-            }
-        });
-        // getPersonInShift(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
-    }, [branchs, activeTab]);
+    // useEffect(() => {
+    //     branchs.map((ele, idx) => {
+    //         if (idx === activeTab) {
+    //             setCreateBranchId(ele._id)
+    //         }
+    //     });
+    //     // getPersonInShift(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+    // }, [branchs, activeTab]);
 
     useEffect(() => {
         if (moment(startDate).format('MM-DD-YYYY') > moment().startOf("isoWeek").format('MM-DD-YYYY')
@@ -1073,7 +1083,31 @@ const TabContent = ({
         setCountCallUpdateDeleteUserModal(countCallUpdateDeleteUserModal + 1);
         setCurrentUserId(curUserId);
         let id = shiftRegisters.find(x => x.userId === curUserId)._id;
+        // Get _id của shiftRegisters
         setIdUpdate(id);
+    }
+
+    const onAddManager = (day, curUserId) => {
+        setShowAddManagerModal(1);
+        setCountCallAddManagerModal(countCallAddManagerModal + 1);
+        setCurrentUserId(curUserId);
+        setCurrentDay(day);
+        
+        // if (curUserId !== " ") {
+        //     let getId = null;
+        //     // if(shiftRegisterManagers.length > 0){
+        //     //     getId = shiftRegisterManagers.find(x => x.userId._id === curUserId) ? shiftRegisterManagers.find(x => x.userId === curUserId)._id : "" ;
+        //     // } else {
+        //     //     getId = " ";
+        //     // }
+        //     shiftRegisterManagers.filter((ele) => {
+        //         if(ele.userId === curUserId){
+        //             getId = ele._id;
+        //         }
+        //     })
+        //     // Get _id của shiftRegisterManagers
+        //     setIdUpdate(getId);
+        // }
 
     }
 
@@ -1265,9 +1299,294 @@ const TabContent = ({
     // const handleClose = () => setShow(false);
     // const handleShow = () => setShow(true);
 
+    let listMon = [];
+    let listTue = [];
+    let listWed = [];
+    let listThu = [];
+    let listFri = [];
+    let listSat = [];
+    let listSun = [];
+
+    eleMon = [];
+    eleTue = [];
+    eleWed = [];
+    eleThu = [];
+    eleFri = [];
+    eleSat = [];
+    eleSun = [];
+    // let saveManagerUserId = [" ", " ", " ", " ", " ", " ", " "];
+    let saveUserIdMOn = "";
+    let saveUserIdTue = "";
+    let saveUserIdWed = "";
+    let saveUserIdThu = "";
+    let saveUserIdFri = "";
+    let saveUserIdSat = "";
+    let saveUserIdSun = "";
+
+    if (shiftRegisterManagers.length > 0) {
+        shiftRegisterManagers.map((ele) => {
+            getUsers = users.find(({ _id }) => _id === ele.userId);
+            if (moment(ele.date).format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
+                eleMon.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                saveUserIdMOn = ele.userId;
+            }
+            if (moment(ele.date).format('MM-DD-YYYY') === moment(tuesday).format('MM-DD-YYYY')) {
+                eleTue.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                saveUserIdTue = ele.userId;
+            }
+            if (moment(ele.date).format('MM-DD-YYYY') === moment(wednesday).format('MM-DD-YYYY')) {
+                eleWed.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                saveUserIdWed = ele.userId;
+            }
+            if (moment(ele.date).format('MM-DD-YYYY') === moment(thursday).format('MM-DD-YYYY')) {
+                eleThu.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                saveUserIdThu = ele.userId;
+            }
+            if (moment(ele.date).format('MM-DD-YYYY') === moment(friday).format('MM-DD-YYYY')) {
+                eleFri.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                saveUserIdFri = ele.userId;
+            }
+            if (moment(ele.date).format('MM-DD-YYYY') === moment(saturday).format('MM-DD-YYYY')) {
+                eleSat.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                saveUserIdSat = ele.userId;
+            }
+            if (moment(ele.date).format('MM-DD-YYYY') === moment(sunday).format('MM-DD-YYYY')) {
+                eleSun.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                saveUserIdSun = ele.userId;
+            }
+        })
+    }
+
+    if (eleMon.length === 0) {
+        eleMon.push(<span className="label-manager">AAA</span>);
+    }
+    if (eleTue.length === 0) {
+        eleTue.push(<span className="label-manager">AAA</span>);
+    }
+    if (eleWed.length === 0) {
+        eleWed.push(<span className="label-manager">AAA</span>);
+    }
+    if (eleThu.length === 0) {
+        eleThu.push(<span className="label-manager">AAA</span>);
+    }
+    if (eleFri.length === 0) {
+        eleFri.push(<span className="label-manager">AAA</span>);
+    }
+    if (eleSat.length === 0) {
+        eleSat.push(<span className="label-manager">AAA</span>);
+    }
+    if (eleSun.length === 0) {
+        eleSun.push(<span className="label-manager">AAA</span>);
+    }
+
+    if (userLogin && userLogin.roles === "Admin") {
+        listMon.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="el-element-overlay">
+                    <div class="card-body-shiftRegister text-center">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <p class="text-center font-medium m-b-0">{eleMon}</p>
+                                <div class="el-overlay">
+                                    <ul class="el-info">
+                                        <li>
+                                            <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(monday, saveUserIdMOn)}><i class="ti-plus"></i></a>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+        listTue.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="el-element-overlay">
+                    <div class="card-body-shiftRegister text-center">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <p class="text-center font-medium m-b-0">{eleTue}</p>
+                                <div class="el-overlay">
+                                    <ul class="el-info">
+                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(tuesday, saveUserIdTue)}><i class="ti-plus"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+        listWed.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="el-element-overlay">
+                    <div class="card-body-shiftRegister text-center">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <p class="text-center font-medium m-b-0">{eleWed}</p>
+                                <div class="el-overlay">
+                                    <ul class="el-info">
+                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(wednesday, saveUserIdWed)}><i class="ti-plus"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+        listThu.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="el-element-overlay">
+                    <div class="card-body-shiftRegister text-center">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <p class="text-center font-medium m-b-0">{eleThu}</p>
+                                <div class="el-overlay">
+                                    <ul class="el-info">
+                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(thursday, saveUserIdThu)}><i class="ti-plus"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+        listFri.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="el-element-overlay">
+                    <div class="card-body-shiftRegister text-center">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <p class="text-center font-medium m-b-0">{eleFri}</p>
+                                <div class="el-overlay">
+                                    <ul class="el-info">
+                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(friday, saveUserIdFri)}><i class="ti-plus"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+        listSat.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="el-element-overlay">
+                    <div class="card-body-shiftRegister text-center">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <p class="text-center font-medium m-b-0">{eleSat}</p>
+                                <div class="el-overlay">
+                                    <ul class="el-info">
+                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(saturday, saveUserIdSat)}><i class="ti-plus"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+        listSun.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="el-element-overlay">
+                    <div class="card-body-shiftRegister text-center">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <p class="text-center font-medium m-b-0">{eleSun}</p>
+                                <div class="el-overlay">
+                                    <ul class="el-info">
+                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(sunday, saveUserIdSun)}><i class="ti-plus"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    } else {
+        listMon.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="card-body-shiftRegister text-center">
+                    <p class="text-center font-medium m-b-0">{eleMon}</p>
+                </div>
+            </div>
+        );
+        listTue.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="card-body-shiftRegister text-center">
+                    <p class="text-center font-medium m-b-0">{eleTue}</p>
+                </div>
+            </div>
+        );
+        listWed.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="card-body-shiftRegister text-center">
+                    <p class="text-center font-medium m-b-0">{eleWed}</p>
+                </div>
+            </div>
+        );
+        listThu.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="card-body-shiftRegister text-center">
+                    <p class="text-center font-medium m-b-0">{eleThu}</p>
+                </div>
+            </div>
+        );
+        listFri.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="card-body-shiftRegister text-center">
+                    <p class="text-center font-medium m-b-0">{eleFri}</p>
+                </div>
+            </div>
+        );
+        listSat.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="card-body-shiftRegister text-center">
+                    <p class="text-center font-medium m-b-0">{eleSat}</p>
+                </div>
+            </div>
+        );
+        listSun.push(
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="card-body-shiftRegister text-center">
+                    <p class="text-center font-medium m-b-0">{eleSun}</p>
+                </div>
+            </div>
+        );
+    }
+
+    elmShiftRegisterManagers.push(
+        <div class="card-group-shiftRegister">
+            <div class="card-shiftRegister col-md-4-5" style={{ background: "#ab8ce4" }}>
+                <div class="card-body-shiftRegister">
+                    <p class="font-medium m-b-0">Quản lý</p>
+                </div>
+                <div class="box b-t text-center"></div>
+            </div>
+            {listMon}
+            {listTue}
+            {listWed}
+            {listThu}
+            {listFri}
+            {listSat}
+            {listSun}
+            <div class="card-shiftRegister col-md-1-5">
+                <div class="card-body-shiftRegister text-center">
+                    <p class="text-center font-medium m-b-0"></p>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <Fragment>
-            {branchs === null ? (
+            {shiftRegisters === null ? (
                 <Spinner />
             ) : (
                 <Fragment>
@@ -1326,7 +1645,7 @@ const TabContent = ({
                                 <i class="fas fa-trash-alt"></i>{"  "}Xoá đăng ký ca
                             </button>
                         ) : " "}
-
+                        
                         {addButton === 1 ? (
                             <button
                                 type="button"
@@ -1422,7 +1741,7 @@ const TabContent = ({
                         //     ) : ""}
                         // </div>
                         <AddUserForm users={users}
-                            branchIdForm={branchs[activeTab]._id}
+                            branchIdForm={activeTab >= 0 ? branchs[activeTab]._id : ""}
                             startDate={moment(startDate).format('MM-DD-YYYY')}
                             endDate={moment(endDate).format('MM-DD-YYYY')}
                             saveUserId={saveUserId}
@@ -1487,6 +1806,65 @@ const TabContent = ({
                         </div>
 
                     </div>
+                    {elmShiftRegisterManagers}
+
+                    {/* <div class="card-group-shiftRegister">
+
+                        <div class="card-shiftRegister col-md-4-5" style={{ background: "#ab8ce4" }}>
+                            <div class="card-body-shiftRegister">
+                                <p class="font-medium m-b-0">Quản lý</p>
+
+                            </div>
+                            <div class="box b-t text-center"></div>
+                        </div>
+
+
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="card-body-shiftRegister text-center">
+                                <p class="text-center font-medium m-b-0"></p>
+                            </div>
+                        </div>
+
+
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="card-body-shiftRegister text-center">
+                                <p class="text-center font-medium m-b-0"></p>
+                            </div>
+                        </div>
+
+
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="card-body-shiftRegister text-center">
+                                <p class="text-center font-medium m-b-0"></p>
+                            </div>
+                        </div>
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="card-body-shiftRegister text-center">
+                                <p class="text-center font-medium m-b-0"></p>
+                            </div>
+                        </div>
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="card-body-shiftRegister text-center">
+                                <p class="text-center font-medium m-b-0"></p>
+                            </div>
+                        </div>
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="card-body-shiftRegister text-center">
+                                <p class="text-center font-medium m-b-0"></p>
+                            </div>
+                        </div>
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="card-body-shiftRegister text-center">
+                                <p class="text-center font-medium m-b-0"></p>
+                            </div>
+                        </div>
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="card-body-shiftRegister text-center">
+                                <p class="text-center font-medium m-b-0"></p>
+                            </div>
+                        </div>
+
+                    </div> */}
 
                     {showShiftRegisterModal === 1 ? (
                         <ShiftRegisterModal
@@ -1518,6 +1896,17 @@ const TabContent = ({
                         />
                     ) : ""}
 
+                    {showAddManagerModal === 1 ? (
+                        <AddManagerModal
+                            currentUserId={currentUserId}
+                            users={users}
+                            countCallAddManagerModal={countCallAddManagerModal}
+                            currentDay={currentDay}
+                            branchId={branchs[activeTab]._id}
+                            dateFrom={startDate}
+                            dateTo={endDate}
+                        />
+                    ) : ""}
                 </Fragment>
             )}
         </Fragment>
@@ -1550,16 +1939,18 @@ TabContent.propTypes = {
     getAllPermitShifts: PropTypes.func.isRequired,
     getPersonInShift: PropTypes.func.isRequired,
     copyPersonInShifts: PropTypes.func.isRequired,
+    getShiftRegisterManagers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     shiftRegister: state.shiftRegister,
+    shiftRegisterManager: state.shiftRegisterManager,
     personInShift: state.personInShift,
     auth: state.auth,
     permitShiftRegist: state.permitShiftRegist,
     // branch: state.branch,
 });
 
-export default connect(mapStateToProps, { getShiftRegisters, getPreWeekPersonInShift, getPersonInShiftDate, addUserShiftRegister, deleteUserShiftRegister, getAllBranchs, getPersonInShift, copyPersonInShifts, getAllPermitShifts })(
+export default connect(mapStateToProps, { getShiftRegisters, getPreWeekPersonInShift, getPersonInShiftDate, addUserShiftRegister, deleteUserShiftRegister, getAllBranchs, getPersonInShift, copyPersonInShifts, getAllPermitShifts, getShiftRegisterManagers })(
     TabContent
 );

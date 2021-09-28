@@ -10,7 +10,9 @@ import {
   DELETE_SHIFT_REGISTER,
   SHIFT_REGISTER_ERROR,
   CLEAR_SHIFT_REGISTER,
+  CLEAR_SHIFT_REGISTER_VIEW_SALARY,
   GET_SHIFT_REGISTER,
+  SET_CURRENT_DAY,
 } from "./types";
 // import { PromiseProvider } from "mongoose";
 // import { count } from "../../../models/ShiftRegister2";
@@ -169,6 +171,56 @@ export const getShiftRegisters = (branchId, dateFrom, dateTo) => async (dispatch
       });
       return Promise.resolve(res.data);
     }
+
+  } catch (err) {
+    dispatch({
+      type: SHIFT_REGISTER_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get shift Registers by userId, dateFrom, dateTo
+export const getShiftRegisterViewSalary = (userId, dateFrom, dateTo, currentDay) => async (dispatch) => {
+  
+  dispatch({ type: CLEAR_SHIFT_REGISTER_VIEW_SALARY });
+  try {
+    if (userId) {
+      // console.log("action in ra " + userId + " - " + dateFrom + " - " + dateTo);
+      
+      dispatch({
+        type: SET_CURRENT_DAY,
+        payload: currentDay,
+      });
+      const res = await axios.get(`/api/shiftRegisters2/salaryPersonal/${userId}/${dateFrom}/${dateTo}`);
+      dispatch({
+        type: GET_SHIFT_REGISTER,
+        payload: res.data,
+      });
+      return Promise.resolve(res.data);
+    }
+
+  } catch (err) {
+    dispatch({
+      type: SHIFT_REGISTER_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get shift Registers by branchId, dateFrom, dateTo
+export const getShiftRegistersForMonth = (dateFrom, dateTo) => async (dispatch) => {
+  dispatch({ type: CLEAR_SHIFT_REGISTER });
+  try {
+    // console.log("action in ra " + branchId + " - " + dateFrom + " - " + dateTo);
+    // Truyền vào branchId nhưng không sử dụng
+    const branchId = 0;
+    const res = await axios.get(`/api/shiftRegisters2/salary/${branchId}/${dateFrom}/${dateTo}`);
+    dispatch({
+      type: GET_SHIFT_REGISTERS,
+      payload: res.data,
+    });
+    return Promise.resolve(res.data);
 
   } catch (err) {
     dispatch({

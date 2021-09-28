@@ -162,6 +162,56 @@ router.get("/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
   }
 });
 
+// @route       GET api/shiftRegisters/salary/:userId/:dateFrom/:dateTo
+// @desc        Get Shift Register by dateFrom, dateTo
+// @access      Private
+router.get("/salary/:userId/:dateFrom/:dateTo", auth, async (req, res) => {
+  try {
+    // const shiftRegister2 = await ShiftRegister2.findById(req.params.id);
+    // console.log("server " + req.params.branchId + " - " + req.params.dateFrom + " - " + req.params.dateTo);
+    const shiftRegister2 = await ShiftRegister2.find({
+      $and: [{ dateFrom: { $gte: req.params.dateFrom} }, { dateTo: { $lt: req.params.dateTo} }],
+    });
+
+    if (!shiftRegister2) {
+      return res.status(404).json({ msg: "Shift Registers not found" });
+    }
+
+    res.json(shiftRegister2);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Shift Registers not found" });
+    }
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route       GET api/shiftRegisters/salaryPersonal/:userId/:dateFrom/:dateTo
+// @desc        Get Shift Register by userId, dateFrom, dateTo
+// @access      Private
+router.get("/salaryPersonal/:userId/:dateFrom/:dateTo", auth, async (req, res) => {
+  try {
+    // const shiftRegister2 = await ShiftRegister2.findById(req.params.id);
+    // console.log("server " + req.params.branchId + " - " + req.params.dateFrom + " - " + req.params.dateTo);
+    const shiftRegister2 = await ShiftRegister2.find({
+      $and: [{ userId: req.params.userId }, { dateFrom: { $gte: req.params.dateFrom} }, { dateTo: { $lt: req.params.dateTo} }],
+    });
+
+    if (!shiftRegister2) {
+      return res.status(404).json({ msg: "Shift Registers not found" });
+    }
+
+    res.json(shiftRegister2);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Shift Registers not found" });
+    }
+    res.status(500).send("Server Error");
+  }
+});
+
 // @route       PUT api/shiftRegisters/register
 // @desc        Add Shift Registers
 // @access      Private

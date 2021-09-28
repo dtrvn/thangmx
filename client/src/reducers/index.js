@@ -11,6 +11,7 @@ import shift from "./shift";
 import typeUser from "./typeUser";
 import personInShift from "./personInShift";
 import shiftRegister from "./shiftRegister";
+import shiftRegisterManager from "./shiftRegisterManager";
 import nextWeekActive from "./nextWeekActive";
 import permitShiftRegist from "./permitShiftRegist";
 
@@ -27,6 +28,7 @@ export default combineReducers({
   typeUser,
   personInShift,
   shiftRegister,
+  shiftRegisterManager,
   nextWeekActive,
   permitShiftRegist,
 });

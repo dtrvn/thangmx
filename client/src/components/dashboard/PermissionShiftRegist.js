@@ -20,7 +20,7 @@ const PermissionShiftRegist = ({ branchs, deletePermitShift, permitShiftRegist: 
 
   const listPermitShifts = permitShiftRegists.map((per) => (
     <tr key={per._id}>
-      <td>{branchs ? branchs.find(({ _id }) => _id === per.branchId).branchName : ""}</td>
+      <td>{branchs.find(({ _id }) => _id === per.branchId) ? branchs.find(({ _id }) => _id === per.branchId).branchName : ""}</td>
       <td>{per.shiftNoPermit}</td>
       <td>
         <button onClick={() => editPermitShift(per)} className="btn btn-success"><i class="far fa-edit"></i>
