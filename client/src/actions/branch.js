@@ -14,40 +14,40 @@ import {
 // Create or update branch
 export const addBranch =
   (formData, history, edit = false) =>
-  async (dispatch) => {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
+    async (dispatch) => {
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
 
-      const res = await axios.post("/api/branchs", formData, config);
+        const res = await axios.post("/api/branchs", formData, config);
 
-      if (edit) {
+        if (edit) {
+          dispatch({
+            type: UPDATE_BRANCH,
+            payload: res.data,
+          });
+        } else {
+          dispatch({
+            type: ADD_BRANCH,
+            payload: res.data,
+          });
+        }
+      } catch (err) {
+        const errors = err.response.data.errors;
+
+        if (errors) {
+          errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+        }
+
         dispatch({
-          type: UPDATE_BRANCH,
-          payload: res.data,
-        });
-      } else {
-        dispatch({
-          type: ADD_BRANCH,
-          payload: res.data,
+          type: BRANCH_ERROR,
+          payload: { msg: err.response.statusText, status: err.response.status },
         });
       }
-    } catch (err) {
-      const errors = err.response.data.errors;
-
-      if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
-      }
-
-      dispatch({
-        type: BRANCH_ERROR,
-        payload: { msg: err.response.statusText, status: err.response.status },
-      });
-    }
-  };
+    };
 
 // Get all Branchs
 export const getAllBranchs = () => async (dispatch) => {
@@ -65,6 +65,11 @@ export const getAllBranchs = () => async (dispatch) => {
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
+};
+
+// Clear Branchs
+export const clearBranchs = () => async (dispatch) => {
+  dispatch({ type: CLEAR_BRANCH });
 };
 
 // Get branch by id

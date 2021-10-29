@@ -6,6 +6,7 @@ import {
   ADD_PERSONINSHIFT,
   PERSONINSHIFT_ERROR,
   CLEAR_PERSONINSHIFT,
+  SETLOADING_PERSONINSHIFT,
 } from "../actions/types";
 
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
   personInShift: [],
   personInShiftsPrevWeek: [],
   loading: true,
+  loader: false,
   error: {},
 };
 
@@ -25,12 +27,14 @@ export default function (state = initialState, action) {
         ...state,
         personInShifts: payload,
         loading: false,
+        loader: true,
       };
     case GET_PERSONINSHIFTS_PREVWEEK:
       return {
         ...state,
         personInShiftsPrevWeek: payload,
         loading: false,
+        loader: true,
       };
     case GET_PERSONINSHIFT:
       return {
@@ -43,12 +47,14 @@ export default function (state = initialState, action) {
         ...state,
         error: payload,
         loading: false,
+        loader: false,
       };
     case ADD_PERSONINSHIFT:
       return {
         ...state,
         personInShifts: [...state.personInShifts, payload],
         loading: false,
+        loader: true,
       };
     case UPDATE_PERSONINSHIFT:
       return {
@@ -63,6 +69,12 @@ export default function (state = initialState, action) {
         ...state,
         personInShift: [],
         loading: false,
+        loader: false,
+      };
+    case SETLOADING_PERSONINSHIFT:
+      return {
+        ...state,
+        loader: payload,
       };
     default:
       return state;

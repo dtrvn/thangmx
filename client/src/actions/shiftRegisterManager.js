@@ -11,6 +11,7 @@ import {
   SHIFT_REGISTER_MANAGERS_ERROR,
   CLEAR_SHIFT_REGISTER_MANAGERS,
   GET_SHIFT_REGISTER_MANAGER,
+  SHOW_SHIFTREGISTERS_MANAGER_MODAL,
 } from "./types";
 
 // Create or Update Shift Register Manager
@@ -26,34 +27,46 @@ export const addUpdateDeleteUserManager =
         // console.log("shift action "+ formData.userId + " - " + formData.userIdOld+ " - " + formData.branchId + " - " + formData.dateFrom + " - " + formData.dateTo + " - " + formData.date);
         // console.log("userFlag " + formData.userFlag);
         if (formData.userFlag === "0") {
-          dispatch(setAlertShiftRegister("Chưa có thay đổi", "warning"));
+          dispatch(setAlert("Chưa có thay đổi", "warning"));
         } else {
           if (formData.userFlag === "1") {
+            dispatch({
+              type: SHOW_SHIFTREGISTERS_MANAGER_MODAL,
+              payload: false,
+            });
             // Delete
             const res = await axios.delete(`/api/shiftRegisterManagers/${formData.userIdOld}/${formData.branchId}/${formData.date}`);
             dispatch({
               type: DELETE_SHIFT_REGISTER_MANAGERS,
               payload: res.data,
             });
-            dispatch(setAlertShiftRegister("Xoá quản lý thành công", "success"));
+            dispatch(setAlert("Xoá quản lý thành công", "success"));
           }
           if (formData.userFlag === "2") {
+            dispatch({
+              type: SHOW_SHIFTREGISTERS_MANAGER_MODAL,
+              payload: false,
+            });
             // Update
             const res1 = await axios.post("/api/shiftRegisterManagers", formData, config);
             dispatch({
               type: UPDATE_SHIFT_REGISTER_MANAGERS,
               payload: res1.data,
             });
-            dispatch(setAlertShiftRegister("Cập nhật quản lý thành công", "success"));
+            dispatch(setAlert("Cập nhật quản lý thành công", "success"));
           }
           if (formData.userFlag === "3") {
+            dispatch({
+              type: SHOW_SHIFTREGISTERS_MANAGER_MODAL,
+              payload: false,
+            });
             // Add
             const res2 = await axios.post("/api/shiftRegisterManagers", formData, config);
             dispatch({
               type: ADD_SHIFT_REGISTER_MANAGERS,
               payload: res2.data,
             });
-            dispatch(setAlertShiftRegister("Thêm mới quản lý thành công", "success"));
+            dispatch(setAlert("Thêm mới quản lý thành công", "success"));
           }
         }
 
@@ -173,4 +186,12 @@ export const getShiftRegisterManagers = (branchId, dateFrom, dateTo) => async (d
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
+};
+
+// Show Shift Register Manager Modal
+export const setShowAddManagerModal = (data) => async (dispatch) => {
+  dispatch({
+    type: SHOW_SHIFTREGISTERS_MANAGER_MODAL,
+    payload: data,
+  });
 };

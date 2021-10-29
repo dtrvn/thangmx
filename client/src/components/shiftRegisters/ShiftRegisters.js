@@ -6,13 +6,15 @@ import moment from "moment";
 import { getAllShifts } from "../../actions/shift";
 import { getAllBranchs } from "../../actions/branch";
 import { getAllUsers } from "../../actions/user";
-import { getPersonInShift, getPreWeekPersonInShift } from "../../actions/personInShift";
-import { getShiftRegisters } from "../../actions/shiftRegister";
+import { getPersonInShift, getPreWeekPersonInShift, deletePersonInShift } from "../../actions/personInShift";
+import { getShiftRegisters, deleteShiftRegisterNextWeek } from "../../actions/shiftRegister";
 import { getNextWeekActive, addNextWeekActive, deleteNextWeekActive } from "../../actions/nextWeekActive";
 import { getAllJobs } from "../../actions/job";
 import { getAllTypeUsers } from "../../actions/typeUser";
 import TabContent from "./TabContent";
 import { addUpdateShiftRegisterManager, getShiftRegisterManagers } from "../../actions/shiftRegisterManager";
+import Spinner from "../layout/Spinner";
+import { setAlert } from "../../actions/alert";
 
 const ShiftRegisters = ({
   getAllShifts,
@@ -22,7 +24,9 @@ const ShiftRegisters = ({
   getAllTypeUsers,
   getPersonInShift,
   getPreWeekPersonInShift,
+  deletePersonInShift,
   getShiftRegisters,
+  deleteShiftRegisterNextWeek,
   getNextWeekActive,
   addNextWeekActive,
   deleteNextWeekActive,
@@ -38,6 +42,7 @@ const ShiftRegisters = ({
   shiftRegisterManager: { shiftRegisterManagers },
   nextWeekActive: { nextWeekDB },
   history,
+  setAlert,
 }) => {
   let branchId = null;
 
@@ -65,6 +70,7 @@ const ShiftRegisters = ({
 
 
   useEffect(() => {
+    console.log("lan 3");
     getAllShifts();
     getAllUsers();
     getAllBranchs();
@@ -74,8 +80,15 @@ const ShiftRegisters = ({
     // getPersonInShift(moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
   }, [getAllShifts, getAllUsers, getAllBranchs, getAllJobs, getNextWeekActive, getAllTypeUsers]);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (branchs.length >= 0) {
+  //     setRunTabContentAgain(runTabContentAgain + 1);
+  //   }
+  // }, [branchs]);
 
+
+  useEffect(() => {
+    console.log("lan 4");
     if (nextWeekDB) {
       if (moment().startOf("isoWeek").format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).format('MM-DD-YYYY')) {
         setHiddenButton(1);
@@ -96,7 +109,6 @@ const ShiftRegisters = ({
       //   }
       // }
     }
-
   }, [nextWeekDB, user]);
 
   // useEffect(() => {
@@ -105,10 +117,10 @@ const ShiftRegisters = ({
   //       return branchId = ele._id
   //     }
   //   });
-    // getPreWeekPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'));
-    // getPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
-    // getShiftRegisters(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
-    // getShiftRegisterManagers(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
+  // getPreWeekPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).subtract(7, "days").format('MM-DD-YYYY'));
+  // getPersonInShift(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
+  // getShiftRegisters(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
+  // getShiftRegisterManagers(branchId, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
   // }, [branchs]);
 
   const onPrevWeek = () => {
@@ -215,40 +227,42 @@ const ShiftRegisters = ({
   };
 
   const onCurrentWeek = () => {
+
     const currentFirstWeek = moment().startOf("isoWeek");
     const currentLastWeek = moment().startOf("isoWeek").add(6, "days");
+    if (moment(currentFirstWeek).format('MM-DD-YYYY') !== moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY')) {
+      const mondayCurrent = currentFirstWeek;
+      const tuesdayCurrent = currentFirstWeek.clone().add(1, "days");
+      const wednesdayCurrent = currentFirstWeek.clone().add(2, "days");
+      const thursdayCurrent = currentFirstWeek.clone().add(3, "days");
+      const fridayCurrent = currentFirstWeek.clone().add(4, "days");
+      const saturdayCurrent = currentFirstWeek.clone().add(5, "days");
+      const sundayCurrent = currentLastWeek;
 
-    const mondayCurrent = currentFirstWeek;
-    const tuesdayCurrent = currentFirstWeek.clone().add(1, "days");
-    const wednesdayCurrent = currentFirstWeek.clone().add(2, "days");
-    const thursdayCurrent = currentFirstWeek.clone().add(3, "days");
-    const fridayCurrent = currentFirstWeek.clone().add(4, "days");
-    const saturdayCurrent = currentFirstWeek.clone().add(5, "days");
-    const sundayCurrent = currentLastWeek;
-
-    setCreateDate({
-      ...createDate,
-      firstdayOfThisWeek: currentFirstWeek,
-      lastdayOfThisWeek: currentLastWeek,
-      monday: mondayCurrent,
-      tuesday: tuesdayCurrent,
-      wednesday: wednesdayCurrent,
-      thursday: thursdayCurrent,
-      friday: fridayCurrent,
-      saturday: saturdayCurrent,
-      sunday: sundayCurrent,
-    });
-    if (moment(currentFirstWeek).format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).format('MM-DD-YYYY')) {
-      setHiddenButton(1);
-      if (user && user.roles === "Admin") {
-        setHiddenButtonAddNexWeek(0);
-        setHiddenButtonDeleteNexWeek(1);
-      }
-    } else {
-      setHiddenButton(0);
-      if (user && user.roles === "Admin") {
-        setHiddenButtonAddNexWeek(1);
-        setHiddenButtonDeleteNexWeek(1);
+      setCreateDate({
+        ...createDate,
+        firstdayOfThisWeek: currentFirstWeek,
+        lastdayOfThisWeek: currentLastWeek,
+        monday: mondayCurrent,
+        tuesday: tuesdayCurrent,
+        wednesday: wednesdayCurrent,
+        thursday: thursdayCurrent,
+        friday: fridayCurrent,
+        saturday: saturdayCurrent,
+        sunday: sundayCurrent,
+      });
+      if (moment(currentFirstWeek).format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).format('MM-DD-YYYY')) {
+        setHiddenButton(1);
+        if (user && user.roles === "Admin") {
+          setHiddenButtonAddNexWeek(0);
+          setHiddenButtonDeleteNexWeek(1);
+        }
+      } else {
+        setHiddenButton(0);
+        if (user && user.roles === "Admin") {
+          setHiddenButtonAddNexWeek(1);
+          setHiddenButtonDeleteNexWeek(1);
+        }
       }
     }
     // if (user && user.roles === "Admin") {
@@ -299,12 +313,13 @@ const ShiftRegisters = ({
       currentFirstWeek: moment().startOf("isoWeek").add(7, "days").format('MM-DD-YYYY'),
       currentLastWeek: moment().startOf("isoWeek").add(13, "days").format('MM-DD-YYYY')
     }
-
     addNextWeekActive(data, history);
   }
 
   const onDeleteNextWeekActive = () => {
     deleteNextWeekActive(nextWeekDB._id);
+    deletePersonInShift(branchs[activeTab]._id, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
+    deleteShiftRegisterNextWeek(branchs[activeTab]._id, moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY'), moment(createDate.lastdayOfThisWeek).format('MM-DD-YYYY'));
     if (moment(createDate.firstdayOfThisWeek).format('MM-DD-YYYY') === moment(nextWeekDB.startDateNextWeek).format('MM-DD-YYYY')) {
       onPrevWeek();
     }
@@ -379,6 +394,13 @@ const ShiftRegisters = ({
                   >
                     Tạo ca làm
                   </button> */}
+                  {/* <button
+                    type="button"
+                    class="btn btn-sm btn-info"
+                    onClick={() => setAlert("Kiểm tra chức năng", "success")}
+                  >
+                    Kiểm tra Alert
+                  </button> */}
                 </div>
               </div>
 
@@ -429,6 +451,8 @@ const ShiftRegisters = ({
         </div>
       </div>
     </Fragment>
+    //   )}
+    // </Fragment>
   );
 };
 
@@ -445,6 +469,9 @@ ShiftRegisters.propTypes = {
   addNextWeekActive: PropTypes.func.isRequired,
   deleteNextWeekActive: PropTypes.func.isRequired,
   getShiftRegisterManagers: PropTypes.func.isRequired,
+  deletePersonInShift: PropTypes.func.isRequired,
+  deleteShiftRegisterNextWeek: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -465,12 +492,15 @@ export default connect(mapStateToProps, {
   getAllUsers,
   getPersonInShift,
   getPreWeekPersonInShift,
+  deletePersonInShift,
   getAllBranchs,
   getAllJobs,
   getAllTypeUsers,
   getShiftRegisters,
+  deleteShiftRegisterNextWeek,
   getNextWeekActive,
   addNextWeekActive,
   deleteNextWeekActive,
-  getShiftRegisterManagers
+  getShiftRegisterManagers,
+  setAlert
 })(ShiftRegisters);

@@ -124,6 +124,37 @@ router.delete("/:id", auth, async (req, res) => {
   }
 });
 
+// @route       DELETE api/shiftRegisters/allUser/:branchId/:dateFrom/:dateTo
+// @desc        Delete Shift Registers
+// @access      Private
+router.delete("/allUser/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
+  try {
+    const branchId = req.params.branchId;
+    const dateFrom = req.params.dateFrom;
+    const dateTo = req.params.dateTo;
+
+    const shiftRegist = await ShiftRegister2.find({ $and: [{ branchId: branchId }, { dateFrom: dateFrom }, { dateTo: dateTo }] })
+      .sort({ date: 1 });
+    // console.log("list "+shiftRegist);
+    if (shiftRegist.length === 0) {
+      return res.status(404).json({ msg: "Shift Register not found" });
+    }
+
+    // await shiftRegist.remove();
+
+    shiftRegist.map((ele) => {
+      ele.remove();
+    })
+
+    res.json({ msg: "Shift Registers removed" });
+  } catch (err) {
+    if (err.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Shift Registers not found" });
+    }
+    res.status(500).send("Server Error");
+  }
+});
+
 // @route       GET api/shift
 // @desc        Get all ShiftRegisters
 // @access      Public
@@ -165,12 +196,12 @@ router.get("/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
 // @route       GET api/shiftRegisters/salary/:userId/:dateFrom/:dateTo
 // @desc        Get Shift Register by dateFrom, dateTo
 // @access      Private
-router.get("/salary/:userId/:dateFrom/:dateTo", auth, async (req, res) => {
+router.get("/salary/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
   try {
     // const shiftRegister2 = await ShiftRegister2.findById(req.params.id);
     // console.log("server " + req.params.branchId + " - " + req.params.dateFrom + " - " + req.params.dateTo);
     const shiftRegister2 = await ShiftRegister2.find({
-      $and: [{ dateFrom: { $gte: req.params.dateFrom} }, { dateTo: { $lt: req.params.dateTo} }],
+      $and: [{ dateFrom: { $gte: req.params.dateFrom} }, { dateTo: { $lte: req.params.dateTo} }],
     });
 
     if (!shiftRegister2) {
@@ -195,7 +226,7 @@ router.get("/salaryPersonal/:userId/:dateFrom/:dateTo", auth, async (req, res) =
     // const shiftRegister2 = await ShiftRegister2.findById(req.params.id);
     // console.log("server " + req.params.branchId + " - " + req.params.dateFrom + " - " + req.params.dateTo);
     const shiftRegister2 = await ShiftRegister2.find({
-      $and: [{ userId: req.params.userId }, { dateFrom: { $gte: req.params.dateFrom} }, { dateTo: { $lt: req.params.dateTo} }],
+      $and: [{ userId: req.params.userId }, { dateFrom: { $gte: req.params.dateFrom} }, { dateTo: { $lte: req.params.dateTo} }],
     });
 
     if (!shiftRegister2) {

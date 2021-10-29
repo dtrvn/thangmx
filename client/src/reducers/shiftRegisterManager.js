@@ -6,11 +6,13 @@ import {
   SHIFT_REGISTER_MANAGERS_ERROR,
   CLEAR_SHIFT_REGISTER_MANAGERS,
   GET_SHIFT_REGISTER_MANAGER,
+  SHOW_SHIFTREGISTERS_MANAGER_MODAL,
 } from "../actions/types";
 
 const initialState = {
   shiftRegisterManagers: [],
   shiftRegisterManager: [],
+  showAddManagerModal: false,
   loading: true,
   error: {},
 };
@@ -64,6 +66,11 @@ export default function (state = initialState, action) {
         shiftRegisterManager: [],
         currentDay: null,
         loading: false,
+      };
+    case SHOW_SHIFTREGISTERS_MANAGER_MODAL:
+      return {
+        ...state,
+        showAddManagerModal: payload,
       };
     default:
       return state;

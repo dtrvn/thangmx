@@ -3844,7 +3844,7 @@ dl,
 ol,
 pre,
 ul {
-	margin-bottom: 1rem
+	/* margin-bottom: 1rem */
 }
 
 p {
@@ -17662,6 +17662,7 @@ kbd kbd {
 .container-fluid {
 	padding-right: 10px;
 	padding-left: 10px;
+	padding-top: 100px;
 	margin-right: auto;
 	margin-left: auto;
 	width: 100%
@@ -17715,7 +17716,8 @@ pre code {
 
 @media (min-width:1200px) {
 	.container {
-		max-width: 1195px;
+		/* max-width: 1195px; */
+		max-width: 1300px;
 		padding-top: 70px;
 	}
 }
@@ -17737,6 +17739,23 @@ pre code {
 	height: 70px;
 	flex-wrap: wrap;
 	margin-right: -20px;
+	/* margin-left: -10px */
+}
+
+.rowShiftRegister {
+	display: flex;
+	height: 60px;
+	flex-wrap: wrap;
+}
+
+.rowShiftRegisterForSalaryColumn {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.rowShiftRegisterForNameColumn {
+	display: flex;
+	margin-right: -10px;
 	margin-left: -10px
 }
 
@@ -17834,6 +17853,13 @@ pre code {
 	width: 100%;
 	padding-right: 10px;
 	padding-left: 10px;
+	margin-bottom: 10px;
+}
+
+.col-md-shiftRegister-3 {
+	position: relative;
+	width: 100%;
+	padding-left: 5px;
 	margin-bottom: 10px;
 }
 
@@ -18011,21 +18037,57 @@ pre code {
 	margin-left: 91.66667%
 }
 
+.col-salary-md-2 {
+	position: relative;
+	flex: 0 0 16.67%;
+	max-width: 16.67%
+}
+.col-salary-md-3 {
+	position: relative;
+	flex: 0 0 25%;
+	max-width: 25%
+}
 .col-salary-md-4 {
 	position: relative;
-	/* width: 100%; */
-	flex: 0 0 30%;
-	max-width: 30%
+	flex: 0 0 33.33%;
+	max-width: 33.33%
+}
+.col-salary-md-5 {
+	position: relative;
+	flex: 0 0 41.67%;
+	max-width: 41.67%
+}
+.col-salary-md-6 {
+	position: relative;
+	flex: 0 0 50%;
+	max-width: 50%
+}
+.col-salary-md-7 {
+	position: relative;
+	flex: 0 0 58.33%;
+	max-width: 58.33%
 }
 .col-salary-md-8 {
 	position: relative;
-	/* width: 70%; */
+	margin-right: 5px;
+	margin-left: 2px;
+	padding-left: 2px;
+	flex: 0 0 66.67%;
+	max-width: 66.67%
+}
+/* .col-salary-md-8 {
+	position: relative;
 	margin-right: 5px;
 	margin-left: 2px;
 	padding-left: 2px;
 	flex: 0 0 60%;
 	max-width: 60%
 }
+.col-salary-md-4 {
+	position: relative;
+	flex: 0 0 30%;
+	max-width: 30%
+} */
 
 @media (min-width:576px) {
 	.col-sm {
@@ -18185,8 +18247,8 @@ pre code {
 		max-width: 8.33333%
 	}
 	.col-md-1-5 {
-		flex: 0 0 10%;
-		max-width: 10%
+		flex: 0 0 9.5%;
+		max-width: 9.5%
 	}
 	.col-md-1-7 {
 		flex: 0 0 12.5%;
@@ -18196,13 +18258,21 @@ pre code {
 		flex: 0 0 16.66667%;
 		max-width: 16.66667%
 	}
-	.col-md-2-5 {
+	.col-md-2-4 {
 		flex: 0 0 20%;
 		max-width: 20%
+	}
+	.col-md-2-5 {
+		flex: 0 0 24%;
+		max-width: 24%
 	}
 	.col-md-3 {
 		flex: 0 0 25%;
 		max-width: 25%
+	}
+	.col-md-shiftRegister-3 {
+		flex: 0 0 20%;
+		max-width: 20%
 	}
 	.col-md-4 {
 		flex: 0 0 33.33333%;
@@ -21330,7 +21400,7 @@ a.badge:hover {
 	/* position: relative; */
 	display: flex;
 	align-items: center;
-	justify-content: space-between
+	justify-content: flex-start
 }
 
 .navbar>.container,
@@ -21352,7 +21422,7 @@ a.badge:hover {
 
 .navbar-nav {
 	display: flex;
-	flex-direction: column;
+	/* flex-direction: column; */
 	padding-left: 0;
 	margin-bottom: 0
 }
@@ -23159,7 +23229,7 @@ a.close.disabled {
 
 @media (min-width:576px) {
 	.modal-dialog {
-		max-width: 800px;
+		max-width: 600px;
 		margin: 1.75rem auto
 	}
 	.modal-dialog-scrollable {
@@ -41058,7 +41128,8 @@ body {
 	margin: 0;
 	overflow-x: hidden;
 	font-size: 14px;
-	font-weight: 300
+	font-weight: 300;
+	overflow-y: scroll;
 }
 
 html {
@@ -42814,6 +42885,142 @@ html body .navbar-dark .mailbox .message-center a div {
 	overflow-x: auto;
 	-ms-overflow-style: -ms-autohiding-scrollbar
 }
+
+@media screen and (max-width: 560px) {
+	.hiddenDiv {
+		/* visibility: hidden; */
+		display: none;
+	}
+	.headerViewOrNotView {
+		visibility: visible;
+	}
+	.hiddenContent-1 {
+		visibility: visible;
+	}
+	.hiddenContent-2 {
+		display: none;
+	}
+	.textAlign {
+		text-align: right;
+	}
+	.viewHeader:before {
+		content: attr(data-label);
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100px;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		background-color: #ab8ce4;
+		color: #fff;
+		font-size: 0.75rem;
+		padding: 0 5px;
+		justify-content: center;
+	}
+	.viewHeaderDay:before {
+		content: attr(data-label);
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100px;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		background-color: #ab8ce4;
+		color: #fff;
+		font-size: 0.85rem;
+		padding: 0 5px;
+		justify-content: center;
+	}
+  }
+
+@media screen and (min-width: 560px) {
+	.headerViewOrNotView {
+		display: none;
+	}
+	.hiddenContent-1 {
+		display: none;
+	}
+	.hiddenContent-2 {
+		visibility: visible;
+	}
+}
+
+/* Table Salary Start */
+.responsive-table-1 {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+  }
+  .responsive-table-1 thead {
+	visibility: hidden;
+	/* background: #fafafa; */
+  }
+  @media screen and (min-width: 600px) {
+	.responsive-table-1 thead {
+	  visibility: visible;
+	}
+  }
+  .responsive-table-1 tr {
+	/* border: 1px solid #ddd;
+	border-bottom: 2px solid #ddd; */
+	padding: 5px;
+	margin-bottom: 10px;
+	display: block;
+  }
+  @media screen and (min-width: 600px) {
+	.responsive-table-1 tr {
+	  display: table-row;
+	  border-bottom-width: 1px;
+	  margin-bottom: 0;
+	}
+	.responsive-table-1 tr:nth-child(even) {
+	  background: #fafafa;
+	}
+  }
+  .responsive-table-1 th,
+  .responsive-table-1 td {
+	padding: 10px;
+	text-align: left;
+  }
+  .responsive-table-1 th {
+	text-transform: uppercase;
+	/* font-size: 11px; */
+  }
+  .responsive-table-1 td {
+	display: block;
+	text-align: right;
+	/* font-size: 13px; */
+	border-bottom: 1px dotted #ddd;
+  }
+  .responsive-table-1 td:last-child {
+	border-bottom: none;
+  }
+  @media screen and (min-width: 600px) {
+	.responsive-table-1 td {
+	  display: table-cell;
+	  text-align: left;
+	  /* font-size: 14px; */
+	  border-bottom: none;
+	}
+  }
+  .responsive-table-1 td:before {
+	content: attr(data-label);
+	float: left;
+	text-transform: uppercase;
+	font-weight: bold;
+  }
+  @media screen and (min-width: 600px) {
+	.responsive-table-1 td:before {
+	  content: "";
+	  display: none;
+	}
+  }
+  
+/* Table Salary End */
 
 .dataTables_info,
 .dataTables_length,

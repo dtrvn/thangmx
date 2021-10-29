@@ -4,19 +4,19 @@ import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import { connect } from "react-redux";
 import moment from "moment";
-import { getShiftRegisters, addUserShiftRegister, deleteUserShiftRegister } from "../../actions/shiftRegister";
-import { getAllBranchs } from "../../actions/branch";
+import { getShiftRegisters, addUserShiftRegister, deleteUserShiftRegister, setShowShiftRegistersModal, setShowShiftRegistersUserModal } from "../../actions/shiftRegister";
+import { setShowAddManagerModal } from "../../actions/shiftRegisterManager";
 import { getAllPermitShifts } from "../../actions/permitShiftRegist";
 import Spinner from "../layout/Spinner";
-import { getPersonInShift, getPreWeekPersonInShift, copyPersonInShifts, getPersonInShiftDate } from "../../actions/personInShift";
-import { addUpdateShiftRegisterManager, getShiftRegisterManagers } from "../../actions/shiftRegisterManager";
+import { getPersonInShift, getPreWeekPersonInShift, copyPersonInShifts, getPersonInShiftDate, setValueLoader, viewPersonInShiftArlet } from "../../actions/personInShift";
+import { getShiftRegisterManagers } from "../../actions/shiftRegisterManager";
 import ShiftRegisterModal from "./shiftRegisters/ShiftRegisterModal";
 import UpdateDeleteUserModal from "./update-deleteUser/UpdateDeleteUserModal";
 import AddUserForm from "./addUser-forms/AddUserForm";
 import AddManagerModal from "./addUpdateDeleteManager/AddManagerModal";
+import ExportExcel from "./exportExcelFile/ExportExcel";
 
 const TabContent = ({
-    branchTabName,
     activeTab,
     startDate,
     endDate,
@@ -42,23 +42,24 @@ const TabContent = ({
     getShiftRegisterManagers,
     copyPersonInShifts,
     getAllPermitShifts,
-    shiftRegister: { shiftRegisters },
-    shiftRegisterManager: { shiftRegisterManagers },
-    personInShift: { personInShifts, personInShiftsPrevWeek, personInShift },
+    setValueLoader,
+    viewPersonInShiftArlet,
+    shiftRegister: { shiftRegisters, showShiftRegistersModal, showUpdateOrDeleteUserModal, shiftRegisterLoader },
+    shiftRegisterManager: { shiftRegisterManagers, showAddManagerModal },
+    personInShift: { personInShifts, personInShiftsPrevWeek, personInShift, loader },
     auth: { user },
     permitShiftRegist: { permitShiftRegists },
-    // branch: { branchs },
-    // getAllBranchs,
+    setShowShiftRegistersModal,
+    setShowShiftRegistersUserModal,
+    setShowAddManagerModal,
 }) => {
 
     let branchId = null;
     let getUsers = null;
     let elmShiftRegisters = [];
-    let elmShiftRegisters1 = [];
     let elmPersonInShifts = [];
     let elmShiftRegisterManagers = [];
     let findUser = null;
-    // let saveShiftRegisters = [];
 
     // Kiểm tra xem user đã tạo đăng kí ca của tuần hiện tại chưa
     let checkExistUserInShiftRegister = null;
@@ -67,11 +68,11 @@ const TabContent = ({
     const [addButton, setAddButton] = useState(0);
     const [deleteButton, setDeleteButton] = useState(0);
 
-    const [showShiftRegisterModal, setShowShiftRegisterModal] = useState(0);
+    // const [showShiftRegisterModal, setShowShiftRegisterModal] = useState(0);
 
-    const [showUpdateOrDeleteModal, setShowUpdateOrDeleteModal] = useState(0);
+    // const [showUpdateOrDeleteModal, setShowUpdateOrDeleteModal] = useState(0);
 
-    const [showAddManagerModal, setShowAddManagerModal] = useState(0);
+    // const [showAddManagerModal, setShowAddManagerModal] = useState(0);
 
     const [showButtonCopyPersonInShift, setShowButtonCopyPersonInShift] = useState("0");
 
@@ -96,21 +97,21 @@ const TabContent = ({
     const [currentDay, setCurrentDay] = useState(0);
 
     useEffect(() => {
-
-        branchs.map((ele, idx) => {
-            if (idx === activeTab) {
-                return branchId = ele._id
+        if (branchs.length > 0) {
+            branchs.map((ele, idx) => {
+                if (idx === activeTab) {
+                    return branchId = ele._id
+                }
+            });
+            if (branchs && branchId !== null) {
+                setCreateBranchId(branchId);
             }
-        });
-        console.log("chay lai " + branchId);
-        if (branchs && branchId !== null) {
-            setCreateBranchId(branchId);
+            getPersonInShift(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+            getPreWeekPersonInShift(branchId, moment(startDate).subtract(7, "days").format('MM-DD-YYYY'), moment(endDate).subtract(7, "days").format('MM-DD-YYYY'));
+            getShiftRegisters(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+            getShiftRegisterManagers(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+            setViewFormPersonInShiftRegist(false);
         }
-        getPersonInShift(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
-        getPreWeekPersonInShift(branchId, moment(startDate).subtract(7, "days").format('MM-DD-YYYY'), moment(endDate).subtract(7, "days").format('MM-DD-YYYY'));
-        getShiftRegisters(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
-        getShiftRegisterManagers(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
-        setViewFormPersonInShiftRegist(false);
     }, [activeTab, branchs]);
 
     useEffect(() => {
@@ -124,15 +125,6 @@ const TabContent = ({
     useEffect(() => {
         getAllPermitShifts();
     }, []);
-
-    // useEffect(() => {
-    //     branchs.map((ele, idx) => {
-    //         if (idx === activeTab) {
-    //             setCreateBranchId(ele._id)
-    //         }
-    //     });
-    //     // getPersonInShift(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
-    // }, [branchs, activeTab]);
 
     useEffect(() => {
         if (moment(startDate).format('MM-DD-YYYY') > moment().startOf("isoWeek").format('MM-DD-YYYY')
@@ -151,7 +143,6 @@ const TabContent = ({
                 setDeleteButton(0);
             }
         }
-        // setShowShiftRegisterModal(0);
     }, [shiftRegisters]);
 
     // Initial variable
@@ -163,8 +154,6 @@ const TabContent = ({
         totalLackShiftsNum.push(0);
         totalShiftsNumRule.push(0);
     }
-    // totalLackShiftsNum = totalShiftsNum;
-    // totalShiftsNumRule = totalShiftsNum;
 
     let classNameListMon = [];
     let classNameListTue = [];
@@ -248,6 +237,27 @@ const TabContent = ({
                 className = "label label-info";
             }
             if (index === 2) {
+                className = "label label-warning";
+            }
+            if (index === 3) {
+                className = "label label-warning";
+            }
+            if (index === 4) {
+                className = "label label-warning";
+            }
+            if (index === 5) {
+                className = "label label-warning";
+            }
+            if (index === 6) {
+                className = "label label-warning";
+            }
+            if (index === 7) {
+                className = "label label-warning";
+            }
+            if (index === 8) {
+                className = "label label-warning";
+            }
+            if (index === 9) {
                 className = "label label-warning";
             }
 
@@ -413,49 +423,91 @@ const TabContent = ({
 
     classNameListMon.push(
         <div class="card-shiftRegister col-md-1-5">
-            <div class="card-body-shiftRegister text-center">
+            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                <div class="col-salary-md-5"></div>
+                <div class="col-salary-md-7">
+                    <p class="text-center font-medium m-b-0">{eleMon}</p>
+                </div>
+            </div>
+            <div class="card-body-shiftRegister text-center hiddenContent-2">
                 <p class="text-center font-medium m-b-0">{eleMon}</p>
             </div>
         </div>
     );
     classNameListTue.push(
         <div class="card-shiftRegister col-md-1-5">
-            <div class="card-body-shiftRegister text-center">
+            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                <div class="col-salary-md-5"></div>
+                <div class="col-salary-md-7">
+                    <p class="text-center font-medium m-b-0">{eleTue}</p>
+                </div>
+            </div>
+            <div class="card-body-shiftRegister text-center hiddenContent-2">
                 <p class="text-center font-medium m-b-0">{eleTue}</p>
             </div>
         </div>
     );
     classNameListWed.push(
         <div class="card-shiftRegister col-md-1-5">
-            <div class="card-body-shiftRegister text-center">
+            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                <div class="col-salary-md-5"></div>
+                <div class="col-salary-md-7">
+                    <p class="text-center font-medium m-b-0">{eleWed}</p>
+                </div>
+            </div>
+            <div class="card-body-shiftRegister text-center hiddenContent-2">
                 <p class="text-center font-medium m-b-0">{eleWed}</p>
             </div>
         </div>
     );
     classNameListThu.push(
         <div class="card-shiftRegister col-md-1-5">
-            <div class="card-body-shiftRegister text-center">
+            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                <div class="col-salary-md-5"></div>
+                <div class="col-salary-md-7">
+                    <p class="text-center font-medium m-b-0">{eleThu}</p>
+                </div>
+            </div>
+            <div class="card-body-shiftRegister text-center hiddenContent-2">
                 <p class="text-center font-medium m-b-0">{eleThu}</p>
             </div>
         </div>
     );
     classNameListFri.push(
         <div class="card-shiftRegister col-md-1-5">
-            <div class="card-body-shiftRegister text-center">
+            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                <div class="col-salary-md-5"></div>
+                <div class="col-salary-md-7">
+                    <p class="text-center font-medium m-b-0">{eleFri}</p>
+                </div>
+            </div>
+            <div class="card-body-shiftRegister text-center hiddenContent-2">
                 <p class="text-center font-medium m-b-0">{eleFri}</p>
             </div>
         </div>
     );
     classNameListSat.push(
         <div class="card-shiftRegister col-md-1-5">
-            <div class="card-body-shiftRegister text-center">
+            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                <div class="col-salary-md-5"></div>
+                <div class="col-salary-md-7">
+                    <p class="text-center font-medium m-b-0">{eleSat}</p>
+                </div>
+            </div>
+            <div class="card-body-shiftRegister text-center hiddenContent-2">
                 <p class="text-center font-medium m-b-0">{eleSat}</p>
             </div>
         </div>
     );
     classNameListSun.push(
         <div class="card-shiftRegister col-md-1-5">
-            <div class="card-body-shiftRegister text-center">
+            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                <div class="col-salary-md-5"></div>
+                <div class="col-salary-md-7">
+                    <p class="text-center font-medium m-b-0">{eleSun}</p>
+                </div>
+            </div>
+            <div class="card-body-shiftRegister text-center hiddenContent-2">
                 <p class="text-center font-medium m-b-0">{eleSun}</p>
             </div>
         </div>
@@ -492,85 +544,18 @@ const TabContent = ({
 
     /* End Create view Get Person In Shift */
 
-    // let totalShiftsNum = [];
-    // for (let i = 0; i < shifts.length * 7; i++) {
-    //     totalShiftsNum.push(0);
-    // }
-
-    // let classNameListMon = [];
-    // let classNameListTue = [];
-    // let classNameListWed = [];
-    // let classNameListThu = [];
-    // let classNameListFri = [];
-    // let classNameListSat = [];
-    // let classNameListSun = [];
-    // let valueListMon = [];
-    // let valueListTue = [];
-    // let valueListWed = [];
-    // let valueListThu = [];
-    // let valueListFri = [];
-    // let valueListSat = [];
-    // let valueListSun = [];
-
-    // let className = null;
-
-    // let listJobsModal = [];
-    // let listShiftsModal = [];
-
-    // let index = null;
-    // let jobIndex = null;
-
-    // const resetData = () => {
-    //     classNameListMon = [];
-    //     classNameListTue = [];
-    //     classNameListWed = [];
-    //     classNameListThu = [];
-    //     classNameListFri = [];
-    //     classNameListSat = [];
-    //     classNameListSun = [];
-    //     valueListMon = [];
-    //     valueListTue = [];
-    //     valueListWed = [];
-    //     valueListThu = [];
-    //     valueListFri = [];
-    //     valueListSat = [];
-    //     valueListSun = [];
-    //     for (let i = 0; i < shifts.length; i++) {
-    //         classNameListMon.push(" ");
-    //         valueListMon.push(" ");
-
-    //         classNameListTue.push(" ");
-    //         valueListTue.push(" ");
-
-    //         classNameListWed.push(" ");
-    //         valueListWed.push(" ");
-
-    //         classNameListThu.push(" ");
-    //         valueListThu.push(" ");
-
-    //         classNameListFri.push(" ");
-    //         valueListFri.push(" ");
-
-    //         classNameListSat.push(" ");
-    //         valueListSat.push(" ");
-
-    //         classNameListSun.push(" ");
-    //         valueListSun.push(" ");
-    //     }
-    // }
-
     resetData();
     let countGridRecord = 0;
     let saveUserId = [];
     let totalAmount = 0;
-    if (shiftRegisters.length > 0) {
+    let checkViewListFlag = 0;
+    if (shiftRegisters.length > 0 && shifts.length > 0 && jobs.length > 0) {
         shiftRegisters.map((ele) => {
             getUsers = users.find(({ _id }) => _id === ele.userId);
             saveUserId.push(ele.userId);
             // Reset lương
             totalAmount = 0;
             resetData();
-            // console.log("hien thi " + classNameListMon[0]);
             ele.register.map((reg) => {
                 totalAmount = totalAmount + reg.cost;
                 index = shifts.findIndex(x => x._id === reg.shiftId);
@@ -749,7 +734,46 @@ const TabContent = ({
                     || userLogin.roles === "Admin") {
                     classNameListMon.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="el-element-overlay">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <div class="el-element-overlay">
+                                        <div class="card-body-shiftRegister text-center">
+                                            <div class="el-card-item">
+                                                <div class="el-card-avatar el-overlay-1">
+                                                    <p class="text-center font-medium m-b-0">{eleMon}</p>
+                                                    <div class="el-overlay">
+                                                        <ul class="el-info">
+                                                            <li>
+                                                                <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(monday, eleMon, ele.userId)}><i class="ti-plus"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
+                                <div class="el-element-overlay">
+                                    <div class="card-body-shiftRegister text-center">
+                                        <div class="el-card-item">
+                                            <div class="el-card-avatar el-overlay-1">
+                                                <p class="text-center font-medium m-b-0">{eleMon}</p>
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                        <li>
+                                                            <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(monday, eleMon, ele.userId)}><i class="ti-plus"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <div class="el-element-overlay">
                                 <div class="card-body-shiftRegister text-center">
                                     <div class="el-card-item">
                                         <div class="el-card-avatar el-overlay-1">
@@ -757,30 +781,48 @@ const TabContent = ({
                                             <div class="el-overlay">
                                                 <ul class="el-info">
                                                     <li>
-                                                        {/* <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" onClick={() => onPutShiftRegister()} data-toggle="modal"
-                                                            data-target="#ShiftMonday"><i class="ti-plus"></i></a> */}
                                                         <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(monday, eleMon, ele.userId)}><i class="ti-plus"></i></a>
-
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     );
                     classNameListTue.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="el-element-overlay">
-                                <div class="card-body-shiftRegister text-center">
-                                    <div class="el-card-item">
-                                        <div class="el-card-avatar el-overlay-1">
-                                            <p class="text-center font-medium m-b-0">{eleTue}</p>
-                                            <div class="el-overlay">
-                                                <ul class="el-info">
-                                                    <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(tuesday, eleTue, ele.userId)}><i class="ti-plus"></i></a></li>
-                                                </ul>
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <div class="el-element-overlay">
+                                        <div class="card-body-shiftRegister text-center">
+                                            <div class="el-card-item">
+                                                <div class="el-card-avatar el-overlay-1">
+                                                    <p class="text-center font-medium m-b-0">{eleTue}</p>
+                                                    <div class="el-overlay">
+                                                        <ul class="el-info">
+                                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(tuesday, eleTue, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
+                                <div class="el-element-overlay">
+                                    <div class="card-body-shiftRegister text-center">
+                                        <div class="el-card-item">
+                                            <div class="el-card-avatar el-overlay-1">
+                                                <p class="text-center font-medium m-b-0">{eleTue}</p>
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(tuesday, eleTue, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -790,15 +832,36 @@ const TabContent = ({
                     );
                     classNameListWed.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="el-element-overlay">
-                                <div class="card-body-shiftRegister text-center">
-                                    <div class="el-card-item">
-                                        <div class="el-card-avatar el-overlay-1">
-                                            <p class="text-center font-medium m-b-0">{eleWed}</p>
-                                            <div class="el-overlay">
-                                                <ul class="el-info">
-                                                    <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(wednesday, eleWed, ele.userId)}><i class="ti-plus"></i></a></li>
-                                                </ul>
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <div class="el-element-overlay">
+                                        <div class="card-body-shiftRegister text-center">
+                                            <div class="el-card-item">
+                                                <div class="el-card-avatar el-overlay-1">
+                                                    <p class="text-center font-medium m-b-0">{eleWed}</p>
+                                                    <div class="el-overlay">
+                                                        <ul class="el-info">
+                                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(wednesday, eleWed, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
+                                <div class="el-element-overlay">
+                                    <div class="card-body-shiftRegister text-center">
+                                        <div class="el-card-item">
+                                            <div class="el-card-avatar el-overlay-1">
+                                                <p class="text-center font-medium m-b-0">{eleWed}</p>
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(wednesday, eleWed, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -808,15 +871,36 @@ const TabContent = ({
                     );
                     classNameListThu.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="el-element-overlay">
-                                <div class="card-body-shiftRegister text-center">
-                                    <div class="el-card-item">
-                                        <div class="el-card-avatar el-overlay-1">
-                                            <p class="text-center font-medium m-b-0">{eleThu}</p>
-                                            <div class="el-overlay">
-                                                <ul class="el-info">
-                                                    <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(thursday, eleThu, ele.userId)}><i class="ti-plus"></i></a></li>
-                                                </ul>
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <div class="el-element-overlay">
+                                        <div class="card-body-shiftRegister text-center">
+                                            <div class="el-card-item">
+                                                <div class="el-card-avatar el-overlay-1">
+                                                    <p class="text-center font-medium m-b-0">{eleThu}</p>
+                                                    <div class="el-overlay">
+                                                        <ul class="el-info">
+                                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(thursday, eleThu, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
+                                <div class="el-element-overlay">
+                                    <div class="card-body-shiftRegister text-center">
+                                        <div class="el-card-item">
+                                            <div class="el-card-avatar el-overlay-1">
+                                                <p class="text-center font-medium m-b-0">{eleThu}</p>
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(thursday, eleThu, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -826,15 +910,36 @@ const TabContent = ({
                     );
                     classNameListFri.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="el-element-overlay">
-                                <div class="card-body-shiftRegister text-center">
-                                    <div class="el-card-item">
-                                        <div class="el-card-avatar el-overlay-1">
-                                            <p class="text-center font-medium m-b-0">{eleFri}</p>
-                                            <div class="el-overlay">
-                                                <ul class="el-info">
-                                                    <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(friday, eleFri, ele.userId)}><i class="ti-plus"></i></a></li>
-                                                </ul>
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <div class="el-element-overlay">
+                                        <div class="card-body-shiftRegister text-center">
+                                            <div class="el-card-item">
+                                                <div class="el-card-avatar el-overlay-1">
+                                                    <p class="text-center font-medium m-b-0">{eleFri}</p>
+                                                    <div class="el-overlay">
+                                                        <ul class="el-info">
+                                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(friday, eleFri, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
+                                <div class="el-element-overlay">
+                                    <div class="card-body-shiftRegister text-center">
+                                        <div class="el-card-item">
+                                            <div class="el-card-avatar el-overlay-1">
+                                                <p class="text-center font-medium m-b-0">{eleFri}</p>
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(friday, eleFri, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -844,15 +949,36 @@ const TabContent = ({
                     );
                     classNameListSat.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="el-element-overlay">
-                                <div class="card-body-shiftRegister text-center">
-                                    <div class="el-card-item">
-                                        <div class="el-card-avatar el-overlay-1">
-                                            <p class="text-center font-medium m-b-0">{eleSat}</p>
-                                            <div class="el-overlay">
-                                                <ul class="el-info">
-                                                    <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(saturday, eleSat, ele.userId)}><i class="ti-plus"></i></a></li>
-                                                </ul>
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <div class="el-element-overlay">
+                                        <div class="card-body-shiftRegister text-center">
+                                            <div class="el-card-item">
+                                                <div class="el-card-avatar el-overlay-1">
+                                                    <p class="text-center font-medium m-b-0">{eleSat}</p>
+                                                    <div class="el-overlay">
+                                                        <ul class="el-info">
+                                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(saturday, eleSat, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
+                                <div class="el-element-overlay">
+                                    <div class="card-body-shiftRegister text-center">
+                                        <div class="el-card-item">
+                                            <div class="el-card-avatar el-overlay-1">
+                                                <p class="text-center font-medium m-b-0">{eleSat}</p>
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(saturday, eleSat, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -862,15 +988,36 @@ const TabContent = ({
                     );
                     classNameListSun.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="el-element-overlay">
-                                <div class="card-body-shiftRegister text-center">
-                                    <div class="el-card-item">
-                                        <div class="el-card-avatar el-overlay-1">
-                                            <p class="text-center font-medium m-b-0">{eleSun}</p>
-                                            <div class="el-overlay">
-                                                <ul class="el-info">
-                                                    <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(sunday, eleSun, ele.userId)}><i class="ti-plus"></i></a></li>
-                                                </ul>
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <div class="el-element-overlay">
+                                        <div class="card-body-shiftRegister text-center">
+                                            <div class="el-card-item">
+                                                <div class="el-card-avatar el-overlay-1">
+                                                    <p class="text-center font-medium m-b-0">{eleSun}</p>
+                                                    <div class="el-overlay">
+                                                        <ul class="el-info">
+                                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(sunday, eleSun, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
+                                <div class="el-element-overlay">
+                                    <div class="card-body-shiftRegister text-center">
+                                        <div class="el-card-item">
+                                            <div class="el-card-avatar el-overlay-1">
+                                                <p class="text-center font-medium m-b-0">{eleSun}</p>
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal" onClick={() => onPutShiftRegister(sunday, eleSun, ele.userId)}><i class="ti-plus"></i></a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -881,49 +1028,91 @@ const TabContent = ({
                 } else {
                     classNameListMon.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{eleMon}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{eleMon}</p>
                             </div>
                         </div>
                     );
                     classNameListTue.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{eleTue}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{eleTue}</p>
                             </div>
                         </div>
                     );
                     classNameListWed.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{eleWed}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{eleWed}</p>
                             </div>
                         </div>
                     );
                     classNameListThu.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{eleThu}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{eleThu}</p>
                             </div>
                         </div>
                     );
                     classNameListFri.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{eleFri}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{eleFri}</p>
                             </div>
                         </div>
                     );
                     classNameListSat.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{eleSat}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{eleSat}</p>
                             </div>
                         </div>
                     );
                     classNameListSun.push(
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{eleSun}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{eleSun}</p>
                             </div>
                         </div>
@@ -931,70 +1120,148 @@ const TabContent = ({
                 }
             }
 
+            if (user.roles === "User") {
+                // Đăng kí ca cho tuần sau
+                if (moment().startOf("isoWeek").add(7, "days").format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
+                    if (user._id === getUsers._id) {
+                        // Hiển thị chỉ một mình user đăng nhập
+                        checkViewListFlag = 1;
+                    }
+                } else {
+                    // Hiển thị tất cả các user
+                    checkViewListFlag = 2;
+                }
+            } else {
+                // Hiển thị tất cả các user
+                checkViewListFlag = 2;
+            }
 
-            // elmShiftRegisters.push(
-            //     <tr key={ele.userId}>
-            //         <td colspan="3" className="border-cell-shiftRegister">{getUsers.name}</td>
-            //         <td className="border-cell-shiftRegister">{eleMon}</td>
-            //         <td className="border-cell-shiftRegister">{eleTue}</td>
-            //         <td className="border-cell-shiftRegister">{eleWed}</td>
-            //         <td className="border-cell-shiftRegister">{eleThu}</td>
-            //         <td className="border-cell-shiftRegister">{eleFri}</td>
-            //         <td className="border-cell-shiftRegister">{eleSat}</td>
-            //         <td className="border-cell-shiftRegister">{eleSun}</td>
-            //         <td className="border-cell-shiftRegister">
+            if (checkViewListFlag === 1) {
+                // Chỉ cho phép add 1 lần đầu tiên đối với user đang đăng nhập
+                checkViewListFlag = 0;
+                elmShiftRegisters.push(
+                    <div class="card-group-shiftRegister">
 
-            //             <Link
-            //                 to="#"
-            //                 className="btn btn-primary"
-            //                 onClick={() => onPutShiftRegister("1", "2", ele.userId)}
-            //             >
-            //                 <i class="fas fa-key"></i>
-            //             </Link>
-            //         </td>
-            //     </tr>
-            // );
-
-            elmShiftRegisters1.push(
-                <div class="card-group-shiftRegister">
-
-                    <div class="card-shiftRegister col-md-4-5">
-                        <div class="card-body-shiftRegister">
-                            <div className="row">
-                                <div className="col-md-9">
-                                    <p class="font-medium m-b-0" style={{ color: "black" }}>{getUsers.name}</p>
-
+                        <div class="card-shiftRegister col-md-4-5">
+                            <div class="card-body-shiftRegister">
+                                {/* <div className="row">
+                                    <div className="col-md-9-5">
+                                        <p class="font-medium m-b-0" style={{ color: "black" }}>{getUsers.name}</p>
+                                    </div>
+                                    <div className="col-md-2">
+                                        {user.roles !== "User" ? (
+                                            <a class="btn btn-sm btn-info"
+                                                data-toggle="modal" data-target="#responsive-modal-UpdateDeleteUser"
+                                                onClick={() => onUpdateOrDeleteUser(ele.userId)} >
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        ) : ""}
+                                    </div>
+                                </div> */}
+                                <div className="rowShiftRegisterForNameColumn">
+                                    <div className="col-md-9-5">
+                                        <p class="font-medium m-b-0" style={{ color: "black" }}>{getUsers.name}</p>
+                                    </div>
+                                    <div className="col-md-2-4">
+                                        {user.roles !== "User" ? (
+                                            <a class="btn btn-sm btn-info"
+                                                data-toggle="modal" data-target="#responsive-modal-UpdateDeleteUser"
+                                                onClick={() => onUpdateOrDeleteUser(ele.userId)} >
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        ) : ""}
+                                    </div>
                                 </div>
-                                <div className="col-md-3">
-                                    <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive"
-                                        data-toggle="modal" data-target="#responsive-modal-UpdateDeleteUser"
-                                        onClick={() => onUpdateOrDeleteUser(ele.userId)} >
-                                        <i class="ti-plus"></i>
-                                    </a>
+
+                            </div>
+                            <div class="box b-t text-center"></div>
+                        </div>
+
+                        {classNameListMon}
+                        {classNameListTue}
+                        {classNameListWed}
+                        {classNameListThu}
+                        {classNameListFri}
+                        {classNameListSat}
+                        {classNameListSun}
+
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="rowShiftRegisterForSalaryColumn viewHeaderDay hiddenContent-1" data-label="Lương">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{totalAmount.toLocaleString()}</p>
                                 </div>
                             </div>
-
-
+                            <div class="card-body-shiftRegister text-right hiddenContent-2">
+                                <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{totalAmount.toLocaleString()}</p>
+                            </div>
                         </div>
-                        <div class="box b-t text-center"></div>
+
                     </div>
+                );
+            }
 
-                    {classNameListMon}
-                    {classNameListTue}
-                    {classNameListWed}
-                    {classNameListThu}
-                    {classNameListFri}
-                    {classNameListSat}
-                    {classNameListSun}
+            if (checkViewListFlag === 2) {
+                elmShiftRegisters.push(
+                    <div class="card-group-shiftRegister">
 
-                    <div class="card-shiftRegister col-md-1-5">
-                        <div class="card-body-shiftRegister text-right">
-                            <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{totalAmount.toLocaleString()}</p>
+                        <div class="card-shiftRegister col-md-4-5">
+                            <div class="card-body-shiftRegister">
+                                <div className="rowShiftRegisterForNameColumn">
+                                    <div className="col-md-9-5">
+                                        <p class="font-medium m-b-0" style={{ color: "black" }}>{getUsers.name}</p>
+                                    </div>
+                                    <div className="col-md-2-4">
+                                        {user.roles !== "User" ? (
+                                            <a class="btn btn-sm btn-info"
+                                                data-toggle="modal" data-target="#responsive-modal-UpdateDeleteUser"
+                                                onClick={() => onUpdateOrDeleteUser(ele.userId)} >
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        ) : ""}
+                                    </div>
+                                </div>
+                                {/* <div className="row">
+                                    <div className="col-salary-md-8">
+                                        <p class="font-medium m-b-0" style={{ color: "black" }}>{getUsers.name}</p>
+                                    </div>
+                                    <div className="col-salary-md-4">
+                                        {user.roles !== "User" ? (
+                                            <a class="btn btn-sm btn-info"
+                                                data-toggle="modal" data-target="#responsive-modal-UpdateDeleteUser"
+                                                onClick={() => onUpdateOrDeleteUser(ele.userId)} >
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        ) : ""}
+                                    </div>
+                                </div> */}
+                            </div>
+                            <div class="box b-t text-center"></div>
                         </div>
-                    </div>
 
-                </div>
-            );
+                        {classNameListMon}
+                        {classNameListTue}
+                        {classNameListWed}
+                        {classNameListThu}
+                        {classNameListFri}
+                        {classNameListSat}
+                        {classNameListSun}
+
+                        <div class="card-shiftRegister col-md-1-5">
+                            <div class="rowShiftRegisterForSalaryColumn viewHeaderDay hiddenContent-1" data-label="Lương">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{totalAmount.toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-right hiddenContent-2">
+                                <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{totalAmount.toLocaleString()}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                );
+            }
 
             countGridRecord = countGridRecord + 1;
         });
@@ -1069,17 +1336,18 @@ const TabContent = ({
     }
 
     const onPutShiftRegister = (day, currentShifts, curUserId) => {
-        // console.log("curUserId " + curUserId);
-        setShowShiftRegisterModal(1);
+        // setShowShiftRegisterModal(1);
+        setShowShiftRegistersModal(true);
         setCount(count + 1);
         setDayRegist(day);
         setCurrentUserId(curUserId);
         getPersonInShiftDate(branchs[activeTab]._id, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'), moment(day).format('MM-DD-YYYY'));
-        // handleShow();
+        setValueLoader(true);
     }
 
     const onUpdateOrDeleteUser = (curUserId) => {
-        setShowUpdateOrDeleteModal(1);
+        // setShowUpdateOrDeleteModal(1);
+        setShowShiftRegistersUserModal(true);
         setCountCallUpdateDeleteUserModal(countCallUpdateDeleteUserModal + 1);
         setCurrentUserId(curUserId);
         let id = shiftRegisters.find(x => x.userId === curUserId)._id;
@@ -1088,31 +1356,15 @@ const TabContent = ({
     }
 
     const onAddManager = (day, curUserId) => {
-        setShowAddManagerModal(1);
+        // setShowAddManagerModal(1);
+        setShowAddManagerModal(true);
         setCountCallAddManagerModal(countCallAddManagerModal + 1);
         setCurrentUserId(curUserId);
         setCurrentDay(day);
-        
-        // if (curUserId !== " ") {
-        //     let getId = null;
-        //     // if(shiftRegisterManagers.length > 0){
-        //     //     getId = shiftRegisterManagers.find(x => x.userId._id === curUserId) ? shiftRegisterManagers.find(x => x.userId === curUserId)._id : "" ;
-        //     // } else {
-        //     //     getId = " ";
-        //     // }
-        //     shiftRegisterManagers.filter((ele) => {
-        //         if(ele.userId === curUserId){
-        //             getId = ele._id;
-        //         }
-        //     })
-        //     // Get _id của shiftRegisterManagers
-        //     setIdUpdate(getId);
-        // }
-
     }
 
     const onCopyPersonInShifts = () => {
-        // getPreWeekPersonInShift(branchs[activeTab]._id, moment(startDate).subtract(7, "days").format('MM-DD-YYYY'), moment(endDate).subtract(7, "days").format('MM-DD-YYYY'));
+        // changeValueLoading();
 
         var data = {
             branchId: branchs[activeTab]._id,
@@ -1129,175 +1381,177 @@ const TabContent = ({
         };
 
         let shiftIndex = "";
-
-        personInShiftsPrevWeek.map((ele) => {
-            // Thứ 2
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(7, "days").format('MM-DD-YYYY')) {
-                data.currentDate = moment(monday).format('MM-DD-YYYY');
-                ele.personShift.map((per) => {
-                    shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
-                    if (shiftIndex === 0) {
-                        data.shiftId0 = per.shiftId;
-                        data.personNo0 = per.personNumber;
+        if (personInShiftsPrevWeek.length > 0) {
+            setValueLoader(false);
+            personInShiftsPrevWeek.map((ele) => {
+                // Thứ 2
+                if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(7, "days").format('MM-DD-YYYY')) {
+                    data.currentDate = moment(monday).format('MM-DD-YYYY');
+                    ele.personShift.map((per) => {
+                        shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                        if (shiftIndex === 0) {
+                            data.shiftId0 = per.shiftId;
+                            data.personNo0 = per.personNumber;
+                        }
+                        if (shiftIndex === 1) {
+                            data.shiftId1 = per.shiftId;
+                            data.personNo1 = per.personNumber;
+                        }
+                        if (shiftIndex === 2) {
+                            data.shiftId2 = per.shiftId;
+                            data.personNo2 = per.personNumber;
+                        }
+                    })
+                    copyPersonInShifts(data);
+                }
+                setTimeout(() => {
+                    // Thứ 3
+                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(6, "days").format('MM-DD-YYYY')) {
+                        data.currentDate = moment(tuesday).format('MM-DD-YYYY');
+                        ele.personShift.map((per) => {
+                            shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            if (shiftIndex === 0) {
+                                data.shiftId0 = per.shiftId;
+                                data.personNo0 = per.personNumber;
+                            }
+                            if (shiftIndex === 1) {
+                                data.shiftId1 = per.shiftId;
+                                data.personNo1 = per.personNumber;
+                            }
+                            if (shiftIndex === 2) {
+                                data.shiftId2 = per.shiftId;
+                                data.personNo2 = per.personNumber;
+                            }
+                        })
+                        copyPersonInShifts(data);
                     }
-                    if (shiftIndex === 1) {
-                        data.shiftId1 = per.shiftId;
-                        data.personNo1 = per.personNumber;
+                }, 500);
+
+                setTimeout(() => {
+                    // Thứ 4
+                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(5, "days").format('MM-DD-YYYY')) {
+                        data.currentDate = moment(wednesday).format('MM-DD-YYYY');
+                        ele.personShift.map((per) => {
+                            shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            if (shiftIndex === 0) {
+                                data.shiftId0 = per.shiftId;
+                                data.personNo0 = per.personNumber;
+                            }
+                            if (shiftIndex === 1) {
+                                data.shiftId1 = per.shiftId;
+                                data.personNo1 = per.personNumber;
+                            }
+                            if (shiftIndex === 2) {
+                                data.shiftId2 = per.shiftId;
+                                data.personNo2 = per.personNumber;
+                            }
+                        })
+                        copyPersonInShifts(data);
                     }
-                    if (shiftIndex === 2) {
-                        data.shiftId2 = per.shiftId;
-                        data.personNo2 = per.personNumber;
+                }, 1000);
+
+                setTimeout(() => {
+                    // Thứ 5
+                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(4, "days").format('MM-DD-YYYY')) {
+                        data.currentDate = moment(thursday).format('MM-DD-YYYY');
+                        ele.personShift.map((per) => {
+                            shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            if (shiftIndex === 0) {
+                                data.shiftId0 = per.shiftId;
+                                data.personNo0 = per.personNumber;
+                            }
+                            if (shiftIndex === 1) {
+                                data.shiftId1 = per.shiftId;
+                                data.personNo1 = per.personNumber;
+                            }
+                            if (shiftIndex === 2) {
+                                data.shiftId2 = per.shiftId;
+                                data.personNo2 = per.personNumber;
+                            }
+                        })
+                        copyPersonInShifts(data);
                     }
-                })
-                copyPersonInShifts(data);
-            }
-            setTimeout(() => {
-                // Thứ 3
-                if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(6, "days").format('MM-DD-YYYY')) {
-                    data.currentDate = moment(tuesday).format('MM-DD-YYYY');
-                    ele.personShift.map((per) => {
-                        shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
-                        if (shiftIndex === 0) {
-                            data.shiftId0 = per.shiftId;
-                            data.personNo0 = per.personNumber;
-                        }
-                        if (shiftIndex === 1) {
-                            data.shiftId1 = per.shiftId;
-                            data.personNo1 = per.personNumber;
-                        }
-                        if (shiftIndex === 2) {
-                            data.shiftId2 = per.shiftId;
-                            data.personNo2 = per.personNumber;
-                        }
-                    })
-                    copyPersonInShifts(data);
-                }
-            }, 500);
+                }, 1500);
 
-            setTimeout(() => {
-                // Thứ 4
-                if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(5, "days").format('MM-DD-YYYY')) {
-                    data.currentDate = moment(wednesday).format('MM-DD-YYYY');
-                    ele.personShift.map((per) => {
-                        shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
-                        if (shiftIndex === 0) {
-                            data.shiftId0 = per.shiftId;
-                            data.personNo0 = per.personNumber;
-                        }
-                        if (shiftIndex === 1) {
-                            data.shiftId1 = per.shiftId;
-                            data.personNo1 = per.personNumber;
-                        }
-                        if (shiftIndex === 2) {
-                            data.shiftId2 = per.shiftId;
-                            data.personNo2 = per.personNumber;
-                        }
-                    })
-                    copyPersonInShifts(data);
-                }
-            }, 1000);
+                setTimeout(() => {
+                    // Thứ 6
+                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(3, "days").format('MM-DD-YYYY')) {
+                        data.currentDate = moment(friday).format('MM-DD-YYYY');
+                        ele.personShift.map((per) => {
+                            shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            if (shiftIndex === 0) {
+                                data.shiftId0 = per.shiftId;
+                                data.personNo0 = per.personNumber;
+                            }
+                            if (shiftIndex === 1) {
+                                data.shiftId1 = per.shiftId;
+                                data.personNo1 = per.personNumber;
+                            }
+                            if (shiftIndex === 2) {
+                                data.shiftId2 = per.shiftId;
+                                data.personNo2 = per.personNumber;
+                            }
+                        })
+                        copyPersonInShifts(data);
+                    }
+                }, 2000);
 
-            setTimeout(() => {
-                // Thứ 5
-                if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(4, "days").format('MM-DD-YYYY')) {
-                    data.currentDate = moment(thursday).format('MM-DD-YYYY');
-                    ele.personShift.map((per) => {
-                        shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
-                        if (shiftIndex === 0) {
-                            data.shiftId0 = per.shiftId;
-                            data.personNo0 = per.personNumber;
-                        }
-                        if (shiftIndex === 1) {
-                            data.shiftId1 = per.shiftId;
-                            data.personNo1 = per.personNumber;
-                        }
-                        if (shiftIndex === 2) {
-                            data.shiftId2 = per.shiftId;
-                            data.personNo2 = per.personNumber;
-                        }
-                    })
-                    copyPersonInShifts(data);
-                }
-            }, 1500);
+                setTimeout(() => {
+                    // Thứ 7
+                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(2, "days").format('MM-DD-YYYY')) {
+                        data.currentDate = moment(saturday).format('MM-DD-YYYY');
+                        ele.personShift.map((per) => {
+                            shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            if (shiftIndex === 0) {
+                                data.shiftId0 = per.shiftId;
+                                data.personNo0 = per.personNumber;
+                            }
+                            if (shiftIndex === 1) {
+                                data.shiftId1 = per.shiftId;
+                                data.personNo1 = per.personNumber;
+                            }
+                            if (shiftIndex === 2) {
+                                data.shiftId2 = per.shiftId;
+                                data.personNo2 = per.personNumber;
+                            }
+                        })
+                        copyPersonInShifts(data);
+                    }
+                }, 2500);
 
+                setTimeout(() => {
+                    // Chủ nhật
+                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(1, "days").format('MM-DD-YYYY')) {
+                        data.currentDate = moment(sunday).format('MM-DD-YYYY');
+                        ele.personShift.map((per) => {
+                            shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            if (shiftIndex === 0) {
+                                data.shiftId0 = per.shiftId;
+                                data.personNo0 = per.personNumber;
+                            }
+                            if (shiftIndex === 1) {
+                                data.shiftId1 = per.shiftId;
+                                data.personNo1 = per.personNumber;
+                            }
+                            if (shiftIndex === 2) {
+                                data.shiftId2 = per.shiftId;
+                                data.personNo2 = per.personNumber;
+                            }
+                        })
+                        data.flagCheckLastRecord = "1";
+                        copyPersonInShifts(data);
+                    }
+                }, 4000);
+            })
             setTimeout(() => {
-                // Thứ 6
-                if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(3, "days").format('MM-DD-YYYY')) {
-                    data.currentDate = moment(friday).format('MM-DD-YYYY');
-                    ele.personShift.map((per) => {
-                        shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
-                        if (shiftIndex === 0) {
-                            data.shiftId0 = per.shiftId;
-                            data.personNo0 = per.personNumber;
-                        }
-                        if (shiftIndex === 1) {
-                            data.shiftId1 = per.shiftId;
-                            data.personNo1 = per.personNumber;
-                        }
-                        if (shiftIndex === 2) {
-                            data.shiftId2 = per.shiftId;
-                            data.personNo2 = per.personNumber;
-                        }
-                    })
-                    copyPersonInShifts(data);
-                }
-            }, 2000);
+                setValueLoader(true);
+            }, 5000);
+            setShowButtonCopyPersonInShift("0");
+        } else {
+            viewPersonInShiftArlet();
+        }
 
-            setTimeout(() => {
-                // Thứ 7
-                if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(2, "days").format('MM-DD-YYYY')) {
-                    data.currentDate = moment(saturday).format('MM-DD-YYYY');
-                    ele.personShift.map((per) => {
-                        shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
-                        if (shiftIndex === 0) {
-                            data.shiftId0 = per.shiftId;
-                            data.personNo0 = per.personNumber;
-                        }
-                        if (shiftIndex === 1) {
-                            data.shiftId1 = per.shiftId;
-                            data.personNo1 = per.personNumber;
-                        }
-                        if (shiftIndex === 2) {
-                            data.shiftId2 = per.shiftId;
-                            data.personNo2 = per.personNumber;
-                        }
-                    })
-                    copyPersonInShifts(data);
-                }
-            }, 2500);
-
-            setTimeout(() => {
-                // Chủ nhật
-                if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(1, "days").format('MM-DD-YYYY')) {
-                    data.currentDate = moment(sunday).format('MM-DD-YYYY');
-                    ele.personShift.map((per) => {
-                        shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
-                        if (shiftIndex === 0) {
-                            data.shiftId0 = per.shiftId;
-                            data.personNo0 = per.personNumber;
-                        }
-                        if (shiftIndex === 1) {
-                            data.shiftId1 = per.shiftId;
-                            data.personNo1 = per.personNumber;
-                        }
-                        if (shiftIndex === 2) {
-                            data.shiftId2 = per.shiftId;
-                            data.personNo2 = per.personNumber;
-                        }
-                    })
-                    data.flagCheckLastRecord = "1";
-                    copyPersonInShifts(data);
-                }
-            }, 4000);
-        })
-
-        setShowButtonCopyPersonInShift("0");
     }
-
-    // const [show, setShow] = useState(false);
-
-    // const handleClose = () => setShow(false);
-    // const handleShow = () => setShow(true);
 
     let listMon = [];
     let listTue = [];
@@ -1314,7 +1568,7 @@ const TabContent = ({
     eleFri = [];
     eleSat = [];
     eleSun = [];
-    // let saveManagerUserId = [" ", " ", " ", " ", " ", " ", " "];
+
     let saveUserIdMOn = "";
     let saveUserIdTue = "";
     let saveUserIdWed = "";
@@ -1323,35 +1577,67 @@ const TabContent = ({
     let saveUserIdSat = "";
     let saveUserIdSun = "";
 
+    let nameProcess = "";
+    let indexOfFirst = 0;
+    let indexOfSecond = 0;
+    let indexOfThird = 0;
+    let indexOfFourth = 0;
+
     if (shiftRegisterManagers.length > 0) {
         shiftRegisterManagers.map((ele) => {
+            // Reset value
+            indexOfFirst = 0;
+            indexOfSecond = 0;
+            indexOfThird = 0;
+            indexOfFourth = 0;
             getUsers = users.find(({ _id }) => _id === ele.userId);
+            // Xử lý cắt phần tên trong họ tên
+            nameProcess = getUsers.name;
+            indexOfFirst = nameProcess.indexOf(" ");
+            indexOfSecond = nameProcess.indexOf(" ", (indexOfFirst + 1));
+            if (indexOfSecond < 0) {
+                indexOfThird = nameProcess.indexOf(" ", (indexOfSecond + 1));
+            }
+            if (indexOfThird < 0) {
+                indexOfFourth = nameProcess.indexOf(" ", (indexOfThird + 1));
+            }
+            console.log("in " + indexOfFirst + " - " + indexOfSecond + " - " + indexOfThird + " - " + indexOfFourth);
+            if (indexOfFourth > 0) {
+                nameProcess = nameProcess.substr(indexOfFourth + 1, nameProcess.length - indexOfFourth);
+            } else if (indexOfThird > 0) {
+                nameProcess = nameProcess.substr(indexOfThird + 1, nameProcess.length - indexOfThird);
+            } else if (indexOfSecond > 0) {
+                nameProcess = nameProcess.substr(indexOfSecond + 1, nameProcess.length - indexOfSecond);
+            } else if (indexOfFirst > 0) {
+                nameProcess = nameProcess.substr(indexOfFirst + 1, nameProcess.length - indexOfFirst);
+            }
+
             if (moment(ele.date).format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
-                eleMon.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                eleMon.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdMOn = ele.userId;
             }
             if (moment(ele.date).format('MM-DD-YYYY') === moment(tuesday).format('MM-DD-YYYY')) {
-                eleTue.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                eleTue.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdTue = ele.userId;
             }
             if (moment(ele.date).format('MM-DD-YYYY') === moment(wednesday).format('MM-DD-YYYY')) {
-                eleWed.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                eleWed.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdWed = ele.userId;
             }
             if (moment(ele.date).format('MM-DD-YYYY') === moment(thursday).format('MM-DD-YYYY')) {
-                eleThu.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                eleThu.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdThu = ele.userId;
             }
             if (moment(ele.date).format('MM-DD-YYYY') === moment(friday).format('MM-DD-YYYY')) {
-                eleFri.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                eleFri.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdFri = ele.userId;
             }
             if (moment(ele.date).format('MM-DD-YYYY') === moment(saturday).format('MM-DD-YYYY')) {
-                eleSat.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                eleSat.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdSat = ele.userId;
             }
             if (moment(ele.date).format('MM-DD-YYYY') === moment(sunday).format('MM-DD-YYYY')) {
-                eleSun.push(<span className="label-manager label-primary">{getUsers.name}</span>);
+                eleSun.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdSun = ele.userId;
             }
         })
@@ -1382,18 +1668,40 @@ const TabContent = ({
     if (userLogin && userLogin.roles === "Admin") {
         listMon.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="el-element-overlay">
-                    <div class="card-body-shiftRegister text-center">
-                        <div class="el-card-item">
-                            <div class="el-card-avatar el-overlay-1">
-                                <p class="text-center font-medium m-b-0">{eleMon}</p>
-                                <div class="el-overlay">
-                                    <ul class="el-info">
-                                        <li>
-                                            <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(monday, saveUserIdMOn)}><i class="ti-plus"></i></a>
-
-                                        </li>
-                                    </ul>
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <div class="el-element-overlay">
+                            <div class="card-body-shiftRegister text-center">
+                                <div class="el-card-item">
+                                    <div class="el-card-avatar el-overlay-1">
+                                        <p class="text-center font-medium m-b-0">{eleMon}</p>
+                                        <div class="el-overlay">
+                                            <ul class="el-info">
+                                                <li>
+                                                    <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(monday, saveUserIdMOn)}><i class="ti-plus"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
+                    <div class="el-element-overlay">
+                        <div class="card-body-shiftRegister text-center">
+                            <div class="el-card-item">
+                                <div class="el-card-avatar el-overlay-1">
+                                    <p class="text-center font-medium m-b-0">{eleMon}</p>
+                                    <div class="el-overlay">
+                                        <ul class="el-info">
+                                            <li>
+                                                <a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(monday, saveUserIdMOn)}><i class="ti-plus"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1403,15 +1711,36 @@ const TabContent = ({
         );
         listTue.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="el-element-overlay">
-                    <div class="card-body-shiftRegister text-center">
-                        <div class="el-card-item">
-                            <div class="el-card-avatar el-overlay-1">
-                                <p class="text-center font-medium m-b-0">{eleTue}</p>
-                                <div class="el-overlay">
-                                    <ul class="el-info">
-                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(tuesday, saveUserIdTue)}><i class="ti-plus"></i></a></li>
-                                    </ul>
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <div class="el-element-overlay">
+                            <div class="card-body-shiftRegister text-center">
+                                <div class="el-card-item">
+                                    <div class="el-card-avatar el-overlay-1">
+                                        <p class="text-center font-medium m-b-0">{eleTue}</p>
+                                        <div class="el-overlay">
+                                            <ul class="el-info">
+                                                <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(tuesday, saveUserIdTue)}><i class="ti-plus"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
+                    <div class="el-element-overlay">
+                        <div class="card-body-shiftRegister text-center">
+                            <div class="el-card-item">
+                                <div class="el-card-avatar el-overlay-1">
+                                    <p class="text-center font-medium m-b-0">{eleTue}</p>
+                                    <div class="el-overlay">
+                                        <ul class="el-info">
+                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(tuesday, saveUserIdTue)}><i class="ti-plus"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1421,15 +1750,36 @@ const TabContent = ({
         );
         listWed.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="el-element-overlay">
-                    <div class="card-body-shiftRegister text-center">
-                        <div class="el-card-item">
-                            <div class="el-card-avatar el-overlay-1">
-                                <p class="text-center font-medium m-b-0">{eleWed}</p>
-                                <div class="el-overlay">
-                                    <ul class="el-info">
-                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(wednesday, saveUserIdWed)}><i class="ti-plus"></i></a></li>
-                                    </ul>
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <div class="el-element-overlay">
+                            <div class="card-body-shiftRegister text-center">
+                                <div class="el-card-item">
+                                    <div class="el-card-avatar el-overlay-1">
+                                        <p class="text-center font-medium m-b-0">{eleWed}</p>
+                                        <div class="el-overlay">
+                                            <ul class="el-info">
+                                                <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(wednesday, saveUserIdWed)}><i class="ti-plus"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
+                    <div class="el-element-overlay">
+                        <div class="card-body-shiftRegister text-center">
+                            <div class="el-card-item">
+                                <div class="el-card-avatar el-overlay-1">
+                                    <p class="text-center font-medium m-b-0">{eleWed}</p>
+                                    <div class="el-overlay">
+                                        <ul class="el-info">
+                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(wednesday, saveUserIdWed)}><i class="ti-plus"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1439,15 +1789,36 @@ const TabContent = ({
         );
         listThu.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="el-element-overlay">
-                    <div class="card-body-shiftRegister text-center">
-                        <div class="el-card-item">
-                            <div class="el-card-avatar el-overlay-1">
-                                <p class="text-center font-medium m-b-0">{eleThu}</p>
-                                <div class="el-overlay">
-                                    <ul class="el-info">
-                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(thursday, saveUserIdThu)}><i class="ti-plus"></i></a></li>
-                                    </ul>
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <div class="el-element-overlay">
+                            <div class="card-body-shiftRegister text-center">
+                                <div class="el-card-item">
+                                    <div class="el-card-avatar el-overlay-1">
+                                        <p class="text-center font-medium m-b-0">{eleThu}</p>
+                                        <div class="el-overlay">
+                                            <ul class="el-info">
+                                                <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(thursday, saveUserIdThu)}><i class="ti-plus"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
+                    <div class="el-element-overlay">
+                        <div class="card-body-shiftRegister text-center">
+                            <div class="el-card-item">
+                                <div class="el-card-avatar el-overlay-1">
+                                    <p class="text-center font-medium m-b-0">{eleThu}</p>
+                                    <div class="el-overlay">
+                                        <ul class="el-info">
+                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(thursday, saveUserIdThu)}><i class="ti-plus"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1457,15 +1828,36 @@ const TabContent = ({
         );
         listFri.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="el-element-overlay">
-                    <div class="card-body-shiftRegister text-center">
-                        <div class="el-card-item">
-                            <div class="el-card-avatar el-overlay-1">
-                                <p class="text-center font-medium m-b-0">{eleFri}</p>
-                                <div class="el-overlay">
-                                    <ul class="el-info">
-                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(friday, saveUserIdFri)}><i class="ti-plus"></i></a></li>
-                                    </ul>
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <div class="el-element-overlay">
+                            <div class="card-body-shiftRegister text-center">
+                                <div class="el-card-item">
+                                    <div class="el-card-avatar el-overlay-1">
+                                        <p class="text-center font-medium m-b-0">{eleFri}</p>
+                                        <div class="el-overlay">
+                                            <ul class="el-info">
+                                                <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(friday, saveUserIdFri)}><i class="ti-plus"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
+                    <div class="el-element-overlay">
+                        <div class="card-body-shiftRegister text-center">
+                            <div class="el-card-item">
+                                <div class="el-card-avatar el-overlay-1">
+                                    <p class="text-center font-medium m-b-0">{eleFri}</p>
+                                    <div class="el-overlay">
+                                        <ul class="el-info">
+                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(friday, saveUserIdFri)}><i class="ti-plus"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1475,15 +1867,36 @@ const TabContent = ({
         );
         listSat.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="el-element-overlay">
-                    <div class="card-body-shiftRegister text-center">
-                        <div class="el-card-item">
-                            <div class="el-card-avatar el-overlay-1">
-                                <p class="text-center font-medium m-b-0">{eleSat}</p>
-                                <div class="el-overlay">
-                                    <ul class="el-info">
-                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(saturday, saveUserIdSat)}><i class="ti-plus"></i></a></li>
-                                    </ul>
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <div class="el-element-overlay">
+                            <div class="card-body-shiftRegister text-center">
+                                <div class="el-card-item">
+                                    <div class="el-card-avatar el-overlay-1">
+                                        <p class="text-center font-medium m-b-0">{eleSat}</p>
+                                        <div class="el-overlay">
+                                            <ul class="el-info">
+                                                <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(saturday, saveUserIdSat)}><i class="ti-plus"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
+                    <div class="el-element-overlay">
+                        <div class="card-body-shiftRegister text-center">
+                            <div class="el-card-item">
+                                <div class="el-card-avatar el-overlay-1">
+                                    <p class="text-center font-medium m-b-0">{eleSat}</p>
+                                    <div class="el-overlay">
+                                        <ul class="el-info">
+                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(saturday, saveUserIdSat)}><i class="ti-plus"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1493,15 +1906,36 @@ const TabContent = ({
         );
         listSun.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="el-element-overlay">
-                    <div class="card-body-shiftRegister text-center">
-                        <div class="el-card-item">
-                            <div class="el-card-avatar el-overlay-1">
-                                <p class="text-center font-medium m-b-0">{eleSun}</p>
-                                <div class="el-overlay">
-                                    <ul class="el-info">
-                                        <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(sunday, saveUserIdSun)}><i class="ti-plus"></i></a></li>
-                                    </ul>
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <div class="el-element-overlay">
+                            <div class="card-body-shiftRegister text-center">
+                                <div class="el-card-item">
+                                    <div class="el-card-avatar el-overlay-1">
+                                        <p class="text-center font-medium m-b-0">{eleSun}</p>
+                                        <div class="el-overlay">
+                                            <ul class="el-info">
+                                                <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(sunday, saveUserIdSun)}><i class="ti-plus"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
+                    <div class="el-element-overlay">
+                        <div class="card-body-shiftRegister text-center">
+                            <div class="el-card-item">
+                                <div class="el-card-avatar el-overlay-1">
+                                    <p class="text-center font-medium m-b-0">{eleSun}</p>
+                                    <div class="el-overlay">
+                                        <ul class="el-info">
+                                            <li><a class="btn default btn-outline image-popup-vertical-fit model_img img-responsive" data-toggle="modal" data-target="#responsive-modal-AddManager" onClick={() => onAddManager(sunday, saveUserIdSun)}><i class="ti-plus"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1512,49 +1946,91 @@ const TabContent = ({
     } else {
         listMon.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="card-body-shiftRegister text-center">
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <p class="text-center font-medium m-b-0">{eleMon}</p>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
                     <p class="text-center font-medium m-b-0">{eleMon}</p>
                 </div>
             </div>
         );
         listTue.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="card-body-shiftRegister text-center">
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <p class="text-center font-medium m-b-0">{eleTue}</p>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
                     <p class="text-center font-medium m-b-0">{eleTue}</p>
                 </div>
             </div>
         );
         listWed.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="card-body-shiftRegister text-center">
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <p class="text-center font-medium m-b-0">{eleWed}</p>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
                     <p class="text-center font-medium m-b-0">{eleWed}</p>
                 </div>
             </div>
         );
         listThu.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="card-body-shiftRegister text-center">
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <p class="text-center font-medium m-b-0">{eleThu}</p>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
                     <p class="text-center font-medium m-b-0">{eleThu}</p>
                 </div>
             </div>
         );
         listFri.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="card-body-shiftRegister text-center">
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <p class="text-center font-medium m-b-0">{eleFri}</p>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
                     <p class="text-center font-medium m-b-0">{eleFri}</p>
                 </div>
             </div>
         );
         listSat.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="card-body-shiftRegister text-center">
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <p class="text-center font-medium m-b-0">{eleSat}</p>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
                     <p class="text-center font-medium m-b-0">{eleSat}</p>
                 </div>
             </div>
         );
         listSun.push(
             <div class="card-shiftRegister col-md-1-5">
-                <div class="card-body-shiftRegister text-center">
+                <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                    <div class="col-salary-md-5"></div>
+                    <div class="col-salary-md-7">
+                        <p class="text-center font-medium m-b-0">{eleSun}</p>
+                    </div>
+                </div>
+                <div class="card-body-shiftRegister text-center hiddenContent-2">
                     <p class="text-center font-medium m-b-0">{eleSun}</p>
                 </div>
             </div>
@@ -1586,24 +2062,14 @@ const TabContent = ({
 
     return (
         <Fragment>
-            {shiftRegisters === null ? (
+            {!loader || !shiftRegisterLoader ? (
                 <Spinner />
             ) : (
                 <Fragment>
-                    {/* <div className="card-group">
-                        <button
-                            type="button"
-                            class="btn btn-sm btn-info"
-                            onClick={() => setViewFormPersonInShiftRegist(!viewFormPersonInShiftRegist)}
-                        >
-                            <i class="fas fa-plus"></i>{"  "}Điều chỉnh số người trong ca
-                        </button>
-
-                    </div> */}
-
                     {user && user.roles === "Admin" ?
                         <div className="row">
-                            <Link to={`/modifer-personInShift/${moment(startDate).format('MM-DD-YYYY')}/${moment(endDate).format('MM-DD-YYYY')}/${createBranchId}`} className="btn btn-success">
+                            <Link to={`/modifer-personInShift/${moment(startDate).format('MM-DD-YYYY')}/${moment(endDate).format('MM-DD-YYYY')}/${createBranchId}`} className="btn btn-success"
+                                style={{ marginLeft: "10px" }}>
                                 <i className="fas fa-users"></i> Điều chỉnh số người trong ca
                             </Link>
                             {showButtonCopyPersonInShift === "1" ? (
@@ -1615,25 +2081,32 @@ const TabContent = ({
                                     <i class="far fa-copy"></i>{"  "}Sao chép số người trong ca tuần trước
                                 </button>
                             ) : ""}
+                            {/* <button
+                                type="button"
+                                class="btn btn-sm btn-warning"
+                                onClick={() => exportExcelFile()}
+                            >
+                                <i class="fas fa-trash-alt"></i>{"  "}Output Excel
+                            </button> */}
+                            {branchs && branchs.length > 0 ? (
+                                <ExportExcel shiftRegisters={shiftRegisters}
+                                    monday={monday}
+                                    tuesday={tuesday}
+                                    wednesday={wednesday}
+                                    thursday={thursday}
+                                    friday={friday}
+                                    saturday={saturday}
+                                    sunday={sunday}
+                                    users={users}
+                                    shifts={shifts}
+                                    jobs={jobs}
+                                    branchName={branchs[activeTab].branchAddress}
+                                />
+                            ) : ""}
+
                         </div>
 
                         : ""}
-
-
-                    {/* {viewFormPersonInShiftRegist === true ? (
-                        <PersonInShiftList
-                            startDate={startDate}
-                            endDate={endDate}
-                            monday={monday}
-                            tuesday={tuesday}
-                            wednesday={wednesday}
-                            thursday={thursday}
-                            friday={friday}
-                            saturday={saturday}
-                            sunday={sunday}
-                            shifts={shifts}
-                            branchId={branchs[activeTab]._id} />
-                    ) : ""} */}
 
                     <div className="card-group">
                         {deleteButton === 1 ? (
@@ -1645,7 +2118,7 @@ const TabContent = ({
                                 <i class="fas fa-trash-alt"></i>{"  "}Xoá đăng ký ca
                             </button>
                         ) : " "}
-                        
+
                         {addButton === 1 ? (
                             <button
                                 type="button"
@@ -1656,8 +2129,12 @@ const TabContent = ({
                             </button>
                         ) : " "}
                     </div>
-                    <div class="card-group-shiftRegister color-bordered-table-shiftRegister">
-
+                    <div class="card-group-shiftRegister color-bordered-table-shiftRegister headerViewOrNotView" style={{ height: "40px" }}>
+                        <div class="card-shiftRegister">
+                            <p class="text-center font-medium m-b-0">Ca đăng kí</p>
+                        </div>
+                    </div>
+                    <div class="card-group-shiftRegister color-bordered-table-shiftRegister hiddenDiv">
                         <div class="card-shiftRegister col-md-4-5">
                             <div class="card-body-shiftRegister">
                                 <p class="font-medium m-b-0">Họ và tên</p>
@@ -1665,24 +2142,18 @@ const TabContent = ({
                             </div>
                             <div class="box b-t text-center"></div>
                         </div>
-
-
                         <div class="card-shiftRegister col-md-1-5">
                             <div class="card-body-shiftRegister text-center">
                                 <p class="text-center font-medium m-b-0">Thứ 2</p>
                                 <p>(<Moment format="DD/MM">{monday}</Moment>)</p>
                             </div>
                         </div>
-
-
                         <div class="card-shiftRegister col-md-1-5">
                             <div class="card-body-shiftRegister text-center">
                                 <p class="text-center font-medium m-b-0">Thứ 3</p>
                                 <p>(<Moment format="DD/MM">{tuesday}</Moment>)</p>
                             </div>
                         </div>
-
-
                         <div class="card-shiftRegister col-md-1-5">
                             <div class="card-body-shiftRegister text-center">
                                 <p class="text-center font-medium m-b-0">Thứ 4</p>
@@ -1718,30 +2189,15 @@ const TabContent = ({
                                 <p class="text-center font-medium m-b-0">Lương</p>
                             </div>
                         </div>
-
                     </div>
 
                     {elmPersonInShifts}
 
-                    {elmShiftRegisters1}
+                    {elmShiftRegisters}
 
                     {user && user.roles === "Admin" ?
-                        // <div className="row">
-                        //     <Link to={`/modifer-personInShift/${moment(startDate).format('MM-DD-YYYY')}/${moment(endDate).format('MM-DD-YYYY')}/${createBranchId}`} className="btn btn-success">
-                        //         <i className="fas fa-users"></i> Điều chỉnh số người trong ca
-                        //     </Link>
-                        //     {showButtonCopyPersonInShift === "1" ? (
-                        //         <button
-                        //             type="button"
-                        //             class="btn btn-sm btn-info"
-                        //             onClick={() => onCopyPersonInShifts()}
-                        //         >
-                        //             <i class="far fa-copy"></i>{"  "}Sao chép số người trong ca tuần trước
-                        //         </button>
-                        //     ) : ""}
-                        // </div>
                         <AddUserForm users={users}
-                            branchIdForm={activeTab >= 0 ? branchs[activeTab]._id : ""}
+                            branchIdForm={activeTab >= 0 && branchs[activeTab] ? branchs[activeTab]._id : ""}
                             startDate={moment(startDate).format('MM-DD-YYYY')}
                             endDate={moment(endDate).format('MM-DD-YYYY')}
                             saveUserId={saveUserId}
@@ -1753,7 +2209,7 @@ const TabContent = ({
 
                         <div class="card-shiftRegister col-md-4-5" style={{ background: "#ab8ce4" }}>
                             <div class="card-body-shiftRegister">
-                                <p class="font-medium m-b-0">Tổng ca - ca thiếu</p>
+                                <p class="font-medium m-b-0">Số ca (đã đăng kí - thiếu)</p>
 
                             </div>
                             <div class="box b-t text-center"></div>
@@ -1761,41 +2217,83 @@ const TabContent = ({
 
 
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{classNameListMon}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{classNameListMon}</p>
                             </div>
                         </div>
 
 
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{classNameListTue}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{classNameListTue}</p>
                             </div>
                         </div>
 
 
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{classNameListWed}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{classNameListWed}</p>
                             </div>
                         </div>
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{classNameListThu}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{classNameListThu}</p>
                             </div>
                         </div>
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{classNameListFri}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{classNameListFri}</p>
                             </div>
                         </div>
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{classNameListSat}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{classNameListSat}</p>
                             </div>
                         </div>
                         <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
+                            <div class="rowShiftRegister viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                <div class="col-salary-md-5"></div>
+                                <div class="col-salary-md-7">
+                                    <p class="text-center font-medium m-b-0">{classNameListSun}</p>
+                                </div>
+                            </div>
+                            <div class="card-body-shiftRegister text-center hiddenContent-2">
                                 <p class="text-center font-medium m-b-0">{classNameListSun}</p>
                             </div>
                         </div>
@@ -1808,65 +2306,29 @@ const TabContent = ({
                     </div>
                     {elmShiftRegisterManagers}
 
-                    {/* <div class="card-group-shiftRegister">
+                    {showShiftRegistersModal === true ? (
+                        <ShiftRegisterModal
+                            currentDay={dayRegist}
+                            dateFrom={startDate}
+                            dateTo={endDate}
+                            branchId={branchs[activeTab]._id}
+                            userLogin={userLogin._id}
+                            currentUserLineId={currentUserId}
+                            shifts={shifts}
+                            jobs={jobs}
+                            users={users}
+                            typeUsers={typeUsers}
+                            shiftRegisters={shiftRegisters}
+                            showShiftRegistersModal={showShiftRegistersModal}
+                            // setShowShiftRegisterModal={setShowShiftRegisterModal}
+                            count={count}
+                            personInShift={personInShift}
+                            permitShiftRegists={permitShiftRegists}
+                        />
+                    ) : ""
+                    }
 
-                        <div class="card-shiftRegister col-md-4-5" style={{ background: "#ab8ce4" }}>
-                            <div class="card-body-shiftRegister">
-                                <p class="font-medium m-b-0">Quản lý</p>
-
-                            </div>
-                            <div class="box b-t text-center"></div>
-                        </div>
-
-
-                        <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
-                                <p class="text-center font-medium m-b-0"></p>
-                            </div>
-                        </div>
-
-
-                        <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
-                                <p class="text-center font-medium m-b-0"></p>
-                            </div>
-                        </div>
-
-
-                        <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
-                                <p class="text-center font-medium m-b-0"></p>
-                            </div>
-                        </div>
-                        <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
-                                <p class="text-center font-medium m-b-0"></p>
-                            </div>
-                        </div>
-                        <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
-                                <p class="text-center font-medium m-b-0"></p>
-                            </div>
-                        </div>
-                        <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
-                                <p class="text-center font-medium m-b-0"></p>
-                            </div>
-                        </div>
-                        <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
-                                <p class="text-center font-medium m-b-0"></p>
-                            </div>
-                        </div>
-                        <div class="card-shiftRegister col-md-1-5">
-                            <div class="card-body-shiftRegister text-center">
-                                <p class="text-center font-medium m-b-0"></p>
-                            </div>
-                        </div>
-
-                    </div> */}
-
-                    {showShiftRegisterModal === 1 ? (
+                    {/* {showShiftRegisterModal === 1 ? (
                         <ShiftRegisterModal
                             currentDay={dayRegist}
                             dateFrom={startDate}
@@ -1880,13 +2342,14 @@ const TabContent = ({
                             typeUsers={typeUsers}
                             shiftRegisters={shiftRegisters}
                             showShiftRegisterModal={showShiftRegisterModal}
+                            setShowShiftRegisterModal={setShowShiftRegisterModal}
                             count={count}
                             personInShift={personInShift}
                             permitShiftRegists={permitShiftRegists}
                         />
-                    ) : ""}
+                    ) : ""} */}
 
-                    {showUpdateOrDeleteModal === 1 ? (
+                    {/* {showUpdateOrDeleteModal === 1 ? (
                         <UpdateDeleteUserModal
                             idUpdate={idUpdate}
                             currentUserLineId={currentUserId}
@@ -1894,9 +2357,20 @@ const TabContent = ({
                             countCallUpdateDeleteUserModal={countCallUpdateDeleteUserModal}
                             listUserId={saveUserId}
                         />
+                    ) : ""} */}
+
+                    {showUpdateOrDeleteUserModal === true ? (
+                        <UpdateDeleteUserModal
+                            idUpdate={idUpdate}
+                            currentUserLineId={currentUserId}
+                            users={users}
+                            countCallUpdateDeleteUserModal={countCallUpdateDeleteUserModal}
+                            listUserId={saveUserId}
+                            showUpdateOrDeleteUserModal={showUpdateOrDeleteUserModal}
+                        />
                     ) : ""}
 
-                    {showAddManagerModal === 1 ? (
+                    {showAddManagerModal === true ? (
                         <AddManagerModal
                             currentUserId={currentUserId}
                             users={users}
@@ -1905,8 +2379,10 @@ const TabContent = ({
                             branchId={branchs[activeTab]._id}
                             dateFrom={startDate}
                             dateTo={endDate}
+                            showAddManagerModal={showAddManagerModal}
                         />
                     ) : ""}
+
                 </Fragment>
             )}
         </Fragment>
@@ -1914,7 +2390,6 @@ const TabContent = ({
 };
 
 TabContent.propTypes = {
-    branchTabName: PropTypes.object.isRequired,
     activeTab: PropTypes.object.isRequired,
     startDate: PropTypes.object.isRequired,
     endDate: PropTypes.object.isRequired,
@@ -1932,14 +2407,19 @@ TabContent.propTypes = {
     jobs: PropTypes.object.isRequired,
     typeUsers: PropTypes.object.isRequired,
     branchs: PropTypes.object.isRequired,
+    changeValueLoading: PropTypes.func.isRequired,
     getShiftRegisters: PropTypes.func.isRequired,
     addUserShiftRegister: PropTypes.func.isRequired,
     deleteUserShiftRegister: PropTypes.func.isRequired,
-    getAllBranchs: PropTypes.func.isRequired,
     getAllPermitShifts: PropTypes.func.isRequired,
     getPersonInShift: PropTypes.func.isRequired,
     copyPersonInShifts: PropTypes.func.isRequired,
     getShiftRegisterManagers: PropTypes.func.isRequired,
+    setValueLoader: PropTypes.func.isRequired,
+    viewPersonInShiftArlet: PropTypes.func.isRequired,
+    setShowShiftRegistersModal: PropTypes.func.isRequired,
+    setShowShiftRegistersUserModal: PropTypes.func.isRequired,
+    setShowAddManagerModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -1948,9 +2428,24 @@ const mapStateToProps = (state) => ({
     personInShift: state.personInShift,
     auth: state.auth,
     permitShiftRegist: state.permitShiftRegist,
-    // branch: state.branch,
 });
 
-export default connect(mapStateToProps, { getShiftRegisters, getPreWeekPersonInShift, getPersonInShiftDate, addUserShiftRegister, deleteUserShiftRegister, getAllBranchs, getPersonInShift, copyPersonInShifts, getAllPermitShifts, getShiftRegisterManagers })(
-    TabContent
-);
+export default connect(mapStateToProps,
+    {
+        getShiftRegisters,
+        getPreWeekPersonInShift,
+        getPersonInShiftDate,
+        addUserShiftRegister,
+        deleteUserShiftRegister,
+        getPersonInShift,
+        copyPersonInShifts,
+        getAllPermitShifts,
+        getShiftRegisterManagers,
+        setValueLoader,
+        viewPersonInShiftArlet,
+        setShowShiftRegistersModal,
+        setShowShiftRegistersUserModal,
+        setShowAddManagerModal,
+    })(
+        TabContent
+    );

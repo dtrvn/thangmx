@@ -46,7 +46,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
       //   console.error(err.response.data);
       // }
       // console.log("SUCCESS");
-      register({ name, email, password });
+      // register({ name, email, password });
     }
   };
 
@@ -56,9 +56,9 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
 
   return (
     <Fragment>
-      <h1 className="large text-primary">Sign Up</h1>
+      <h1 className="large text-primary">Đăng kí</h1>
       <p className="lead">
-        <i className="fas fa-user"></i> Create Your Account
+        <i className="fas fa-user"></i> Tạo tài khoản của bạn
       </p>
       <form className="form" onSubmit={(e) => onSubmit(e)}>
         <div className="form-group">
@@ -78,10 +78,6 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             value={email}
             onChange={(e) => onChange(e)}
           />
-          <small className="form-text">
-            This site uses Gravatar, so if you want a profile image, use a
-            Gravatar email
-          </small>
         </div>
         <div className="form-group">
           <input

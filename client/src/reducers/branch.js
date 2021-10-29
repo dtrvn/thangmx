@@ -35,6 +35,7 @@ export default function (state = initialState, action) {
     case CLEAR_BRANCH:
       return {
         ...state,
+        branchs: [],
         branch: null,
         loading: false,
       };

@@ -5,7 +5,6 @@ import { Link, withRouter, Redirect } from "react-router-dom";
 import Moment from "react-moment";
 import moment from "moment";
 import { getShiftRegisters } from "../../actions/shiftRegister";
-import SalaryPersonalList from "./SalaryPersonalComponent/SalaryPersonalList";
 import { getAllShifts } from "../../actions/shift";
 import { getAllJobs } from "../../actions/job";
 import { getAllUsers } from "../../actions/user";
@@ -13,16 +12,26 @@ import { getShiftRegisterViewSalary } from "../../actions/shiftRegister";
 import Spinner from "../layout/Spinner";
 
 const SalaryPersonal = ({
+    userId,
+    dateFrom,
+    dateTo,
+    currentDay,
     getAllShifts,
     getAllJobs,
     getAllUsers,
     getShiftRegisterViewSalary,
-    shiftRegister: { shiftRegister, currentDay },
+    // shiftRegister: { shiftRegister, currentDay },
+    shiftRegister: { shiftRegister },
+    auth: { user },
     user: { users },
     job: { jobs },
     shift: { shifts },
-    match,
+    // match,
+    setViewSalaryAllMemberScreen,
+    setViewSalaryPersonalScreen,
 }) => {
+
+    let getLastDayOfThisWeek = null;
 
     const [createDate, setCreateDate] = useState({
         firstDayOfFirstWeekInMonth: "",
@@ -53,15 +62,25 @@ const SalaryPersonal = ({
     }, [getAllUsers, getAllShifts, getAllJobs]);
 
     useEffect(() => {
-        if (!currentDay) {
-            getShiftRegisterViewSalary(match.params.id, match.params.firstDayOfFirstWeekInMonth, match.params.lastDayOfLastWeekInMonth, match.params.currentDay);
+        // console.log("user 2");
+        // if (!currentDay) {
+        if (user && user.roles === "User") {
+            // console.log("user " + user.roles);
+            getLastDayOfThisWeek = moment().startOf("isoWeek").add(6, "days").format('MM-DD-YYYY');
+            getShiftRegisterViewSalary(userId, dateFrom, getLastDayOfThisWeek, currentDay);
+        } else {
+            // console.log("user 1");
+            // getShiftRegisterViewSalary(match.params.id, match.params.firstDayOfFirstWeekInMonth, match.params.lastDayOfLastWeekInMonth, match.params.currentDay);
+            getShiftRegisterViewSalary(userId, dateFrom, dateTo, currentDay);
         }
-    }, []);
+        // }
+    }, [user]);
 
     useEffect(() => {
         let getUserName = null;
         if (users.length > 0) {
-            getUserName = users.find(({ _id }) => _id === match.params.id).name;
+            // getUserName = users.find(({ _id }) => _id === match.params.id).name;
+            getUserName = users.find(({ _id }) => _id === userId).name;
         }
         setCreateDate({
             ...createDate,
@@ -276,6 +295,13 @@ const SalaryPersonal = ({
         valueListFri = [];
         valueListSat = [];
         valueListSun = [];
+        eleMon = [];
+        eleTue = [];
+        eleWed = [];
+        eleThu = [];
+        eleFri = [];
+        eleSat = [];
+        eleSun = [];
         for (let i = 0; i < shifts.length; i++) {
             classNameListMon.push(" ");
             valueListMon.push("0");
@@ -304,7 +330,6 @@ const SalaryPersonal = ({
         shiftRegister.map((ele) => {
             amountWeek = 0;
             resetData();
-            // console.log("ngay " + moment(ele.dateFrom).format('MM-DD-YYYY') + " - " + moment(createDate.firstDayRow1).format('MM-DD-YYYY'));
             if (moment(ele.dateFrom).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).format('MM-DD-YYYY')) {
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
@@ -443,84 +468,6 @@ const SalaryPersonal = ({
                     row1.push(" ");
                 }
                 row1.push(amountWeek);
-
-
-                // classNameListMon = [];
-                // classNameListTue = [];
-                // classNameListWed = [];
-                // classNameListThu = [];
-                // classNameListFri = [];
-                // classNameListSat = [];
-                // classNameListSun = [];
-
-                // classNameListMon.push(
-                //     <div class="card-shiftRegister col-md-1-7">
-                //         <div class="card-body-shiftRegister text-center">
-                //             <p class="text-center font-medium m-b-0">{eleMon}</p>
-                //         </div>
-                //     </div>
-                // );
-                // classNameListTue.push(
-                //     <div class="card-shiftRegister col-md-1-7">
-                //         <div class="card-body-shiftRegister text-center">
-                //             <p class="text-center font-medium m-b-0">{eleTue}</p>
-                //         </div>
-                //     </div>
-                // );
-                // classNameListWed.push(
-                //     <div class="card-shiftRegister col-md-1-7">
-                //         <div class="card-body-shiftRegister text-center">
-                //             <p class="text-center font-medium m-b-0">{eleWed}</p>
-                //         </div>
-                //     </div>
-                // );
-                // classNameListThu.push(
-                //     <div class="card-shiftRegister col-md-1-7">
-                //         <div class="card-body-shiftRegister text-center">
-                //             <p class="text-center font-medium m-b-0">{eleThu}</p>
-                //         </div>
-                //     </div>
-                // );
-                // classNameListFri.push(
-                //     <div class="card-shiftRegister col-md-1-7">
-                //         <div class="card-body-shiftRegister text-center">
-                //             <p class="text-center font-medium m-b-0">{eleFri}</p>
-                //         </div>
-                //     </div>
-                // );
-                // classNameListSat.push(
-                //     <div class="card-shiftRegister col-md-1-7">
-                //         <div class="card-body-shiftRegister text-center">
-                //             <p class="text-center font-medium m-b-0">{eleSat}</p>
-                //         </div>
-                //     </div>
-                // );
-                // classNameListSun.push(
-                //     <div class="card-shiftRegister col-md-1-7">
-                //         <div class="card-body-shiftRegister text-center">
-                //             <p class="text-center font-medium m-b-0">{eleSun}</p>
-                //         </div>
-                //     </div>
-                // );
-
-                // row1.push(
-                //     <div class="card-group-shiftRegister">
-                //         {classNameListMon}
-                //         {classNameListTue}
-                //         {classNameListWed}
-                //         {classNameListThu}
-                //         {classNameListFri}
-                //         {classNameListSat}
-                //         {classNameListSun}
-
-                //         <div class="card-shiftRegister col-md-1-7">
-                //             <div class="card-body-shiftRegister text-right">
-                //                 <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{amountWeek.toLocaleString()}</p>
-                //             </div>
-                //         </div>
-
-                //     </div>
-                // );
             }
             if (moment(ele.dateFrom).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).format('MM-DD-YYYY')) {
                 ele.register.map((reg) => {
@@ -573,6 +520,7 @@ const SalaryPersonal = ({
                     }
                 })
                 totalAmount = totalAmount + amountWeek;
+
                 classNameListMon.map((ele, idx) => {
                     if (ele !== " ") {
                         eleMon.push(<span className={ele}>{valueListMon[idx]}</span>)
@@ -1217,6 +1165,11 @@ const SalaryPersonal = ({
 
     }
 
+    const onReturnSalaryAllMemberScreen = () => {
+        setViewSalaryPersonalScreen(0);
+        setViewSalaryAllMemberScreen(1);
+    }
+
     return (
         <Fragment>
             {shiftRegister.length === 0 ? (
@@ -1238,13 +1191,18 @@ const SalaryPersonal = ({
                                         </div>
                                         <div className="col-md-8">
                                             <h3 className="text-right">{createDate.currentUser}</h3>
-                                            <Link className="btn btn-sm btn-success" to="/salarys" style={{ float: 'right' }}>
+                                            {/* <Link className="btn btn-sm btn-success" to="/salarys" style={{ float: 'right' }}>
                                                 <i className="ti-arrow-left"></i>{"  "}<span className="hide-sm">Trở về</span>
-                                            </Link>
+                                            </Link> */}
+                                            <button types="button" class="btn btn-sm btn-success" style={{ float: 'right' }}
+                                                onClick={() => onReturnSalaryAllMemberScreen()}>
+                                                <i className="ti-arrow-left"></i>{"  "}<span className="hide-sm">Trở về</span>
+                                            </button>
                                         </div>
                                     </div>
-
-                                    <div class="card-group-shiftRegister color-bordered-table-shiftRegister">
+                                    <div class="card-group-shiftRegister color-bordered-table-shiftRegister headerViewOrNotView" style={{ height: "40px" }}>
+                                    </div>
+                                    <div class="card-group-shiftRegister color-bordered-table-shiftRegister hiddenDiv">
                                         <div class="card-shiftRegister col-md-1-7">
                                             <div class="card-body-shiftRegister text-center">
                                                 <p class="text-center font-medium m-b-0">Thứ 2</p>
@@ -1298,80 +1256,142 @@ const SalaryPersonal = ({
                                         </div>
 
                                     </div>
-                                    {/* <SalaryPersonalList /> */}
                                     {/* Row 1 */}
                                     <div class="card-group-shiftRegister">
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row1[0]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[1] }}>{createDate.listDay[0]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 2">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row1[0]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[1] }}>{createDate.listDay[0]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row1[1]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[3] }}>{createDate.listDay[2]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 3">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row1[1]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[3] }}>{createDate.listDay[2]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row1[2]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[5] }}>{createDate.listDay[4]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 4">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row1[2]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[5] }}>{createDate.listDay[4]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row1[3]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[7] }}>{createDate.listDay[6]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 5">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row1[3]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[7] }}>{createDate.listDay[6]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row1[4]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[9] }}>{createDate.listDay[8]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 6">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row1[4]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[9] }}>{createDate.listDay[8]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row1[5]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[11] }}>{createDate.listDay[10]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 7">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row1[5]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[11] }}>{createDate.listDay[10]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row1[6]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[13] }}>{createDate.listDay[12]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Chủ nhật">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row1[6]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[13] }}>{createDate.listDay[12]}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card-shiftRegister col-md-1-7">
+                                        <div class="card-shiftRegister col-md-1-7" style={{ background: "#ab8ce4" }}>
                                             <div class="card-body-shiftRegister text-right">
                                                 <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{row1.length > 0 && row1[7] !== "0" ? row1[7].toLocaleString() : " "}</p>
                                             </div>
@@ -1381,76 +1401,139 @@ const SalaryPersonal = ({
                                     {/* Row 2 */}
                                     <div class="card-group-shiftRegister">
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row2[0]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[15] }}>{createDate.listDay[14]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 2">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row2[0]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[15] }}>{createDate.listDay[14]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row2[1]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[17] }}>{createDate.listDay[16]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 3">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row2[1]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[17] }}>{createDate.listDay[16]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row2[2]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[19] }}>{createDate.listDay[18]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 4">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row2[2]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[19] }}>{createDate.listDay[18]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row2[3]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[21] }}>{createDate.listDay[20]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 5">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row2[3]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[21] }}>{createDate.listDay[20]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
-                                                    <p class="text-center font-medium m-b-0">{row1[4]}</p>
-                                                </div>
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                                <div class="col-salary-md-5"></div>
                                                 <div class="col-salary-md-4">
+                                                    <p class="text-center font-medium m-b-0">{row2[4]}</p>
+                                                </div>
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[23] }}>{createDate.listDay[22]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 6">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row2[4]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[23] }}>{createDate.listDay[22]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row2[5]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[25] }}>{createDate.listDay[24]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 7">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row2[5]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[25] }}>{createDate.listDay[24]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row2[6]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[27] }}>{createDate.listDay[26]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Chủ nhật">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row2[6]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[27] }}>{createDate.listDay[26]}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card-shiftRegister col-md-1-7">
+                                        <div class="card-shiftRegister col-md-1-7" style={{ background: "#ab8ce4" }}>
                                             <div class="card-body-shiftRegister text-right">
                                                 <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{row2.length > 0 && row2[7] !== 0 ? row2[7].toLocaleString() : " "}</p>
                                             </div>
@@ -1460,155 +1543,280 @@ const SalaryPersonal = ({
                                     {/* Row 3 */}
                                     <div class="card-group-shiftRegister">
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row3[0]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[29] }}>{createDate.listDay[28]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 2">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row3[0]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[29] }}>{createDate.listDay[28]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row3[1]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[31] }}>{createDate.listDay[30]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 3">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row3[1]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[31] }}>{createDate.listDay[30]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row3[2]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[33] }}>{createDate.listDay[32]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 4">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row3[2]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[33] }}>{createDate.listDay[32]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row3[3]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[35] }}>{createDate.listDay[34]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 5">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row3[3]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[35] }}>{createDate.listDay[34]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row3[4]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[37] }}>{createDate.listDay[36]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 6">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row3[4]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[37] }}>{createDate.listDay[36]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row3[5]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[39] }}>{createDate.listDay[38]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 7">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row3[5]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[39] }}>{createDate.listDay[38]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row3[6]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[41] }}>{createDate.listDay[40]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Chủ nhật">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row3[6]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[41] }}>{createDate.listDay[40]}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card-shiftRegister col-md-1-7">
+                                        <div class="card-shiftRegister col-md-1-7" style={{ background: "#ab8ce4" }}>
                                             <div class="card-body-shiftRegister text-right">
                                                 <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{row3.length > 0 && row3[7] !== 0 ? row3[7].toLocaleString() : " "}</p>
                                             </div>
                                         </div>
-
                                     </div>
                                     {/* Row 4 */}
                                     <div class="card-group-shiftRegister">
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row4[0]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[43] }}>{createDate.listDay[42]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 2">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row4[0]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[43] }}>{createDate.listDay[42]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row4[1]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[45] }}>{createDate.listDay[44]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 3">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row4[1]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[45] }}>{createDate.listDay[44]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row4[2]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[47] }}>{createDate.listDay[46]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 4">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row4[2]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[47] }}>{createDate.listDay[46]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row4[3]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[49] }}>{createDate.listDay[48]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 5">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row4[3]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[49] }}>{createDate.listDay[48]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row4[4]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[51] }}>{createDate.listDay[50]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 6">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row4[4]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[51] }}>{createDate.listDay[50]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row4[5]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[53] }}>{createDate.listDay[52]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 7">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row4[5]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[53] }}>{createDate.listDay[52]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row4[6]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[55] }}>{createDate.listDay[54]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Chủ nhật">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row4[6]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[55] }}>{createDate.listDay[54]}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card-shiftRegister col-md-1-7">
+                                        <div class="card-shiftRegister col-md-1-7" style={{ background: "#ab8ce4" }}>
                                             <div class="card-body-shiftRegister text-right">
                                                 <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{row4.length > 0 && row4[7] !== 0 ? row4[7].toLocaleString() : " "}</p>
                                             </div>
@@ -1618,76 +1826,139 @@ const SalaryPersonal = ({
                                     {/* Row 5 */}
                                     <div class="card-group-shiftRegister">
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row5[0]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[57] }}>{createDate.listDay[56]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 2">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row5[0]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[57] }}>{createDate.listDay[56]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row5[1]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[59] }}>{createDate.listDay[58]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 3">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row5[1]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[59] }}>{createDate.listDay[58]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row5[2]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[61] }}>{createDate.listDay[60]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 4">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row5[2]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[61] }}>{createDate.listDay[60]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row5[3]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[63] }}>{createDate.listDay[62]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 5">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row5[3]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[63] }}>{createDate.listDay[62]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row5[4]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[65] }}>{createDate.listDay[64]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 6">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row5[4]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[65] }}>{createDate.listDay[64]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row5[5]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[67] }}>{createDate.listDay[66]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 7">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row5[5]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[67] }}>{createDate.listDay[66]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row5[6]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[69] }}>{createDate.listDay[68]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Chủ nhật">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row5[6]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[69] }}>{createDate.listDay[68]}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card-shiftRegister col-md-1-7">
+                                        <div class="card-shiftRegister col-md-1-7" style={{ background: "#ab8ce4" }}>
                                             <div class="card-body-shiftRegister text-right">
                                                 <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{row5.length > 0 && row5[7] !== 0 ? row5[7].toLocaleString() : " "}</p>
                                             </div>
@@ -1697,84 +1968,144 @@ const SalaryPersonal = ({
                                     {/* Row 6 */}
                                     <div class="card-group-shiftRegister">
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 2">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row6[0]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[71] }}>{createDate.listDay[70]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 2">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row6[0]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[71] }}>{createDate.listDay[70]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 3">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row6[1]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[73] }}>{createDate.listDay[72]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 3">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row6[1]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[73] }}>{createDate.listDay[72]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 4">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row6[2]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[75] }}>{createDate.listDay[74]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 4">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row6[2]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[75] }}>{createDate.listDay[74]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 5">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row6[3]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[77] }}>{createDate.listDay[76]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 5">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row6[3]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[77] }}>{createDate.listDay[76]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 6">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row6[4]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[79] }}>{createDate.listDay[78]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 6">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row6[4]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[79] }}>{createDate.listDay[78]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Thứ 7">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row6[5]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[81] }}>{createDate.listDay[80]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Thứ 7">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row6[5]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[81] }}>{createDate.listDay[80]}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-shiftRegister col-md-1-7">
-                                            <div class="rowSalary">
-                                                <div class="col-salary-md-8">
+                                            <div class="rowSalary viewHeaderDay hiddenContent-1" data-label="Chủ nhật">
+                                                <div class="col-salary-md-5"></div>
+                                                <div class="col-salary-md-4">
                                                     <p class="text-center font-medium m-b-0">{row6[6]}</p>
                                                 </div>
-                                                <div class="col-salary-md-4">
+                                                <div class="col-salary-md-3">
+                                                    <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[83] }}>{createDate.listDay[82]}</p>
+                                                </div>
+                                            </div>
+                                            <div class="rowSalary hiddenContent-2" data-label="Chủ nhật">
+                                                <div class="col-salary-md-7">
+                                                    <p class="text-center font-medium m-b-0">{row6[6]}</p>
+                                                </div>
+                                                <div class="col-salary-md-5">
                                                     <p class="text-center font-medium m-b-0" style={{ color: createDate.listDay[83] }}>{createDate.listDay[82]}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card-shiftRegister col-md-1-7">
+                                        <div class="card-shiftRegister col-md-1-7" style={{ background: "#ab8ce4" }}>
                                             <div class="card-body-shiftRegister text-right">
                                                 <p class="text-right font-medium m-b-0" style={{ color: "black" }}>{row6.length > 0 && row6[7] !== 0 ? row6[7].toLocaleString() : " "}</p>
                                             </div>
                                         </div>
-
                                     </div>
-
-
                                     <div className="row" style={{ marginTop: "10px" }}>
                                         <div className="col-md-10">
                                             <h3 class="text-right font-medium m-b-0" style={{ color: "black" }}>Tổng tiền</h3>
@@ -1783,13 +2114,6 @@ const SalaryPersonal = ({
                                             <h3 class="text-right font-medium m-b-0" style={{ color: "black" }}>{totalAmount.toLocaleString()}</h3>
                                         </div>
                                     </div>
-
-                                    {/* {row1}
-                            {row2}
-                            {row3}
-                            {row4}
-                            {row5}
-                            {row6} */}
 
                                 </div>
                             </div>
@@ -1802,6 +2126,12 @@ const SalaryPersonal = ({
 };
 
 SalaryPersonal.propTypes = {
+    userId: PropTypes.object.isRequired,
+    dateFrom: PropTypes.object.isRequired,
+    dateTo: PropTypes.object.isRequired,
+    currentDay: PropTypes.object.isRequired,
+    setViewSalaryAllMemberScreen: PropTypes.func.isRequired,
+    setViewSalaryPersonalScreen: PropTypes.func.isRequired,
     getShiftRegisters: PropTypes.func.isRequired,
     getAllShifts: PropTypes.func.isRequired,
     getAllJobs: PropTypes.func.isRequired,

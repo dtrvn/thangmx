@@ -55,6 +55,12 @@ router.post(
           .json({ errors: [{ msg: "Email hoặc mật khẩu không đúng" }] });
       }
 
+      if(user.status === "Ẩn"){
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Tài khoản không còn hiệu lực" }] });
+      }
+
       const payload = {
         user: {
           id: user.id,

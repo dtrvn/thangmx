@@ -5,6 +5,8 @@ import "./new.css";
 import "./user-card.css";
 import "./switch.css";
 import "./tab-page.css";
+import "./jquery.toast.css";
+import "./other-pages.css";
 import Navbar from "./components/layout/Navbar";
 import Landing from "./components/layout/Landing";
 import Routes from "./components/routing/Routes";

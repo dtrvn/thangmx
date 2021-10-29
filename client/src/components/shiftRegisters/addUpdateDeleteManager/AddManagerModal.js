@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import Moment from "react-moment";
 import moment from "moment";
 import { connect } from "react-redux";
-import { addUpdateDeleteUserManager } from "../../../actions/shiftRegisterManager";
+import { addUpdateDeleteUserManager, setShowAddManagerModal } from "../../../actions/shiftRegisterManager";
 import Switch from './Switch';
-import AlertShiftRegister from '../../layout/AlertShiftRegister';
+// import AlertShiftRegister from '../../layout/AlertShiftRegister';
 
 const AddManagerModal = ({
     currentUserId,
@@ -16,6 +16,8 @@ const AddManagerModal = ({
     dateFrom,
     dateTo,
     addUpdateDeleteUserManager,
+    showAddManagerModal,
+    setShowAddManagerModal,
 }) => {
     const [formData, setFormData] = useState({
         userId: null,
@@ -106,9 +108,14 @@ const AddManagerModal = ({
         addUpdateDeleteUserManager(formData);
     };
 
+    const clearData = () => {
+        setShowAddManagerModal(false);
+    }
+
     return (
         <Fragment>
-            <div id="responsive-modal-AddManager" className="modal" tabIndex={-1} style={{ display: 'none' }} data-backdrop="static"
+            <div className="fade modal-backdrop show"></div>
+            <div id="responsive-modal-AddManager" className={`modal ${showAddManagerModal === true ? "show" : ""}`} tabIndex={-1} style={{ display: showAddManagerModal === true ? 'block' : 'none' }} data-backdrop="static"
                 data-keyboard="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
@@ -117,7 +124,7 @@ const AddManagerModal = ({
                             <button type="button" className="close" data-dismiss="modal" aria-hidden="true">×</button>
                         </div>
                         <form className="form" onSubmit={(e) => onSubmit(e)}>
-                            <AlertShiftRegister />
+                            {/* <AlertShiftRegister /> */}
 
                             <div className="modal-body">
 
@@ -128,7 +135,7 @@ const AddManagerModal = ({
                                             onColor="#EF476F"
                                             handleToggle={() => setValue(!value)}
                                             itemClass={""} />
-                                        <div className="col-md-5">
+                                        <div className="col-md-9">
                                             <div className="input-group">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text label-success">{getName}</span>
@@ -148,7 +155,7 @@ const AddManagerModal = ({
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-default waves-effect" data-dismiss="modal">Đóng</button>
+                                <button type="button" className="btn btn-default waves-effect" data-dismiss="modal" onClick={() => clearData()}>Đóng</button>
                                 <button type="submit" className="btn btn-danger waves-effect waves-light" disabled={disableButtonUpdate === 0 ? "" : "disabled"}>Lưu thay đổi</button>
                             </div>
                         </form>
@@ -169,9 +176,11 @@ AddManagerModal.propTypes = {
     branchId: PropTypes.object.isRequired,
     dateFrom: PropTypes.object.isRequired,
     dateTo: PropTypes.object.isRequired,
+    showAddManagerModal: PropTypes.object.isRequired,
     addUpdateDeleteUserManager: PropTypes.func.isRequired,
+    setShowAddManagerModal: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addUpdateDeleteUserManager })(
+export default connect(null, { addUpdateDeleteUserManager, setShowAddManagerModal })(
     AddManagerModal
 );

@@ -8,6 +8,9 @@ import {
   GET_SHIFT_REGISTER,
   CLEAR_SHIFT_REGISTER_VIEW_SALARY,
   SET_CURRENT_DAY,
+  SHOW_SHIFTREGISTERS_MODAL,
+  SHOW_SHIFTREGISTERS_USER_MODAL,
+  SETLOADING_SHIFTREGISTER,
 } from "../actions/types";
 
 const initialState = {
@@ -15,6 +18,9 @@ const initialState = {
   shiftRegister: [],
   currentDay: null,
   loading: true,
+  shiftRegisterLoader: false,
+  showShiftRegistersModal: false,
+  showUpdateOrDeleteUserModal: false,
   error: {},
 };
 
@@ -27,6 +33,7 @@ export default function (state = initialState, action) {
         ...state,
         shiftRegisters: payload,
         loading: false,
+        shiftRegisterLoader: true,
       };
     case SHIFT_REGISTER_ERROR:
       return {
@@ -71,13 +78,33 @@ export default function (state = initialState, action) {
         shiftRegisters: [],
         shiftRegister: [],
         currentDay: null,
+        showShiftRegistersModal: false,
+        showAddManagerModal: false,
         loading: false,
+        shiftRegisterLoader: false,
       };
     case CLEAR_SHIFT_REGISTER_VIEW_SALARY:
       return {
         ...state,
+        shiftRegisters: [],
         shiftRegister: [],
         loading: false,
+        shiftRegisterLoader: false,
+      };
+    case SHOW_SHIFTREGISTERS_MODAL:
+      return {
+        ...state,
+        showShiftRegistersModal: payload,
+      };
+    case SHOW_SHIFTREGISTERS_USER_MODAL:
+      return {
+        ...state,
+        showUpdateOrDeleteUserModal: payload,
+      };
+    case SETLOADING_SHIFTREGISTER:
+      return {
+        ...state,
+        shiftRegisterLoader: payload,
       };
     default:
       return state;

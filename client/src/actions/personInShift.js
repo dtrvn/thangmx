@@ -10,6 +10,8 @@ import {
   UPDATE_PERSONINSHIFT,
   PERSONINSHIFT_ERROR,
   CLEAR_PERSONINSHIFT,
+  DELETE_PERSONINSHIFT,
+  SETLOADING_PERSONINSHIFT,
 } from "./types";
 
 // Create or update shift khi điều chỉnh đối với ca của từng thứ ngày
@@ -344,6 +346,10 @@ export const getPersonInShiftDate = (branchId, dateFrom, dateTo, date) => async 
       type: GET_PERSONINSHIFT,
       payload: res.data,
     });
+    dispatch({
+      type: SETLOADING_PERSONINSHIFT,
+      payload: true,
+    });
     return Promise.resolve(res.data);
     // }
 
@@ -358,4 +364,36 @@ export const getPersonInShiftDate = (branchId, dateFrom, dateTo, date) => async 
 // Clear Person In Shift
 export const clearPersonInShift = () => async (dispatch) => {
   dispatch({ type: CLEAR_PERSONINSHIFT });
+  dispatch({
+    type: SETLOADING_PERSONINSHIFT,
+    payload: true,
+  });
+};
+
+// Set value for Loading Spinner
+export const setValueLoader = (data) => async (dispatch) => {
+  dispatch({
+    type: SETLOADING_PERSONINSHIFT,
+    payload: data,
+  });
+};
+
+// No exist data person in shift of prev week
+export const viewPersonInShiftArlet = () => async (dispatch) => {
+  dispatch(setAlert("Không tồn tại dữ liệu số người trong ca của tuần trước", "warning"));
+};
+
+// Delete Person In Shift
+export const deletePersonInShift = (branchId, dateFrom, dateTo) => async (dispatch) => {
+  try {
+    const res = await axios.delete(`/api/personInShifts/${branchId}/${dateFrom}/${dateTo}`);
+    dispatch({
+      type: DELETE_PERSONINSHIFT,
+    });
+  } catch (err) {
+    dispatch({
+      type: PERSONINSHIFT_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
 };

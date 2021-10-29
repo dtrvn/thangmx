@@ -66,7 +66,7 @@ export const createUser =
         payload: res.data,
       });
 
-      dispatch(setAlert(edit ? "User Updated" : "User Created", "success"));
+      dispatch(setAlert(edit ? "Đã cập nhật user" : "Đã tạo mới user", "success"));
 
       history.push("/users");
     } catch (err) {
@@ -127,7 +127,7 @@ export const deleteUser = (id) => async (dispatch) => {
       type: DELETE_USER,
       payload: id,
     });
-    // dispatch(setAlert("Branch Removed", "success"));
+    dispatch(setAlert("Đã xoá user thành công", "success"));
   } catch (err) {
     dispatch({
       type: USER_ERROR,

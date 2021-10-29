@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import Moment from "react-moment";
 import { connect } from "react-redux";
 import moment from "moment";
-import { updateShiftRegister } from "../../../actions/shiftRegister";
+import { updateShiftRegister, setShowShiftRegistersModal } from "../../../actions/shiftRegister";
 import Switch from './Switch';
-import AlertShiftRegister from '../../layout/AlertShiftRegister';
+// import AlertShiftRegister from '../../layout/AlertShiftRegister';
 import { clearPersonInShift } from "../../../actions/personInShift";
 
 const ShiftRegisterModal = ({
@@ -25,6 +25,9 @@ const ShiftRegisterModal = ({
     count,
     auth: { user },
     personInShift,
+    showShiftRegistersModal,
+    // setShowShiftRegisterModal,
+    setShowShiftRegistersModal,
 }) => {
     const [formData, setFormData] = useState({
         id: null,
@@ -364,28 +367,33 @@ const ShiftRegisterModal = ({
 
         updateShiftRegister(formData);
         clearPersonInShift();
+        // setShowShiftRegisterModal(0);
+        // setShowShiftRegistersModal(false);
     };
 
     const clearData = () => {
         clearPersonInShift();
+        // setShowShiftRegisterModal(0);
+        setShowShiftRegistersModal(false);
     }
 
     return (
         <Fragment>
-            <div id="responsive-modal" className="modal" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style={{ display: 'none' }} data-backdrop="static"
+            <div className="fade modal-backdrop show"></div>
+            <div id="responsive-modal" className={`fade modal ${showShiftRegistersModal === true ? "show" : ""}`} tabIndex={-1} role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style={{ display: showShiftRegistersModal === true ? 'block' : 'none' }} data-backdrop="static"
                 data-keyboard="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h3>Đăng kí ca cho ngày </h3>
                             <h3>{" "}(<Moment format="DD/MM">{currentDay}</Moment>)</h3>
-                            <button type="button" className="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <button type="button" className="close" data-dismiss="modal" aria-hidden="true" onClick={() => clearData()}>×</button>
                         </div>
                         <form className="form" onSubmit={(e) => onSubmit(e)}>
                             {/* <div className="alert alert-success">
                                 Đăng kí thành công
                             </div> */}
-                            <AlertShiftRegister />
+                            {/* <AlertShiftRegister /> */}
 
                             <div className="modal-body">
 
@@ -393,10 +401,10 @@ const ShiftRegisterModal = ({
                                     <div className="row">
                                         <Switch
                                             isOn={value0}
-                                            onColor="#EF476F"
+                                            onColor="#00c292"
                                             handleToggle={() => setValue0(!value0)}
                                             itemClass={""} />
-                                        <div className="col-md-5">
+                                        <div className="col-md-7">
                                             <div className="input-group">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text label-success">{shifts[0].shiftName}</span>
@@ -418,10 +426,10 @@ const ShiftRegisterModal = ({
                                     <div className="row">
                                         <Switch
                                             isOn={value1}
-                                            onColor="#EF476F"
+                                            onColor="#03a9f3"
                                             handleToggle={() => setValue1(!value1)}
                                             itemClass={"-1"} />
-                                        <div className="col-md-5">
+                                        <div className="col-md-7">
                                             <div className="input-group">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text label-info">{shifts[1].shiftName}</span>
@@ -443,10 +451,10 @@ const ShiftRegisterModal = ({
                                     <div className="row">
                                         <Switch
                                             isOn={value2}
-                                            onColor="#EF476F"
+                                            onColor="#fec107"
                                             handleToggle={() => setValue2(!value2)}
                                             itemClass={"-2"} />
-                                        <div className="col-md-5">
+                                        <div className="col-md-7">
                                             <div className="input-group">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text label-warning">{shifts[2].shiftName}</span>
@@ -464,8 +472,6 @@ const ShiftRegisterModal = ({
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default waves-effect" data-dismiss="modal" onClick={() => clearData()}>Đóng</button>
@@ -475,105 +481,6 @@ const ShiftRegisterModal = ({
                     </div>
                 </div>
             </div>
-
-            {/* <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Đăng kí ca cho ngày (<Moment format="DD/MM">{currentDay}</Moment>)</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form className="form" onSubmit={(e) => onSubmit(e)}>
-                        <div class="form-group">
-                            <div className="row">
-                                <Switch
-                                    isOn={value0}
-                                    onColor="#EF476F"
-                                    handleToggle={() => setValue0(!value0)}
-                                    itemClass={""} />
-                                <div className="col-md-5">
-                                    <div className="input-group">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text label-success">{shifts[0].shiftName}</span>
-                                        </div>
-                                        <select
-                                            disabled={value0 ? "" : "disabled"}
-                                            name="jobId0"
-                                            value={jobId0}
-                                            onChange={(e) => onChange(e)}
-                                            class="form-control custom-select"
-                                        >
-                                            {elmShifts}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div className="row">
-                                <Switch
-                                    isOn={value1}
-                                    onColor="#EF476F"
-                                    handleToggle={() => setValue1(!value1)}
-                                    itemClass={"-1"} />
-                                <div className="col-md-5">
-                                    <div className="input-group">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text label-info">{shifts[1].shiftName}</span>
-                                        </div>
-                                        <select
-                                            disabled={value1 ? "" : "disabled"}
-                                            name="jobId1"
-                                            value={jobId1}
-                                            onChange={(e) => onChange(e)}
-                                            class="form-control custom-select"
-                                        >
-                                            {elmShifts}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div className="row">
-                                <Switch
-                                    isOn={value2}
-                                    onColor="#EF476F"
-                                    handleToggle={() => setValue2(!value2)}
-                                    itemClass={"-2"} />
-                                <div className="col-md-5">
-                                    <div className="input-group">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text label-warning">{shifts[2].shiftName}</span>
-                                        </div>
-                                        <select
-                                            disabled={value2 ? "" : "disabled"}
-                                            name="jobId2"
-                                            value={jobId2}
-                                            onChange={(e) => onChange(e)}
-                                            class="form-control custom-select"
-                                        >
-                                            {elmShifts}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" type="submit">
-                        Save Changes
-                    </Button>
-                </Modal.Body> */}
-            {/* <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" type="submit">
-                        Save Changes
-                    </Button>
-                </Modal.Footer> */}
-            {/* </Modal> */}
         </Fragment>
     );
 };
@@ -595,12 +502,14 @@ ShiftRegisterModal.propTypes = {
     count: PropTypes.object.isRequired,
     personInShift: PropTypes.object.isRequired,
     updateShiftRegister: PropTypes.func.isRequired,
+    setShowShiftRegisterModal: PropTypes.func.isRequired,
+    setShowShiftRegistersModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
 });
 
-export default connect(mapStateToProps, { updateShiftRegister, clearPersonInShift })(
+export default connect(mapStateToProps, { updateShiftRegister, clearPersonInShift, setShowShiftRegistersModal })(
     ShiftRegisterModal
 );

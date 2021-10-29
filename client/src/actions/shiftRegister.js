@@ -13,6 +13,9 @@ import {
   CLEAR_SHIFT_REGISTER_VIEW_SALARY,
   GET_SHIFT_REGISTER,
   SET_CURRENT_DAY,
+  SHOW_SHIFTREGISTERS_MODAL,
+  SHOW_SHIFTREGISTERS_USER_MODAL,
+  SETLOADING_SHIFTREGISTER,
 } from "./types";
 // import { PromiseProvider } from "mongoose";
 // import { count } from "../../../models/ShiftRegister2";
@@ -74,8 +77,9 @@ export const addUserShiftRegister =
             type: ADD_SHIFT_REGISTER,
             payload: res.data,
           });
+          dispatch(setAlert("Đã thêm nhân viên", "success"));
         } else {
-          dispatch(setAlert("Chưa chọn nhân viên", "danger"));
+          dispatch(setAlert("Chưa chọn nhân viên", "error"));
         }
 
 
@@ -110,6 +114,22 @@ export const deleteUserShiftRegister = (shiftId) => async (dispatch) => {
   }
 };
 
+// Delete Shift Register khi xoá tạo tuần mới
+export const deleteShiftRegisterNextWeek = (branchId, dateFrom, dateTo) => async (dispatch) => {
+  try {
+    // console.log("nhan id "+shiftId);
+    const res = await axios.delete(`/api/shiftRegisters2/allUser/${branchId}/${dateFrom}/${dateTo}`);
+    // dispatch({
+    //   type: DELETE_SHIFT_REGISTER,
+    // });
+  } catch (err) {
+    dispatch({
+      type: SHIFT_REGISTER_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
 // Update or Delete User of Shift Register
 export const updateOrDeleteUser =
   (formData) =>
@@ -122,7 +142,8 @@ export const updateOrDeleteUser =
         };
 
         if (formData.userFlag === "0") {
-          dispatch(setAlertShiftRegister("Chưa có thay đổi", "warning"));
+          // dispatch(setAlertShiftRegister("Chưa có thay đổi", "warning"));
+          dispatch(setAlert("Chưa có thay đổi", "warning"));
         } else {
           // console.log("action in ra " + formData.id + " - " + formData.userId + " - " + formData.userFlag);
           if (formData.userFlag === "1") {
@@ -132,7 +153,12 @@ export const updateOrDeleteUser =
               type: DELETE_SHIFT_REGISTER,
               payload: formData.id,
             });
-            dispatch(setAlertShiftRegister("Xoá nhân viên thành công", "success"));
+            // dispatch(setAlertShiftRegister("Xoá nhân viên thành công", "success"));
+            dispatch({
+              type: SHOW_SHIFTREGISTERS_USER_MODAL,
+              payload: false,
+            });
+            dispatch(setAlert("Xoá nhân viên thành công", "success"));
           }
           if (formData.userFlag === "2") {
             // Update
@@ -141,7 +167,12 @@ export const updateOrDeleteUser =
               type: UPDATE_SHIFT_REGISTERS,
               payload: res.data,
             });
-            dispatch(setAlertShiftRegister("Cập nhật nhân viên thành công", "success"));
+            dispatch({
+              type: SHOW_SHIFTREGISTERS_USER_MODAL,
+              payload: false,
+            });
+            // dispatch(setAlertShiftRegister("Cập nhật nhân viên thành công", "success"));
+            dispatch(setAlert("Cập nhật nhân viên thành công", "success"));
           }
         }
 
@@ -182,12 +213,12 @@ export const getShiftRegisters = (branchId, dateFrom, dateTo) => async (dispatch
 
 // Get shift Registers by userId, dateFrom, dateTo
 export const getShiftRegisterViewSalary = (userId, dateFrom, dateTo, currentDay) => async (dispatch) => {
-  
+
   dispatch({ type: CLEAR_SHIFT_REGISTER_VIEW_SALARY });
   try {
     if (userId) {
       // console.log("action in ra " + userId + " - " + dateFrom + " - " + dateTo);
-      
+
       dispatch({
         type: SET_CURRENT_DAY,
         payload: currentDay,
@@ -220,6 +251,10 @@ export const getShiftRegistersForMonth = (dateFrom, dateTo) => async (dispatch) 
       type: GET_SHIFT_REGISTERS,
       payload: res.data,
     });
+    dispatch({
+      type: SETLOADING_SHIFTREGISTER,
+      payload: false,
+    });
     return Promise.resolve(res.data);
 
   } catch (err) {
@@ -228,6 +263,30 @@ export const getShiftRegistersForMonth = (dateFrom, dateTo) => async (dispatch) 
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
+};
+
+// Show Shift Register Modal
+export const setShowShiftRegistersModal = (data) => async (dispatch) => {
+  dispatch({
+    type: SHOW_SHIFTREGISTERS_MODAL,
+    payload: data,
+  });
+};
+
+// Show Shift Register User Modal
+export const setShowShiftRegistersUserModal = (data) => async (dispatch) => {
+  dispatch({
+    type: SHOW_SHIFTREGISTERS_USER_MODAL,
+    payload: data,
+  });
+};
+
+// Set Loading Shift Register
+export const setShiftRegisterLoader = (data) => async (dispatch) => {
+  dispatch({
+    type: SETLOADING_SHIFTREGISTER,
+    payload: data,
+  });
 };
 
 // Update Shift Register
@@ -261,11 +320,13 @@ export const updateShiftRegister =
           flagCheckUpdate = "1";
         }
         if (flagCheckUpdate === "") {
-          dispatch(setAlertShiftRegister("Chưa có thay đổi", "warning"));
+          // dispatch(setAlertShiftRegister("Chưa có thay đổi", "warning"));
+          dispatch(setAlert("Chưa có thay đổi", "warning"));
         } else {
           // Check ca đăng kí có vượt qua số ca được phép đăng kí của từng nhân viên hay không
           if (formData.permitShiftRegistFlag === false) {
-            dispatch(setAlertShiftRegister("Vượt quá số ca quy định", "danger"));
+            // dispatch(setAlertShiftRegister("Vượt quá số ca quy định", "danger"));
+            dispatch(setAlert("Vượt quá số ca quy định", "error"));
           } else {
             // Check ca đăng kí có vượt quá số ca quy định theo ca của 1 ngày hay không
             let getIndex = null;
@@ -294,38 +355,60 @@ export const updateShiftRegister =
               })
             })
 
-            if (formData.shiftFlag0 !== "0" && formData.shiftFlag0 !== "3") {
+            // if (formData.shiftFlag0 !== "0" && formData.shiftFlag0 !== "3") {
+            //   countShift0 = countShift0 + 1;
+            // }
+            // if (formData.shiftFlag1 !== "0" && formData.shiftFlag1 !== "3") {
+            //   countShift1 = countShift1 + 1;
+            // }
+            // if (formData.shiftFlag2 !== "0" && formData.shiftFlag2 !== "3") {
+            //   countShift2 = countShift2 + 1;
+            // }
+
+            if (formData.shiftFlag0 === "2") {
               countShift0 = countShift0 + 1;
             }
-            if (formData.shiftFlag1 !== "0" && formData.shiftFlag1 !== "3") {
+            if (formData.shiftFlag1 === "2") {
               countShift1 = countShift1 + 1;
             }
-            if (formData.shiftFlag2 !== "0" && formData.shiftFlag2 !== "3") {
+            if (formData.shiftFlag2 === "2") {
               countShift2 = countShift2 + 1;
             }
 
             let flagUpdate = "";
             if (countShift0 > formData.personInShift0) {
               flagUpdate = "1";
-              dispatch(setAlertShiftRegister(`${formData.listShiftsName[0]} đã đủ số lượng đăng kí`, "danger"));
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[0]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[0]} đã đủ số lượng đăng kí`, "error"));
             }
             if (countShift1 > formData.personInShift1) {
               flagUpdate = "1";
-              dispatch(setAlertShiftRegister(`${formData.listShiftsName[1]} đã đủ số lượng đăng kí`, "danger"));
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[1]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[1]} đã đủ số lượng đăng kí`, "error"));
             }
             if (countShift2 > formData.personInShift2) {
               flagUpdate = "1";
-              dispatch(setAlertShiftRegister(`${formData.listShiftsName[2]} đã đủ số lượng đăng kí`, "danger"));
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[2]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[2]} đã đủ số lượng đăng kí`, "error"));
             }
 
             if (flagUpdate === "") {
+              dispatch({
+                type: SHOW_SHIFTREGISTERS_MODAL,
+                payload: false,
+              });
+              dispatch({
+                type: SETLOADING_SHIFTREGISTER,
+                payload: false,
+              });
               await axios.put("/api/shiftRegisters2/register", formData, config);
               const res = await axios.get(`/api/shiftRegisters2/${formData.branchId}/${formData.dateFrom}/${formData.dateTo}`);
               dispatch({
                 type: GET_SHIFT_REGISTERS,
                 payload: res.data,
               });
-              dispatch(setAlertShiftRegister("Cập nhật ca thành công", "success"));
+              // dispatch(setAlertShiftRegister("Cập nhật ca thành công", "success"));
+              dispatch(setAlert("Cập nhật ca thành công", "success"));
             }
           }
         }

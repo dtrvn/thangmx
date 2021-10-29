@@ -225,7 +225,7 @@ const ViewPersonInShift = ({
                         class="btn btn-info"
                     // onClick={() => onaddPersonInShift()}
                     >
-                        <i class="fas fa-plus"></i>{"  "} Cập nhật
+                        <i class="fas fa-plus"></i>{"  "}<span className="hide-sm">Cập nhật</span>
                     </button>
                 </div>
             </form>
