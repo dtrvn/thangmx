@@ -889,7 +889,7 @@ const ExportExcel = ({
                 // Ca 2
                 eleData[checkDayFlag + 1] =
                 {
-                    value: `${jobs[jobIndex].jobName}`,
+                    value: `${jobs.length >= 0 ? jobs[jobIndex].jobName : ""}`,
                     style: {
                         font: { sz: "14", bold: false },
                         border: {

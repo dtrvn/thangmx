@@ -240,25 +240,25 @@ const TabContent = ({
                 className = "label label-warning";
             }
             if (index === 3) {
-                className = "label label-warning";
+                className = "label label-blue";
             }
             if (index === 4) {
-                className = "label label-warning";
+                className = "label label-pink";
             }
             if (index === 5) {
-                className = "label label-warning";
+                className = "label label-green";
             }
             if (index === 6) {
-                className = "label label-warning";
+                className = "label label-aqua";
             }
             if (index === 7) {
-                className = "label label-warning";
+                className = "label label-violet";
             }
             if (index === 8) {
-                className = "label label-warning";
+                className = "label label-organge";
             }
             if (index === 9) {
-                className = "label label-warning";
+                className = "label label-blue";
             }
 
             if (moment(ele.date).format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
@@ -310,6 +310,27 @@ const TabContent = ({
         if (idx === 2) {
             className = "label label-warning";
         }
+        if (idx === 3) {
+            className = "label label-blue";
+        }
+        if (idx === 4) {
+            className = "label label-pink";
+        }
+        if (idx === 5) {
+            className = "label label-green";
+        }
+        if (idx === 6) {
+            className = "label label-aqua";
+        }
+        if (idx === 7) {
+            className = "label label-violet";
+        }
+        if (idx === 8) {
+            className = "label label-organge";
+        }
+        if (idx === 9) {
+            className = "label label-blue";
+        }
         if (ele !== null) {
             eleMon.push(<span className={className}>{shifts[idx].shiftName}{" - "}{ele}</span>)
         } else {
@@ -325,6 +346,27 @@ const TabContent = ({
         }
         if (idx === 2) {
             className = "label label-warning";
+        }
+        if (idx === 3) {
+            className = "label label-blue";
+        }
+        if (idx === 4) {
+            className = "label label-pink";
+        }
+        if (idx === 5) {
+            className = "label label-green";
+        }
+        if (idx === 6) {
+            className = "label label-aqua";
+        }
+        if (idx === 7) {
+            className = "label label-violet";
+        }
+        if (idx === 8) {
+            className = "label label-organge";
+        }
+        if (idx === 9) {
+            className = "label label-blue";
         }
         if (ele) {
             eleTue.push(<span className={className}>{shifts[idx].shiftName}{" - "}{ele}</span>)
@@ -342,6 +384,27 @@ const TabContent = ({
         if (idx === 2) {
             className = "label label-warning";
         }
+        if (idx === 3) {
+            className = "label label-blue";
+        }
+        if (idx === 4) {
+            className = "label label-pink";
+        }
+        if (idx === 5) {
+            className = "label label-green";
+        }
+        if (idx === 6) {
+            className = "label label-aqua";
+        }
+        if (idx === 7) {
+            className = "label label-violet";
+        }
+        if (idx === 8) {
+            className = "label label-organge";
+        }
+        if (idx === 9) {
+            className = "label label-blue";
+        }
         if (ele !== null) {
             eleWed.push(<span className={className}>{shifts[idx].shiftName}{" - "}{ele}</span>)
         } else {
@@ -357,6 +420,27 @@ const TabContent = ({
         }
         if (idx === 2) {
             className = "label label-warning";
+        }
+        if (idx === 3) {
+            className = "label label-blue";
+        }
+        if (idx === 4) {
+            className = "label label-pink";
+        }
+        if (idx === 5) {
+            className = "label label-green";
+        }
+        if (idx === 6) {
+            className = "label label-aqua";
+        }
+        if (idx === 7) {
+            className = "label label-violet";
+        }
+        if (idx === 8) {
+            className = "label label-organge";
+        }
+        if (idx === 9) {
+            className = "label label-blue";
         }
         if (ele !== null) {
             eleThu.push(<span className={className}>{shifts[idx].shiftName}{" - "}{ele}</span>)
@@ -374,6 +458,27 @@ const TabContent = ({
         if (idx === 2) {
             className = "label label-warning";
         }
+        if (idx === 3) {
+            className = "label label-blue";
+        }
+        if (idx === 4) {
+            className = "label label-pink";
+        }
+        if (idx === 5) {
+            className = "label label-green";
+        }
+        if (idx === 6) {
+            className = "label label-aqua";
+        }
+        if (idx === 7) {
+            className = "label label-violet";
+        }
+        if (idx === 8) {
+            className = "label label-organge";
+        }
+        if (idx === 9) {
+            className = "label label-blue";
+        }
         if (ele !== null) {
             eleFri.push(<span className={className}>{shifts[idx].shiftName}{" - "}{ele}</span>)
         } else {
@@ -390,6 +495,27 @@ const TabContent = ({
         if (idx === 2) {
             className = "label label-warning";
         }
+        if (idx === 3) {
+            className = "label label-blue";
+        }
+        if (idx === 4) {
+            className = "label label-pink";
+        }
+        if (idx === 5) {
+            className = "label label-green";
+        }
+        if (idx === 6) {
+            className = "label label-aqua";
+        }
+        if (idx === 7) {
+            className = "label label-violet";
+        }
+        if (idx === 8) {
+            className = "label label-organge";
+        }
+        if (idx === 9) {
+            className = "label label-blue";
+        }
         if (ele !== null) {
             eleSat.push(<span className={className}>{shifts[idx].shiftName}{" - "}{ele}</span>)
         } else {
@@ -405,6 +531,27 @@ const TabContent = ({
         }
         if (idx === 2) {
             className = "label label-warning";
+        }
+        if (idx === 3) {
+            className = "label label-blue";
+        }
+        if (idx === 4) {
+            className = "label label-pink";
+        }
+        if (idx === 5) {
+            className = "label label-green";
+        }
+        if (idx === 6) {
+            className = "label label-aqua";
+        }
+        if (idx === 7) {
+            className = "label label-violet";
+        }
+        if (idx === 8) {
+            className = "label label-organge";
+        }
+        if (idx === 9) {
+            className = "label label-blue";
         }
         if (ele !== null) {
             eleSun.push(<span className={className}>{shifts[idx].shiftName}{" - "}{ele}</span>)
@@ -569,8 +716,37 @@ const TabContent = ({
                 if (index === 2) {
                     className = "label label-warning";
                 }
-
+                if (index === 3) {
+                    className = "label label-blue";
+                }
+                if (index === 4) {
+                    className = "label label-pink";
+                }
+                if (index === 5) {
+                    className = "label label-green";
+                }
+                if (index === 6) {
+                    className = "label label-aqua";
+                }
+                if (index === 7) {
+                    className = "label label-violet";
+                }
+                if (index === 8) {
+                    className = "label label-organge";
+                }
+                if (index === 9) {
+                    className = "label label-blue";
+                }
                 if (moment(reg.date).format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
+                    // if (index === 0) {
+                    //     totalShiftsNum[0] = totalShiftsNum[0] + 1;
+                    // }
+                    // if (index === 1) {
+                    //     totalShiftsNum[1] = totalShiftsNum[1] + 1;
+                    // }
+                    // if (index === 2) {
+                    //     totalShiftsNum[2] = totalShiftsNum[2] + 1;
+                    // }
                     if (index === 0) {
                         totalShiftsNum[0] = totalShiftsNum[0] + 1;
                     }
@@ -580,83 +756,275 @@ const TabContent = ({
                     if (index === 2) {
                         totalShiftsNum[2] = totalShiftsNum[2] + 1;
                     }
+                    if (index === 3) {
+                        totalShiftsNum[3] = totalShiftsNum[3] + 1;
+                    }
+                    if (index === 4) {
+                        totalShiftsNum[4] = totalShiftsNum[4] + 1;
+                    }
+                    if (index === 5) {
+                        totalShiftsNum[5] = totalShiftsNum[5] + 1;
+                    }
+                    if (index === 6) {
+                        totalShiftsNum[6] = totalShiftsNum[6] + 1;
+                    }
+                    if (index === 7) {
+                        totalShiftsNum[7] = totalShiftsNum[7] + 1;
+                    }
+                    if (index === 8) {
+                        totalShiftsNum[8] = totalShiftsNum[8] + 1;
+                    }
+                    if (index === 9) {
+                        totalShiftsNum[9] = totalShiftsNum[9] + 1;
+                    }
                     classNameListMon[index] = className;
                     valueListMon[index] = jobs[jobIndex].jobName;
                 }
                 if (moment(reg.date).format('MM-DD-YYYY') === moment(tuesday).format('MM-DD-YYYY')) {
+                    // if (index === 0) {
+                    //     totalShiftsNum[3] = totalShiftsNum[3] + 1;
+                    // }
+                    // if (index === 1) {
+                    //     totalShiftsNum[4] = totalShiftsNum[4] + 1;
+                    // }
+                    // if (index === 2) {
+                    //     totalShiftsNum[5] = totalShiftsNum[5] + 1;
+                    // }
                     if (index === 0) {
-                        totalShiftsNum[3] = totalShiftsNum[3] + 1;
+                        totalShiftsNum[10] = totalShiftsNum[10] + 1;
                     }
                     if (index === 1) {
-                        totalShiftsNum[4] = totalShiftsNum[4] + 1;
+                        totalShiftsNum[11] = totalShiftsNum[11] + 1;
                     }
                     if (index === 2) {
-                        totalShiftsNum[5] = totalShiftsNum[5] + 1;
+                        totalShiftsNum[12] = totalShiftsNum[12] + 1;
+                    }
+                    if (index === 3) {
+                        totalShiftsNum[13] = totalShiftsNum[13] + 1;
+                    }
+                    if (index === 4) {
+                        totalShiftsNum[14] = totalShiftsNum[14] + 1;
+                    }
+                    if (index === 5) {
+                        totalShiftsNum[15] = totalShiftsNum[15] + 1;
+                    }
+                    if (index === 6) {
+                        totalShiftsNum[16] = totalShiftsNum[16] + 1;
+                    }
+                    if (index === 7) {
+                        totalShiftsNum[17] = totalShiftsNum[17] + 1;
+                    }
+                    if (index === 8) {
+                        totalShiftsNum[18] = totalShiftsNum[18] + 1;
+                    }
+                    if (index === 9) {
+                        totalShiftsNum[19] = totalShiftsNum[19] + 1;
                     }
                     classNameListTue[index] = className;
                     valueListTue[index] = jobs[jobIndex].jobName;
                 }
                 if (moment(reg.date).format('MM-DD-YYYY') === moment(wednesday).format('MM-DD-YYYY')) {
+                    // if (index === 0) {
+                    //     totalShiftsNum[6] = totalShiftsNum[6] + 1;
+                    // }
+                    // if (index === 1) {
+                    //     totalShiftsNum[7] = totalShiftsNum[7] + 1;
+                    // }
+                    // if (index === 2) {
+                    //     totalShiftsNum[8] = totalShiftsNum[8] + 1;
+                    // }
                     if (index === 0) {
-                        totalShiftsNum[6] = totalShiftsNum[6] + 1;
+                        totalShiftsNum[20] = totalShiftsNum[20] + 1;
                     }
                     if (index === 1) {
-                        totalShiftsNum[7] = totalShiftsNum[7] + 1;
+                        totalShiftsNum[21] = totalShiftsNum[21] + 1;
                     }
                     if (index === 2) {
-                        totalShiftsNum[8] = totalShiftsNum[8] + 1;
+                        totalShiftsNum[22] = totalShiftsNum[22] + 1;
+                    }
+                    if (index === 3) {
+                        totalShiftsNum[23] = totalShiftsNum[23] + 1;
+                    }
+                    if (index === 4) {
+                        totalShiftsNum[24] = totalShiftsNum[24] + 1;
+                    }
+                    if (index === 5) {
+                        totalShiftsNum[25] = totalShiftsNum[25] + 1;
+                    }
+                    if (index === 6) {
+                        totalShiftsNum[26] = totalShiftsNum[26] + 1;
+                    }
+                    if (index === 7) {
+                        totalShiftsNum[27] = totalShiftsNum[27] + 1;
+                    }
+                    if (index === 8) {
+                        totalShiftsNum[28] = totalShiftsNum[28] + 1;
+                    }
+                    if (index === 9) {
+                        totalShiftsNum[29] = totalShiftsNum[29] + 1;
                     }
                     classNameListWed[index] = className;
                     valueListWed[index] = jobs[jobIndex].jobName;
                 }
                 if (moment(reg.date).format('MM-DD-YYYY') === moment(thursday).format('MM-DD-YYYY')) {
+                    // if (index === 0) {
+                    //     totalShiftsNum[9] = totalShiftsNum[9] + 1;
+                    // }
+                    // if (index === 1) {
+                    //     totalShiftsNum[10] = totalShiftsNum[10] + 1;
+                    // }
+                    // if (index === 2) {
+                    //     totalShiftsNum[11] = totalShiftsNum[11] + 1;
+                    // }
                     if (index === 0) {
-                        totalShiftsNum[9] = totalShiftsNum[9] + 1;
+                        totalShiftsNum[30] = totalShiftsNum[30] + 1;
                     }
                     if (index === 1) {
-                        totalShiftsNum[10] = totalShiftsNum[10] + 1;
+                        totalShiftsNum[31] = totalShiftsNum[31] + 1;
                     }
                     if (index === 2) {
-                        totalShiftsNum[11] = totalShiftsNum[11] + 1;
+                        totalShiftsNum[32] = totalShiftsNum[32] + 1;
+                    }
+                    if (index === 3) {
+                        totalShiftsNum[33] = totalShiftsNum[33] + 1;
+                    }
+                    if (index === 4) {
+                        totalShiftsNum[34] = totalShiftsNum[34] + 1;
+                    }
+                    if (index === 5) {
+                        totalShiftsNum[35] = totalShiftsNum[32] + 1;
+                    }
+                    if (index === 6) {
+                        totalShiftsNum[36] = totalShiftsNum[36] + 1;
+                    }
+                    if (index === 7) {
+                        totalShiftsNum[37] = totalShiftsNum[37] + 1;
+                    }
+                    if (index === 8) {
+                        totalShiftsNum[38] = totalShiftsNum[32] + 1;
+                    }
+                    if (index === 9) {
+                        totalShiftsNum[39] = totalShiftsNum[32] + 1;
                     }
                     classNameListThu[index] = className;
                     valueListThu[index] = jobs[jobIndex].jobName;
                 }
                 if (moment(reg.date).format('MM-DD-YYYY') === moment(friday).format('MM-DD-YYYY')) {
+                    // if (index === 0) {
+                    //     totalShiftsNum[12] = totalShiftsNum[12] + 1;
+                    // }
+                    // if (index === 1) {
+                    //     totalShiftsNum[13] = totalShiftsNum[13] + 1;
+                    // }
+                    // if (index === 2) {
+                    //     totalShiftsNum[14] = totalShiftsNum[14] + 1;
+                    // }
                     if (index === 0) {
-                        totalShiftsNum[12] = totalShiftsNum[12] + 1;
+                        totalShiftsNum[40] = totalShiftsNum[40] + 1;
                     }
                     if (index === 1) {
-                        totalShiftsNum[13] = totalShiftsNum[13] + 1;
+                        totalShiftsNum[41] = totalShiftsNum[41] + 1;
                     }
                     if (index === 2) {
-                        totalShiftsNum[14] = totalShiftsNum[14] + 1;
+                        totalShiftsNum[42] = totalShiftsNum[42] + 1;
+                    }
+                    if (index === 3) {
+                        totalShiftsNum[43] = totalShiftsNum[43] + 1;
+                    }
+                    if (index === 4) {
+                        totalShiftsNum[44] = totalShiftsNum[44] + 1;
+                    }
+                    if (index === 5) {
+                        totalShiftsNum[45] = totalShiftsNum[45] + 1;
+                    }
+                    if (index === 6) {
+                        totalShiftsNum[46] = totalShiftsNum[46] + 1;
+                    }
+                    if (index === 7) {
+                        totalShiftsNum[47] = totalShiftsNum[47] + 1;
+                    }
+                    if (index === 8) {
+                        totalShiftsNum[48] = totalShiftsNum[48] + 1;
+                    }
+                    if (index === 9) {
+                        totalShiftsNum[49] = totalShiftsNum[49] + 1;
                     }
                     classNameListFri[index] = className;
                     valueListFri[index] = jobs[jobIndex].jobName;
                 }
                 if (moment(reg.date).format('MM-DD-YYYY') === moment(saturday).format('MM-DD-YYYY')) {
                     if (index === 0) {
-                        totalShiftsNum[15] = totalShiftsNum[15] + 1;
+                        totalShiftsNum[50] = totalShiftsNum[50] + 1;
                     }
                     if (index === 1) {
-                        totalShiftsNum[16] = totalShiftsNum[16] + 1;
+                        totalShiftsNum[51] = totalShiftsNum[51] + 1;
                     }
                     if (index === 2) {
-                        totalShiftsNum[17] = totalShiftsNum[17] + 1;
+                        totalShiftsNum[52] = totalShiftsNum[52] + 1;
+                    }
+                    if (index === 3) {
+                        totalShiftsNum[53] = totalShiftsNum[53] + 1;
+                    }
+                    if (index === 4) {
+                        totalShiftsNum[54] = totalShiftsNum[54] + 1;
+                    }
+                    if (index === 5) {
+                        totalShiftsNum[55] = totalShiftsNum[55] + 1;
+                    }
+                    if (index === 6) {
+                        totalShiftsNum[56] = totalShiftsNum[56] + 1;
+                    }
+                    if (index === 7) {
+                        totalShiftsNum[57] = totalShiftsNum[57] + 1;
+                    }
+                    if (index === 8) {
+                        totalShiftsNum[58] = totalShiftsNum[58] + 1;
+                    }
+                    if (index === 9) {
+                        totalShiftsNum[59] = totalShiftsNum[59] + 1;
                     }
                     classNameListSat[index] = className;
                     valueListSat[index] = jobs[jobIndex].jobName;
                 }
                 if (moment(reg.date).format('MM-DD-YYYY') === moment(sunday).format('MM-DD-YYYY')) {
+                    // if (index === 0) {
+                    //     totalShiftsNum[18] = totalShiftsNum[18] + 1;
+                    // }
+                    // if (index === 1) {
+                    //     totalShiftsNum[19] = totalShiftsNum[19] + 1;
+                    // }
+                    // if (index === 2) {
+                    //     totalShiftsNum[20] = totalShiftsNum[20] + 1;
+                    // }
                     if (index === 0) {
-                        totalShiftsNum[18] = totalShiftsNum[18] + 1;
+                        totalShiftsNum[60] = totalShiftsNum[60] + 1;
                     }
                     if (index === 1) {
-                        totalShiftsNum[19] = totalShiftsNum[19] + 1;
+                        totalShiftsNum[61] = totalShiftsNum[61] + 1;
                     }
                     if (index === 2) {
-                        totalShiftsNum[20] = totalShiftsNum[20] + 1;
+                        totalShiftsNum[62] = totalShiftsNum[62] + 1;
+                    }
+                    if (index === 3) {
+                        totalShiftsNum[63] = totalShiftsNum[63] + 1;
+                    }
+                    if (index === 4) {
+                        totalShiftsNum[64] = totalShiftsNum[64] + 1;
+                    }
+                    if (index === 5) {
+                        totalShiftsNum[65] = totalShiftsNum[65] + 1;
+                    }
+                    if (index === 6) {
+                        totalShiftsNum[66] = totalShiftsNum[66] + 1;
+                    }
+                    if (index === 7) {
+                        totalShiftsNum[67] = totalShiftsNum[67] + 1;
+                    }
+                    if (index === 8) {
+                        totalShiftsNum[68] = totalShiftsNum[68] + 1;
+                    }
+                    if (index === 9) {
+                        totalShiftsNum[69] = totalShiftsNum[69] + 1;
                     }
                     classNameListSun[index] = className;
                     valueListSun[index] = jobs[jobIndex].jobName;
@@ -1374,9 +1742,23 @@ const TabContent = ({
             shiftId0: "",
             shiftId1: "",
             shiftId2: "",
+            shiftId3: "",
+            shiftId4: "",
+            shiftId5: "",
+            shiftId6: "",
+            shiftId7: "",
+            shiftId8: "",
+            shiftId9: "",
             personNo0: "",
             personNo1: "",
             personNo2: "",
+            personNo3: "",
+            personNo4: "",
+            personNo5: "",
+            personNo6: "",
+            personNo7: "",
+            personNo8: "",
+            personNo9: "",
             flagCheckLastRecord: "",
         };
 
@@ -1389,6 +1771,18 @@ const TabContent = ({
                     data.currentDate = moment(monday).format('MM-DD-YYYY');
                     ele.personShift.map((per) => {
                         shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                        // if (shiftIndex === 0) {
+                        //     data.shiftId0 = per.shiftId;
+                        //     data.personNo0 = per.personNumber;
+                        // }
+                        // if (shiftIndex === 1) {
+                        //     data.shiftId1 = per.shiftId;
+                        //     data.personNo1 = per.personNumber;
+                        // }
+                        // if (shiftIndex === 2) {
+                        //     data.shiftId2 = per.shiftId;
+                        //     data.personNo2 = per.personNumber;
+                        // }
                         if (shiftIndex === 0) {
                             data.shiftId0 = per.shiftId;
                             data.personNo0 = per.personNumber;
@@ -1401,6 +1795,34 @@ const TabContent = ({
                             data.shiftId2 = per.shiftId;
                             data.personNo2 = per.personNumber;
                         }
+                        if (shiftIndex === 3) {
+                            data.shiftId3 = per.shiftId;
+                            data.personNo3 = per.personNumber;
+                        }
+                        if (shiftIndex === 4) {
+                            data.shiftId4 = per.shiftId;
+                            data.personNo4 = per.personNumber;
+                        }
+                        if (shiftIndex === 5) {
+                            data.shiftId5 = per.shiftId;
+                            data.personNo5 = per.personNumber;
+                        }
+                        if (shiftIndex === 6) {
+                            data.shiftId6 = per.shiftId;
+                            data.personNo6 = per.personNumber;
+                        }
+                        if (shiftIndex === 7) {
+                            data.shiftId7 = per.shiftId;
+                            data.personNo7 = per.personNumber;
+                        }
+                        if (shiftIndex === 8) {
+                            data.shiftId8 = per.shiftId;
+                            data.personNo8 = per.personNumber;
+                        }
+                        if (shiftIndex === 9) {
+                            data.shiftId9 = per.shiftId;
+                            data.personNo9 = per.personNumber;
+                        }
                     })
                     copyPersonInShifts(data);
                 }
@@ -1410,6 +1832,18 @@ const TabContent = ({
                         data.currentDate = moment(tuesday).format('MM-DD-YYYY');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            // if (shiftIndex === 0) {
+                            //     data.shiftId0 = per.shiftId;
+                            //     data.personNo0 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 1) {
+                            //     data.shiftId1 = per.shiftId;
+                            //     data.personNo1 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 2) {
+                            //     data.shiftId2 = per.shiftId;
+                            //     data.personNo2 = per.personNumber;
+                            // }
                             if (shiftIndex === 0) {
                                 data.shiftId0 = per.shiftId;
                                 data.personNo0 = per.personNumber;
@@ -1421,6 +1855,34 @@ const TabContent = ({
                             if (shiftIndex === 2) {
                                 data.shiftId2 = per.shiftId;
                                 data.personNo2 = per.personNumber;
+                            }
+                            if (shiftIndex === 3) {
+                                data.shiftId3 = per.shiftId;
+                                data.personNo3 = per.personNumber;
+                            }
+                            if (shiftIndex === 4) {
+                                data.shiftId4 = per.shiftId;
+                                data.personNo4 = per.personNumber;
+                            }
+                            if (shiftIndex === 5) {
+                                data.shiftId5 = per.shiftId;
+                                data.personNo5 = per.personNumber;
+                            }
+                            if (shiftIndex === 6) {
+                                data.shiftId6 = per.shiftId;
+                                data.personNo6 = per.personNumber;
+                            }
+                            if (shiftIndex === 7) {
+                                data.shiftId7 = per.shiftId;
+                                data.personNo7 = per.personNumber;
+                            }
+                            if (shiftIndex === 8) {
+                                data.shiftId8 = per.shiftId;
+                                data.personNo8 = per.personNumber;
+                            }
+                            if (shiftIndex === 9) {
+                                data.shiftId9 = per.shiftId;
+                                data.personNo9 = per.personNumber;
                             }
                         })
                         copyPersonInShifts(data);
@@ -1433,6 +1895,18 @@ const TabContent = ({
                         data.currentDate = moment(wednesday).format('MM-DD-YYYY');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            // if (shiftIndex === 0) {
+                            //     data.shiftId0 = per.shiftId;
+                            //     data.personNo0 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 1) {
+                            //     data.shiftId1 = per.shiftId;
+                            //     data.personNo1 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 2) {
+                            //     data.shiftId2 = per.shiftId;
+                            //     data.personNo2 = per.personNumber;
+                            // }
                             if (shiftIndex === 0) {
                                 data.shiftId0 = per.shiftId;
                                 data.personNo0 = per.personNumber;
@@ -1444,6 +1918,34 @@ const TabContent = ({
                             if (shiftIndex === 2) {
                                 data.shiftId2 = per.shiftId;
                                 data.personNo2 = per.personNumber;
+                            }
+                            if (shiftIndex === 3) {
+                                data.shiftId3 = per.shiftId;
+                                data.personNo3 = per.personNumber;
+                            }
+                            if (shiftIndex === 4) {
+                                data.shiftId4 = per.shiftId;
+                                data.personNo4 = per.personNumber;
+                            }
+                            if (shiftIndex === 5) {
+                                data.shiftId5 = per.shiftId;
+                                data.personNo5 = per.personNumber;
+                            }
+                            if (shiftIndex === 6) {
+                                data.shiftId6 = per.shiftId;
+                                data.personNo6 = per.personNumber;
+                            }
+                            if (shiftIndex === 7) {
+                                data.shiftId7 = per.shiftId;
+                                data.personNo7 = per.personNumber;
+                            }
+                            if (shiftIndex === 8) {
+                                data.shiftId8 = per.shiftId;
+                                data.personNo8 = per.personNumber;
+                            }
+                            if (shiftIndex === 9) {
+                                data.shiftId9 = per.shiftId;
+                                data.personNo9 = per.personNumber;
                             }
                         })
                         copyPersonInShifts(data);
@@ -1456,6 +1958,18 @@ const TabContent = ({
                         data.currentDate = moment(thursday).format('MM-DD-YYYY');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            // if (shiftIndex === 0) {
+                            //     data.shiftId0 = per.shiftId;
+                            //     data.personNo0 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 1) {
+                            //     data.shiftId1 = per.shiftId;
+                            //     data.personNo1 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 2) {
+                            //     data.shiftId2 = per.shiftId;
+                            //     data.personNo2 = per.personNumber;
+                            // }
                             if (shiftIndex === 0) {
                                 data.shiftId0 = per.shiftId;
                                 data.personNo0 = per.personNumber;
@@ -1467,6 +1981,34 @@ const TabContent = ({
                             if (shiftIndex === 2) {
                                 data.shiftId2 = per.shiftId;
                                 data.personNo2 = per.personNumber;
+                            }
+                            if (shiftIndex === 3) {
+                                data.shiftId3 = per.shiftId;
+                                data.personNo3 = per.personNumber;
+                            }
+                            if (shiftIndex === 4) {
+                                data.shiftId4 = per.shiftId;
+                                data.personNo4 = per.personNumber;
+                            }
+                            if (shiftIndex === 5) {
+                                data.shiftId5 = per.shiftId;
+                                data.personNo5 = per.personNumber;
+                            }
+                            if (shiftIndex === 6) {
+                                data.shiftId6 = per.shiftId;
+                                data.personNo6 = per.personNumber;
+                            }
+                            if (shiftIndex === 7) {
+                                data.shiftId7 = per.shiftId;
+                                data.personNo7 = per.personNumber;
+                            }
+                            if (shiftIndex === 8) {
+                                data.shiftId8 = per.shiftId;
+                                data.personNo8 = per.personNumber;
+                            }
+                            if (shiftIndex === 9) {
+                                data.shiftId9 = per.shiftId;
+                                data.personNo9 = per.personNumber;
                             }
                         })
                         copyPersonInShifts(data);
@@ -1479,6 +2021,18 @@ const TabContent = ({
                         data.currentDate = moment(friday).format('MM-DD-YYYY');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            // if (shiftIndex === 0) {
+                            //     data.shiftId0 = per.shiftId;
+                            //     data.personNo0 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 1) {
+                            //     data.shiftId1 = per.shiftId;
+                            //     data.personNo1 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 2) {
+                            //     data.shiftId2 = per.shiftId;
+                            //     data.personNo2 = per.personNumber;
+                            // }
                             if (shiftIndex === 0) {
                                 data.shiftId0 = per.shiftId;
                                 data.personNo0 = per.personNumber;
@@ -1490,6 +2044,34 @@ const TabContent = ({
                             if (shiftIndex === 2) {
                                 data.shiftId2 = per.shiftId;
                                 data.personNo2 = per.personNumber;
+                            }
+                            if (shiftIndex === 3) {
+                                data.shiftId3 = per.shiftId;
+                                data.personNo3 = per.personNumber;
+                            }
+                            if (shiftIndex === 4) {
+                                data.shiftId4 = per.shiftId;
+                                data.personNo4 = per.personNumber;
+                            }
+                            if (shiftIndex === 5) {
+                                data.shiftId5 = per.shiftId;
+                                data.personNo5 = per.personNumber;
+                            }
+                            if (shiftIndex === 6) {
+                                data.shiftId6 = per.shiftId;
+                                data.personNo6 = per.personNumber;
+                            }
+                            if (shiftIndex === 7) {
+                                data.shiftId7 = per.shiftId;
+                                data.personNo7 = per.personNumber;
+                            }
+                            if (shiftIndex === 8) {
+                                data.shiftId8 = per.shiftId;
+                                data.personNo8 = per.personNumber;
+                            }
+                            if (shiftIndex === 9) {
+                                data.shiftId9 = per.shiftId;
+                                data.personNo9 = per.personNumber;
                             }
                         })
                         copyPersonInShifts(data);
@@ -1502,6 +2084,18 @@ const TabContent = ({
                         data.currentDate = moment(saturday).format('MM-DD-YYYY');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            // if (shiftIndex === 0) {
+                            //     data.shiftId0 = per.shiftId;
+                            //     data.personNo0 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 1) {
+                            //     data.shiftId1 = per.shiftId;
+                            //     data.personNo1 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 2) {
+                            //     data.shiftId2 = per.shiftId;
+                            //     data.personNo2 = per.personNumber;
+                            // }
                             if (shiftIndex === 0) {
                                 data.shiftId0 = per.shiftId;
                                 data.personNo0 = per.personNumber;
@@ -1513,6 +2107,34 @@ const TabContent = ({
                             if (shiftIndex === 2) {
                                 data.shiftId2 = per.shiftId;
                                 data.personNo2 = per.personNumber;
+                            }
+                            if (shiftIndex === 3) {
+                                data.shiftId3 = per.shiftId;
+                                data.personNo3 = per.personNumber;
+                            }
+                            if (shiftIndex === 4) {
+                                data.shiftId4 = per.shiftId;
+                                data.personNo4 = per.personNumber;
+                            }
+                            if (shiftIndex === 5) {
+                                data.shiftId5 = per.shiftId;
+                                data.personNo5 = per.personNumber;
+                            }
+                            if (shiftIndex === 6) {
+                                data.shiftId6 = per.shiftId;
+                                data.personNo6 = per.personNumber;
+                            }
+                            if (shiftIndex === 7) {
+                                data.shiftId7 = per.shiftId;
+                                data.personNo7 = per.personNumber;
+                            }
+                            if (shiftIndex === 8) {
+                                data.shiftId8 = per.shiftId;
+                                data.personNo8 = per.personNumber;
+                            }
+                            if (shiftIndex === 9) {
+                                data.shiftId9 = per.shiftId;
+                                data.personNo9 = per.personNumber;
                             }
                         })
                         copyPersonInShifts(data);
@@ -1525,6 +2147,18 @@ const TabContent = ({
                         data.currentDate = moment(sunday).format('MM-DD-YYYY');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
+                            // if (shiftIndex === 0) {
+                            //     data.shiftId0 = per.shiftId;
+                            //     data.personNo0 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 1) {
+                            //     data.shiftId1 = per.shiftId;
+                            //     data.personNo1 = per.personNumber;
+                            // }
+                            // if (shiftIndex === 2) {
+                            //     data.shiftId2 = per.shiftId;
+                            //     data.personNo2 = per.personNumber;
+                            // }
                             if (shiftIndex === 0) {
                                 data.shiftId0 = per.shiftId;
                                 data.personNo0 = per.personNumber;
@@ -1536,6 +2170,34 @@ const TabContent = ({
                             if (shiftIndex === 2) {
                                 data.shiftId2 = per.shiftId;
                                 data.personNo2 = per.personNumber;
+                            }
+                            if (shiftIndex === 3) {
+                                data.shiftId3 = per.shiftId;
+                                data.personNo3 = per.personNumber;
+                            }
+                            if (shiftIndex === 4) {
+                                data.shiftId4 = per.shiftId;
+                                data.personNo4 = per.personNumber;
+                            }
+                            if (shiftIndex === 5) {
+                                data.shiftId5 = per.shiftId;
+                                data.personNo5 = per.personNumber;
+                            }
+                            if (shiftIndex === 6) {
+                                data.shiftId6 = per.shiftId;
+                                data.personNo6 = per.personNumber;
+                            }
+                            if (shiftIndex === 7) {
+                                data.shiftId7 = per.shiftId;
+                                data.personNo7 = per.personNumber;
+                            }
+                            if (shiftIndex === 8) {
+                                data.shiftId8 = per.shiftId;
+                                data.personNo8 = per.personNumber;
+                            }
+                            if (shiftIndex === 9) {
+                                data.shiftId9 = per.shiftId;
+                                data.personNo9 = per.personNumber;
                             }
                         })
                         data.flagCheckLastRecord = "1";

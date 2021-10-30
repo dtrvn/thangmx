@@ -41,9 +41,23 @@ const ShiftRegisterModal = ({
         registerId0: "",
         registerId1: "",
         registerId2: "",
+        registerId3: "",
+        registerId4: "",
+        registerId5: "",
+        registerId6: "",
+        registerId7: "",
+        registerId8: "",
+        registerId9: "",
         shiftId0: "",
         shiftId1: "",
         shiftId2: "",
+        shiftId3: "",
+        shiftId4: "",
+        shiftId5: "",
+        shiftId6: "",
+        shiftId7: "",
+        shiftId8: "",
+        shiftId9: "",
         jobId0: "",
         jobId1: "",
         jobId2: "",
@@ -59,6 +73,15 @@ const ShiftRegisterModal = ({
         permitShiftRegistFlag: true,
     });
 
+    // const [value, setValue] = useState({
+    //     item: [],
+    // });
+
+    // if(shifts.length >= 0){
+    //     shifts.map((ele, idx) => {
+    //         setValue
+    //     })
+    // }
     const [value0, setValue0] = useState(false);
     const [value1, setValue1] = useState(false);
     const [value2, setValue2] = useState(false);

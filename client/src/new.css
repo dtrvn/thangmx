@@ -17744,7 +17744,7 @@ pre code {
 
 .rowShiftRegister {
 	display: flex;
-	height: 60px;
+	/* height: 60px; */
 	flex-wrap: wrap;
 }
 
@@ -18542,6 +18542,35 @@ pre code {
 		margin-left: 91.66667%
 	}
 }
+
+.label-blue {
+	background-color: #99ccff;
+}
+
+.label-pink {
+	background-color: #ff33cc;
+}
+
+.label-green {
+	background-color: #99ff33;
+}
+
+.label-aqua {
+	background-color: #00ffff;
+}
+
+.label-violet {
+	background-color: #9933ff;
+}
+
+.label-organge {
+	background-color: #ff6600;
+}
+
+.label-blue {
+	background-color: #33cccc;
+}
+
 
 @media (min-width:1200px) {
 	.col-xl {
