@@ -196,6 +196,29 @@ router.get("/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
 // @route       GET api/shiftRegisters/salary/:userId/:dateFrom/:dateTo
 // @desc        Get Shift Register by dateFrom, dateTo
 // @access      Private
+router.get("/shiftRegisterForWeek/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
+  try {
+    const shiftRegister2 = await ShiftRegister2.find({
+      $and: [{ branchId: req.params.branchId }, { dateFrom: req.params.dateFrom }, { dateTo: req.params.dateTo }],
+    });
+
+    if (!shiftRegister2) {
+      return res.status(404).json({ msg: "Shift Registers not found" });
+    }
+
+    res.json(shiftRegister2);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Shift Registers not found" });
+    }
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route       GET api/shiftRegisters/salary/:userId/:dateFrom/:dateTo
+// @desc        Get Shift Register by dateFrom, dateTo
+// @access      Private
 router.get("/salary/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
   try {
     // const shiftRegister2 = await ShiftRegister2.findById(req.params.id);
