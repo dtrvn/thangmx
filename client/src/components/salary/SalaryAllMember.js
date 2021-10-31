@@ -27,8 +27,8 @@ const SalaryAllMember = ({
     const [createDate, setCreateDate] = useState({
         currentDay: moment(),
         currentMonth: moment().month() + 1,
-        firstDayOfFirstWeekInMonth: moment().startOf('month').startOf("isoWeek").format('MM-DD-YYYY'),
-        lastDayOfLastWeekInMonth: moment().endOf('month').startOf("isoWeek").add(6, "days").format('MM-DD-YYYY'),
+        firstDayOfFirstWeekInMonth: moment().startOf('month').startOf("isoWeek").format('YYYY-MM-DD'),
+        lastDayOfLastWeekInMonth: moment().endOf('month').startOf("isoWeek").add(6, "days").format('YYYY-MM-DD'),
     });
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const SalaryAllMember = ({
     useEffect(() => {
         if (user) {
             if (user.roles === "User") {
-                getLastDayOfThisWeek = moment().startOf("isoWeek").add(6, "days").format('MM-DD-YYYY');
+                getLastDayOfThisWeek = moment().startOf("isoWeek").add(6, "days").format('YYYY-MM-DD');
                 getShiftRegistersForMonth(createDate.firstDayOfFirstWeekInMonth, getLastDayOfThisWeek);
             } else {
                 getShiftRegistersForMonth(createDate.firstDayOfFirstWeekInMonth, createDate.lastDayOfLastWeekInMonth);
@@ -49,8 +49,8 @@ const SalaryAllMember = ({
     const onPrevMonth = () => {
         const prevMonth = createDate.currentDay.subtract(1, "months");
         const getMonth = moment(prevMonth).month() + 1;
-        const firstWeekPrevMonth = moment(prevMonth).startOf('month').startOf("isoWeek").format('MM-DD-YYYY');
-        const lastWeekPrevMonth = moment(prevMonth).endOf('month').startOf("isoWeek").add(6, "days").format('MM-DD-YYYY');
+        const firstWeekPrevMonth = moment(prevMonth).startOf('month').startOf("isoWeek").format('YYYY-MM-DD');
+        const lastWeekPrevMonth = moment(prevMonth).endOf('month').startOf("isoWeek").add(6, "days").format('YYYY-MM-DD');
         setCreateDate({
             ...createDate,
             currentDay: prevMonth,
@@ -63,8 +63,8 @@ const SalaryAllMember = ({
     const onNextMonth = () => {
         const nextMonth = createDate.currentDay.add(1, "months");
         const getMonth = moment(nextMonth).month() + 1;
-        const firstWeekNextMonth = moment(nextMonth).startOf('month').startOf("isoWeek").format('MM-DD-YYYY');
-        const lastWeekNextMonth = moment(nextMonth).endOf('month').startOf("isoWeek").add(6, "days").format('MM-DD-YYYY');
+        const firstWeekNextMonth = moment(nextMonth).startOf('month').startOf("isoWeek").format('YYYY-MM-DD');
+        const lastWeekNextMonth = moment(nextMonth).endOf('month').startOf("isoWeek").add(6, "days").format('YYYY-MM-DD');
         setCreateDate({
             ...createDate,
             currentDay: nextMonth,
@@ -79,8 +79,8 @@ const SalaryAllMember = ({
             ...createDate,
             currentDay: moment(),
             currentMonth: moment().month() + 1,
-            firstDayOfFirstWeekInMonth: moment().startOf('month').startOf("isoWeek").format('MM-DD-YYYY'),
-            lastDayOfLastWeekInMonth: moment().endOf('month').startOf("isoWeek").add(6, "days").format('MM-DD-YYYY'),
+            firstDayOfFirstWeekInMonth: moment().startOf('month').startOf("isoWeek").format('YYYY-MM-DD'),
+            lastDayOfLastWeekInMonth: moment().endOf('month').startOf("isoWeek").add(6, "days").format('YYYY-MM-DD'),
         });
     };
 
@@ -248,7 +248,7 @@ const SalaryAllMember = ({
                 <SalaryPersonal userId={userIdGridLine}
                     dateFrom={createDate.firstDayOfFirstWeekInMonth}
                     dateTo={createDate.lastDayOfLastWeekInMonth}
-                    currentDay={moment(createDate.currentDay).format('MM-DD-YYYY')}
+                    currentDay={moment(createDate.currentDay).format('YYYY-MM-DD')}
                     setViewSalaryAllMemberScreen={setViewSalaryAllMemberScreen}
                     setViewSalaryPersonalScreen={setViewSalaryPersonalScreen}
                 />

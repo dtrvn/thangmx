@@ -16,7 +16,7 @@ router.post("/", auth, async (req, res) => {
     let shiftRegister2 = await ShiftRegister2.findOne({
       $and: [{ userId: userId }, { branchId: branchId }, { dateFrom: dateFrom }, { dateTo: dateTo }],
     });
-
+    
     if (id) {
       // No Update
       return res.json(shiftRegister2);
@@ -178,6 +178,7 @@ router.get("/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
     const shiftRegister2 = await ShiftRegister2.find({
       $and: [{ branchId: req.params.branchId }, { dateFrom: req.params.dateFrom }, { dateTo: req.params.dateTo }],
     });
+    // const shiftRegister2 = await ShiftRegister2.find({ branchId: req.params.branchId });
 
     if (!shiftRegister2) {
       return res.status(404).json({ msg: "Shift Registers not found" });
@@ -193,28 +194,28 @@ router.get("/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
   }
 });
 
-// @route       GET api/shiftRegisters/salary/:userId/:dateFrom/:dateTo
-// @desc        Get Shift Register by dateFrom, dateTo
-// @access      Private
-router.get("/shiftRegisterForWeek/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
-  try {
-    const shiftRegister2 = await ShiftRegister2.find({
-      $and: [{ branchId: req.params.branchId }, { dateFrom: req.params.dateFrom }, { dateTo: req.params.dateTo }],
-    });
+// // @route       GET api/shiftRegisters/salary/:userId/:dateFrom/:dateTo
+// // @desc        Get Shift Register by dateFrom, dateTo
+// // @access      Private
+// router.get("/shiftRegisterForWeek/:branchId/:dateFrom/:dateTo", auth, async (req, res) => {
+//   try {
+//     const shiftRegister2 = await ShiftRegister2.find({
+//       $and: [{ branchId: req.params.branchId }, { dateFrom: req.params.dateFrom }, { dateTo: req.params.dateTo }],
+//     });
 
-    if (!shiftRegister2) {
-      return res.status(404).json({ msg: "Shift Registers not found" });
-    }
+//     if (!shiftRegister2) {
+//       return res.status(404).json({ msg: "Shift Registers not found" });
+//     }
 
-    res.json(shiftRegister2);
-  } catch (err) {
-    console.error(err.message);
-    if (err.kind === "ObjectId") {
-      return res.status(404).json({ msg: "Shift Registers not found" });
-    }
-    res.status(500).send("Server Error");
-  }
-});
+//     res.json(shiftRegister2);
+//   } catch (err) {
+//     console.error(err.message);
+//     if (err.kind === "ObjectId") {
+//       return res.status(404).json({ msg: "Shift Registers not found" });
+//     }
+//     res.status(500).send("Server Error");
+//   }
+// });
 
 // @route       GET api/shiftRegisters/salary/:userId/:dateFrom/:dateTo
 // @desc        Get Shift Register by dateFrom, dateTo

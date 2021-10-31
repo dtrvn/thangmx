@@ -106,10 +106,14 @@ const TabContent = ({
             if (branchs && branchId !== null) {
                 setCreateBranchId(branchId);
             }
-            getPersonInShift(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
-            getPreWeekPersonInShift(branchId, moment(startDate).subtract(7, "days").format('MM-DD-YYYY'), moment(endDate).subtract(7, "days").format('MM-DD-YYYY'));
-            getShiftRegisters(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
-            getShiftRegisterManagers(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+            // getPersonInShift(branchId, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('MM-DD-YYYY'));
+            // getPreWeekPersonInShift(branchId, moment(startDate).subtract(7, "days").format('MM-DD-YYYY'), moment(endDate).subtract(7, "days").format('MM-DD-YYYY'));
+            // getShiftRegisters(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+            getPersonInShift(branchId, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
+            getPreWeekPersonInShift(branchId, moment(startDate).subtract(7, "days").format('YYYY-MM-DD'), moment(endDate).subtract(7, "days").format('YYYY-MM-DD'));
+            getShiftRegisters(branchId, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
+            // getShiftRegisterManagers(branchId, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'));
+            getShiftRegisterManagers(branchId, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
             setViewFormPersonInShiftRegist(false);
         }
     }, [activeTab, branchs]);
@@ -127,7 +131,7 @@ const TabContent = ({
     }, []);
 
     useEffect(() => {
-        if (moment(startDate).format('MM-DD-YYYY') > moment().startOf("isoWeek").format('MM-DD-YYYY')
+        if (moment(startDate).format('YYYY-MM-DD') > moment().startOf("isoWeek").format('YYYY-MM-DD')
             && userLogin.roles !== "Admin") {
             shiftRegisters.map((ele) => {
                 if (ele.userId === userLogin._id && ele.branchId === branchs[activeTab]._id) {
@@ -261,37 +265,37 @@ const TabContent = ({
                 className = "label label-blue";
             }
 
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(monday).format('YYYY-MM-DD')) {
                 classNameListMon[index] = className;
                 valueListMon[index] = reg.personNumber;
                 totalShiftsNumRule[index] = reg.personNumber;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(tuesday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(tuesday).format('YYYY-MM-DD')) {
                 classNameListTue[index] = className;
                 valueListTue[index] = reg.personNumber;
                 totalShiftsNumRule[index + 3] = reg.personNumber;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(wednesday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(wednesday).format('YYYY-MM-DD')) {
                 classNameListWed[index] = className;
                 valueListWed[index] = reg.personNumber;
                 totalShiftsNumRule[index + 6] = reg.personNumber;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(thursday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(thursday).format('YYYY-MM-DD')) {
                 classNameListThu[index] = className;
                 valueListThu[index] = reg.personNumber;
                 totalShiftsNumRule[index + 9] = reg.personNumber;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(friday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(friday).format('YYYY-MM-DD')) {
                 classNameListFri[index] = className;
                 valueListFri[index] = reg.personNumber;
                 totalShiftsNumRule[index + 12] = reg.personNumber;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(saturday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(saturday).format('YYYY-MM-DD')) {
                 classNameListSat[index] = className;
                 valueListSat[index] = reg.personNumber;
                 totalShiftsNumRule[index + 15] = reg.personNumber;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(sunday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(sunday).format('YYYY-MM-DD')) {
                 classNameListSun[index] = className;
                 valueListSun[index] = reg.personNumber;
                 totalShiftsNumRule[index + 18] = reg.personNumber;
@@ -737,7 +741,7 @@ const TabContent = ({
                 if (index === 9) {
                     className = "label label-blue";
                 }
-                if (moment(reg.date).format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
+                if (moment(reg.date).format('YYYY-MM-DD') === moment(monday).format('YYYY-MM-DD')) {
                     // if (index === 0) {
                     //     totalShiftsNum[0] = totalShiftsNum[0] + 1;
                     // }
@@ -780,7 +784,7 @@ const TabContent = ({
                     classNameListMon[index] = className;
                     valueListMon[index] = jobs[jobIndex].jobName;
                 }
-                if (moment(reg.date).format('MM-DD-YYYY') === moment(tuesday).format('MM-DD-YYYY')) {
+                if (moment(reg.date).format('YYYY-MM-DD') === moment(tuesday).format('YYYY-MM-DD')) {
                     // if (index === 0) {
                     //     totalShiftsNum[3] = totalShiftsNum[3] + 1;
                     // }
@@ -823,7 +827,7 @@ const TabContent = ({
                     classNameListTue[index] = className;
                     valueListTue[index] = jobs[jobIndex].jobName;
                 }
-                if (moment(reg.date).format('MM-DD-YYYY') === moment(wednesday).format('MM-DD-YYYY')) {
+                if (moment(reg.date).format('YYYY-MM-DD') === moment(wednesday).format('YYYY-MM-DD')) {
                     // if (index === 0) {
                     //     totalShiftsNum[6] = totalShiftsNum[6] + 1;
                     // }
@@ -866,7 +870,7 @@ const TabContent = ({
                     classNameListWed[index] = className;
                     valueListWed[index] = jobs[jobIndex].jobName;
                 }
-                if (moment(reg.date).format('MM-DD-YYYY') === moment(thursday).format('MM-DD-YYYY')) {
+                if (moment(reg.date).format('YYYY-MM-DD') === moment(thursday).format('YYYY-MM-DD')) {
                     // if (index === 0) {
                     //     totalShiftsNum[9] = totalShiftsNum[9] + 1;
                     // }
@@ -909,7 +913,7 @@ const TabContent = ({
                     classNameListThu[index] = className;
                     valueListThu[index] = jobs[jobIndex].jobName;
                 }
-                if (moment(reg.date).format('MM-DD-YYYY') === moment(friday).format('MM-DD-YYYY')) {
+                if (moment(reg.date).format('YYYY-MM-DD') === moment(friday).format('YYYY-MM-DD')) {
                     // if (index === 0) {
                     //     totalShiftsNum[12] = totalShiftsNum[12] + 1;
                     // }
@@ -952,7 +956,7 @@ const TabContent = ({
                     classNameListFri[index] = className;
                     valueListFri[index] = jobs[jobIndex].jobName;
                 }
-                if (moment(reg.date).format('MM-DD-YYYY') === moment(saturday).format('MM-DD-YYYY')) {
+                if (moment(reg.date).format('YYYY-MM-DD') === moment(saturday).format('YYYY-MM-DD')) {
                     if (index === 0) {
                         totalShiftsNum[50] = totalShiftsNum[50] + 1;
                     }
@@ -986,7 +990,7 @@ const TabContent = ({
                     classNameListSat[index] = className;
                     valueListSat[index] = jobs[jobIndex].jobName;
                 }
-                if (moment(reg.date).format('MM-DD-YYYY') === moment(sunday).format('MM-DD-YYYY')) {
+                if (moment(reg.date).format('YYYY-MM-DD') === moment(sunday).format('YYYY-MM-DD')) {
                     // if (index === 0) {
                     //     totalShiftsNum[18] = totalShiftsNum[18] + 1;
                     // }
@@ -1098,7 +1102,7 @@ const TabContent = ({
 
             if (getUsers && userLogin) {
                 if ((getUsers._id === userLogin._id
-                    && moment(startDate).format('MM-DD-YYYY') > moment().startOf("isoWeek").format('MM-DD-YYYY'))
+                    && moment(startDate).format('YYYY-MM-DD') > moment().startOf("isoWeek").format('YYYY-MM-DD'))
                     || userLogin.roles === "Admin") {
                     classNameListMon.push(
                         <div class="card-shiftRegister col-md-1-5">
@@ -1490,7 +1494,7 @@ const TabContent = ({
 
             if (user.roles === "User") {
                 // Đăng kí ca cho tuần sau
-                if (moment().startOf("isoWeek").add(7, "days").format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
+                if (moment().startOf("isoWeek").add(7, "days").format('YYYY-MM-DD') === moment(monday).format('YYYY-MM-DD')) {
                     if (user._id === getUsers._id) {
                         // Hiển thị chỉ một mình user đăng nhập
                         checkViewListFlag = 1;
@@ -1681,8 +1685,8 @@ const TabContent = ({
         const data = {
             userId: userLogin._id,
             branchId: branchs[activeTab]._id,
-            dateFrom: moment(startDate).format('MM-DD-YYYY'),
-            dateTo: moment(endDate).format('MM-DD-YYYY')
+            dateFrom: moment(startDate).format('YYYY-MM-DD'),
+            dateTo: moment(endDate).format('YYYY-MM-DD')
         }
 
         addUserShiftRegister(data);
@@ -1709,7 +1713,7 @@ const TabContent = ({
         setCount(count + 1);
         setDayRegist(day);
         setCurrentUserId(curUserId);
-        getPersonInShiftDate(branchs[activeTab]._id, moment(startDate).format('MM-DD-YYYY'), moment(endDate).format('MM-DD-YYYY'), moment(day).format('MM-DD-YYYY'));
+        getPersonInShiftDate(branchs[activeTab]._id, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'), moment(day).format('YYYY-MM-DD'));
         setValueLoader(true);
     }
 
@@ -1736,8 +1740,8 @@ const TabContent = ({
 
         var data = {
             branchId: branchs[activeTab]._id,
-            startDate: moment(startDate).format('MM-DD-YYYY'),
-            endDate: moment(endDate).format('MM-DD-YYYY'),
+            startDate: moment(startDate).format('YYYY-MM-DD'),
+            endDate: moment(endDate).format('YYYY-MM-DD'),
             currentDate: "",
             shiftId0: "",
             shiftId1: "",
@@ -1767,8 +1771,8 @@ const TabContent = ({
             setValueLoader(false);
             personInShiftsPrevWeek.map((ele) => {
                 // Thứ 2
-                if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(7, "days").format('MM-DD-YYYY')) {
-                    data.currentDate = moment(monday).format('MM-DD-YYYY');
+                if (moment(ele.date).format('YYYY-MM-DD') === moment(startDate).subtract(7, "days").format('YYYY-MM-DD')) {
+                    data.currentDate = moment(monday).format('YYYY-MM-DD');
                     ele.personShift.map((per) => {
                         shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
                         // if (shiftIndex === 0) {
@@ -1828,8 +1832,8 @@ const TabContent = ({
                 }
                 setTimeout(() => {
                     // Thứ 3
-                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(6, "days").format('MM-DD-YYYY')) {
-                        data.currentDate = moment(tuesday).format('MM-DD-YYYY');
+                    if (moment(ele.date).format('YYYY-MM-DD') === moment(startDate).subtract(6, "days").format('YYYY-MM-DD')) {
+                        data.currentDate = moment(tuesday).format('YYYY-MM-DD');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
                             // if (shiftIndex === 0) {
@@ -1891,8 +1895,8 @@ const TabContent = ({
 
                 setTimeout(() => {
                     // Thứ 4
-                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(5, "days").format('MM-DD-YYYY')) {
-                        data.currentDate = moment(wednesday).format('MM-DD-YYYY');
+                    if (moment(ele.date).format('YYYY-MM-DD') === moment(startDate).subtract(5, "days").format('YYYY-MM-DD')) {
+                        data.currentDate = moment(wednesday).format('YYYY-MM-DD');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
                             // if (shiftIndex === 0) {
@@ -1954,8 +1958,8 @@ const TabContent = ({
 
                 setTimeout(() => {
                     // Thứ 5
-                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(4, "days").format('MM-DD-YYYY')) {
-                        data.currentDate = moment(thursday).format('MM-DD-YYYY');
+                    if (moment(ele.date).format('YYYY-MM-DD') === moment(startDate).subtract(4, "days").format('YYYY-MM-DD')) {
+                        data.currentDate = moment(thursday).format('YYYY-MM-DD');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
                             // if (shiftIndex === 0) {
@@ -2017,8 +2021,8 @@ const TabContent = ({
 
                 setTimeout(() => {
                     // Thứ 6
-                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(3, "days").format('MM-DD-YYYY')) {
-                        data.currentDate = moment(friday).format('MM-DD-YYYY');
+                    if (moment(ele.date).format('YYYY-MM-DD') === moment(startDate).subtract(3, "days").format('YYYY-MM-DD')) {
+                        data.currentDate = moment(friday).format('YYYY-MM-DD');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
                             // if (shiftIndex === 0) {
@@ -2080,8 +2084,8 @@ const TabContent = ({
 
                 setTimeout(() => {
                     // Thứ 7
-                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(2, "days").format('MM-DD-YYYY')) {
-                        data.currentDate = moment(saturday).format('MM-DD-YYYY');
+                    if (moment(ele.date).format('YYYY-MM-DD') === moment(startDate).subtract(2, "days").format('YYYY-MM-DD')) {
+                        data.currentDate = moment(saturday).format('YYYY-MM-DD');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
                             // if (shiftIndex === 0) {
@@ -2143,8 +2147,8 @@ const TabContent = ({
 
                 setTimeout(() => {
                     // Chủ nhật
-                    if (moment(ele.date).format('MM-DD-YYYY') === moment(startDate).subtract(1, "days").format('MM-DD-YYYY')) {
-                        data.currentDate = moment(sunday).format('MM-DD-YYYY');
+                    if (moment(ele.date).format('YYYY-MM-DD') === moment(startDate).subtract(1, "days").format('YYYY-MM-DD')) {
+                        data.currentDate = moment(sunday).format('YYYY-MM-DD');
                         ele.personShift.map((per) => {
                             shiftIndex = shifts.findIndex(x => x._id === per.shiftId);
                             // if (shiftIndex === 0) {
@@ -2274,31 +2278,31 @@ const TabContent = ({
                 nameProcess = nameProcess.substr(indexOfFirst + 1, nameProcess.length - indexOfFirst);
             }
 
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(monday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(monday).format('YYYY-MM-DD')) {
                 eleMon.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdMOn = ele.userId;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(tuesday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(tuesday).format('YYYY-MM-DD')) {
                 eleTue.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdTue = ele.userId;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(wednesday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(wednesday).format('YYYY-MM-DD')) {
                 eleWed.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdWed = ele.userId;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(thursday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(thursday).format('YYYY-MM-DD')) {
                 eleThu.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdThu = ele.userId;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(friday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(friday).format('YYYY-MM-DD')) {
                 eleFri.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdFri = ele.userId;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(saturday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(saturday).format('YYYY-MM-DD')) {
                 eleSat.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdSat = ele.userId;
             }
-            if (moment(ele.date).format('MM-DD-YYYY') === moment(sunday).format('MM-DD-YYYY')) {
+            if (moment(ele.date).format('YYYY-MM-DD') === moment(sunday).format('YYYY-MM-DD')) {
                 eleSun.push(<span className="label-manager label-primary">{nameProcess}</span>);
                 saveUserIdSun = ele.userId;
             }
@@ -2730,7 +2734,7 @@ const TabContent = ({
                 <Fragment>
                     {user && user.roles === "Admin" ?
                         <div className="row">
-                            <Link to={`/modifer-personInShift/${moment(startDate).format('MM-DD-YYYY')}/${moment(endDate).format('MM-DD-YYYY')}/${createBranchId}`} className="btn btn-success"
+                            <Link to={`/modifer-personInShift/${moment(startDate).format('YYYY-MM-DD')}/${moment(endDate).format('YYYY-MM-DD')}/${createBranchId}`} className="btn btn-success"
                                 style={{ marginLeft: "10px" }}>
                                 <i className="fas fa-users"></i> Điều chỉnh số người trong ca
                             </Link>
@@ -2860,8 +2864,8 @@ const TabContent = ({
                     {user && user.roles === "Admin" ?
                         <AddUserForm users={users}
                             branchIdForm={activeTab >= 0 && branchs[activeTab] ? branchs[activeTab]._id : ""}
-                            startDate={moment(startDate).format('MM-DD-YYYY')}
-                            endDate={moment(endDate).format('MM-DD-YYYY')}
+                            startDate={moment(startDate).format('YYYY-MM-DD')}
+                            endDate={moment(endDate).format('YYYY-MM-DD')}
                             saveUserId={saveUserId}
                         />
 

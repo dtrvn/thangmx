@@ -66,7 +66,7 @@ const SalaryPersonal = ({
         // if (!currentDay) {
         if (user && user.roles === "User") {
             // console.log("user " + user.roles);
-            getLastDayOfThisWeek = moment().startOf("isoWeek").add(6, "days").format('MM-DD-YYYY');
+            getLastDayOfThisWeek = moment().startOf("isoWeek").add(6, "days").format('YYYY-MM-DD');
             getShiftRegisterViewSalary(userId, dateFrom, getLastDayOfThisWeek, currentDay);
         } else {
             // console.log("user 1");
@@ -84,8 +84,8 @@ const SalaryPersonal = ({
         }
         setCreateDate({
             ...createDate,
-            firstDayOfFirstWeekInMonth: moment(currentDay).startOf('month').startOf("isoWeek").format('MM-DD-YYYY'),
-            lastDayOfLastWeekInMonth: moment(currentDay).endOf('month').startOf("isoWeek").add(6, "days").format('MM-DD-YYYY'),
+            firstDayOfFirstWeekInMonth: moment(currentDay).startOf('month').startOf("isoWeek").format('YYYY-MM-DD'),
+            lastDayOfLastWeekInMonth: moment(currentDay).endOf('month').startOf("isoWeek").add(6, "days").format('YYYY-MM-DD'),
             firstDayRow1: moment(currentDay).startOf('month').startOf("isoWeek"),
             lastDayRow1: moment(currentDay).startOf('month').startOf("isoWeek").add(6, "days"),
             firstDayRow2: moment(currentDay).startOf('month').startOf("isoWeek").add(7, "days"),
@@ -231,18 +231,18 @@ const SalaryPersonal = ({
     // }, [users]);
 
     // useEffect(() => {
-    //     console.log("firstDayRow1 " + moment(createDate.firstDayRow1).format('MM-DD-YYYY'));
-    //     console.log("lastDayRow1 " + moment(createDate.lastDayRow1).format('MM-DD-YYYY'));
-    //     console.log("firstDayRow2 " + moment(createDate.firstDayRow2).format('MM-DD-YYYY'));
-    //     console.log("lastDayRow2 " + moment(createDate.lastDayRow2).format('MM-DD-YYYY'));
-    //     console.log("firstDayRow3 " + moment(createDate.firstDayRow3).format('MM-DD-YYYY'));
-    //     console.log("lastDayRow3 " + moment(createDate.lastDayRow3).format('MM-DD-YYYY'));
-    //     console.log("firstDayRow4 " + moment(createDate.firstDayRow4).format('MM-DD-YYYY'));
-    //     console.log("lastDayRow4 " + moment(createDate.lastDayRow4).format('MM-DD-YYYY'));
-    //     console.log("firstDayRow5 " + moment(createDate.firstDayRow5).format('MM-DD-YYYY'));
-    //     console.log("lastDayRow5 " + moment(createDate.lastDayRow5).format('MM-DD-YYYY'));
-    //     console.log("firstDayRow6 " + moment(createDate.firstDayRow6).format('MM-DD-YYYY'));
-    //     console.log("lastDayRow6 " + moment(createDate.lastDayRow6).format('MM-DD-YYYY'));
+    //     console.log("firstDayRow1 " + moment(createDate.firstDayRow1).format('YYYY-MM-DD'));
+    //     console.log("lastDayRow1 " + moment(createDate.lastDayRow1).format('YYYY-MM-DD'));
+    //     console.log("firstDayRow2 " + moment(createDate.firstDayRow2).format('YYYY-MM-DD'));
+    //     console.log("lastDayRow2 " + moment(createDate.lastDayRow2).format('YYYY-MM-DD'));
+    //     console.log("firstDayRow3 " + moment(createDate.firstDayRow3).format('YYYY-MM-DD'));
+    //     console.log("lastDayRow3 " + moment(createDate.lastDayRow3).format('YYYY-MM-DD'));
+    //     console.log("firstDayRow4 " + moment(createDate.firstDayRow4).format('YYYY-MM-DD'));
+    //     console.log("lastDayRow4 " + moment(createDate.lastDayRow4).format('YYYY-MM-DD'));
+    //     console.log("firstDayRow5 " + moment(createDate.firstDayRow5).format('YYYY-MM-DD'));
+    //     console.log("lastDayRow5 " + moment(createDate.lastDayRow5).format('YYYY-MM-DD'));
+    //     console.log("firstDayRow6 " + moment(createDate.firstDayRow6).format('YYYY-MM-DD'));
+    //     console.log("lastDayRow6 " + moment(createDate.lastDayRow6).format('YYYY-MM-DD'));
     // }, []);
 
     let row1 = [];
@@ -330,7 +330,7 @@ const SalaryPersonal = ({
         shiftRegister.map((ele) => {
             amountWeek = 0;
             resetData();
-            if (moment(ele.dateFrom).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).format('MM-DD-YYYY')) {
+            if (moment(ele.dateFrom).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).format('YYYY-MM-DD')) {
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
@@ -345,37 +345,37 @@ const SalaryPersonal = ({
                         className = "label label-warning";
                     }
                     // Mon
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).format('YYYY-MM-DD')) {
                         classNameListMon[index] = className;
                         valueListMon[index] = jobs[jobIndex].jobName;
                     }
                     // Tue
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).add(1, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).add(1, "days").format('YYYY-MM-DD')) {
                         classNameListTue[index] = className;
                         valueListTue[index] = jobs[jobIndex].jobName;
                     }
                     // Wed
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).add(2, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).add(2, "days").format('YYYY-MM-DD')) {
                         classNameListWed[index] = className;
                         valueListWed[index] = jobs[jobIndex].jobName;
                     }
                     // Thu
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).add(3, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).add(3, "days").format('YYYY-MM-DD')) {
                         classNameListThu[index] = className;
                         valueListThu[index] = jobs[jobIndex].jobName;
                     }
                     // Fri
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).add(4, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).add(4, "days").format('YYYY-MM-DD')) {
                         classNameListFri[index] = className;
                         valueListFri[index] = jobs[jobIndex].jobName;
                     }
                     // Sat
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).add(5, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).add(5, "days").format('YYYY-MM-DD')) {
                         classNameListSat[index] = className;
                         valueListSat[index] = jobs[jobIndex].jobName;
                     }
                     // Sun
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow1).add(6, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).add(6, "days").format('YYYY-MM-DD')) {
                         classNameListSun[index] = className;
                         valueListSun[index] = jobs[jobIndex].jobName;
                     }
@@ -469,7 +469,7 @@ const SalaryPersonal = ({
                 }
                 row1.push(amountWeek);
             }
-            if (moment(ele.dateFrom).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).format('MM-DD-YYYY')) {
+            if (moment(ele.dateFrom).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).format('YYYY-MM-DD')) {
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
@@ -484,37 +484,37 @@ const SalaryPersonal = ({
                         className = "label label-warning";
                     }
                     // Mon
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).format('YYYY-MM-DD')) {
                         classNameListMon[index] = className;
                         valueListMon[index] = jobs[jobIndex].jobName;
                     }
                     // Tue
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).add(1, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).add(1, "days").format('YYYY-MM-DD')) {
                         classNameListTue[index] = className;
                         valueListTue[index] = jobs[jobIndex].jobName;
                     }
                     // Wed
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).add(2, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).add(2, "days").format('YYYY-MM-DD')) {
                         classNameListWed[index] = className;
                         valueListWed[index] = jobs[jobIndex].jobName;
                     }
                     // Thu
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).add(3, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).add(3, "days").format('YYYY-MM-DD')) {
                         classNameListThu[index] = className;
                         valueListThu[index] = jobs[jobIndex].jobName;
                     }
                     // Fri
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).add(4, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).add(4, "days").format('YYYY-MM-DD')) {
                         classNameListFri[index] = className;
                         valueListFri[index] = jobs[jobIndex].jobName;
                     }
                     // Sat
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).add(5, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).add(5, "days").format('YYYY-MM-DD')) {
                         classNameListSat[index] = className;
                         valueListSat[index] = jobs[jobIndex].jobName;
                     }
                     // Sun
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow2).add(6, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).add(6, "days").format('YYYY-MM-DD')) {
                         classNameListSun[index] = className;
                         valueListSun[index] = jobs[jobIndex].jobName;
                     }
@@ -608,7 +608,7 @@ const SalaryPersonal = ({
                 }
                 row2.push(amountWeek);
             }
-            if (moment(ele.dateFrom).format('MM-DD-YYYY') === moment(createDate.firstDayRow3).format('MM-DD-YYYY')) {
+            if (moment(ele.dateFrom).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).format('YYYY-MM-DD')) {
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
@@ -623,37 +623,37 @@ const SalaryPersonal = ({
                         className = "label label-warning";
                     }
                     // Mon
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow3).format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).format('YYYY-MM-DD')) {
                         classNameListMon[index] = className;
                         valueListMon[index] = jobs[jobIndex].jobName;
                     }
                     // Tue
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow3).add(1, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).add(1, "days").format('YYYY-MM-DD')) {
                         classNameListTue[index] = className;
                         valueListTue[index] = jobs[jobIndex].jobName;
                     }
                     // Wed
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow3).add(2, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).add(2, "days").format('YYYY-MM-DD')) {
                         classNameListWed[index] = className;
                         valueListWed[index] = jobs[jobIndex].jobName;
                     }
                     // Thu
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow3).add(3, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).add(3, "days").format('YYYY-MM-DD')) {
                         classNameListThu[index] = className;
                         valueListThu[index] = jobs[jobIndex].jobName;
                     }
                     // Fri
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow3).add(4, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).add(4, "days").format('YYYY-MM-DD')) {
                         classNameListFri[index] = className;
                         valueListFri[index] = jobs[jobIndex].jobName;
                     }
                     // Sat
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow3).add(5, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).add(5, "days").format('YYYY-MM-DD')) {
                         classNameListSat[index] = className;
                         valueListSat[index] = jobs[jobIndex].jobName;
                     }
                     // Sun
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow3).add(6, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).add(6, "days").format('YYYY-MM-DD')) {
                         classNameListSun[index] = className;
                         valueListSun[index] = jobs[jobIndex].jobName;
                     }
@@ -746,7 +746,7 @@ const SalaryPersonal = ({
                 }
                 row3.push(amountWeek);
             }
-            if (moment(ele.dateFrom).format('MM-DD-YYYY') === moment(createDate.firstDayRow4).format('MM-DD-YYYY')) {
+            if (moment(ele.dateFrom).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).format('YYYY-MM-DD')) {
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
@@ -761,37 +761,37 @@ const SalaryPersonal = ({
                         className = "label label-warning";
                     }
                     // Mon
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow4).format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).format('YYYY-MM-DD')) {
                         classNameListMon[index] = className;
                         valueListMon[index] = jobs[jobIndex].jobName;
                     }
                     // Tue
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow4).add(1, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).add(1, "days").format('YYYY-MM-DD')) {
                         classNameListTue[index] = className;
                         valueListTue[index] = jobs[jobIndex].jobName;
                     }
                     // Wed
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow4).add(2, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).add(2, "days").format('YYYY-MM-DD')) {
                         classNameListWed[index] = className;
                         valueListWed[index] = jobs[jobIndex].jobName;
                     }
                     // Thu
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow4).add(3, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).add(3, "days").format('YYYY-MM-DD')) {
                         classNameListThu[index] = className;
                         valueListThu[index] = jobs[jobIndex].jobName;
                     }
                     // Fri
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow4).add(4, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).add(4, "days").format('YYYY-MM-DD')) {
                         classNameListFri[index] = className;
                         valueListFri[index] = jobs[jobIndex].jobName;
                     }
                     // Sat
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow4).add(5, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).add(5, "days").format('YYYY-MM-DD')) {
                         classNameListSat[index] = className;
                         valueListSat[index] = jobs[jobIndex].jobName;
                     }
                     // Sun
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow4).add(6, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).add(6, "days").format('YYYY-MM-DD')) {
                         classNameListSun[index] = className;
                         valueListSun[index] = jobs[jobIndex].jobName;
                     }
@@ -884,7 +884,7 @@ const SalaryPersonal = ({
                 }
                 row4.push(amountWeek);
             }
-            if (moment(ele.dateFrom).format('MM-DD-YYYY') === moment(createDate.firstDayRow5).format('MM-DD-YYYY')) {
+            if (moment(ele.dateFrom).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).format('YYYY-MM-DD')) {
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
@@ -899,37 +899,37 @@ const SalaryPersonal = ({
                         className = "label label-warning";
                     }
                     // Mon
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow5).format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).format('YYYY-MM-DD')) {
                         classNameListMon[index] = className;
                         valueListMon[index] = jobs[jobIndex].jobName;
                     }
                     // Tue
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow5).add(1, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).add(1, "days").format('YYYY-MM-DD')) {
                         classNameListTue[index] = className;
                         valueListTue[index] = jobs[jobIndex].jobName;
                     }
                     // Wed
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow5).add(2, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).add(2, "days").format('YYYY-MM-DD')) {
                         classNameListWed[index] = className;
                         valueListWed[index] = jobs[jobIndex].jobName;
                     }
                     // Thu
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow5).add(3, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).add(3, "days").format('YYYY-MM-DD')) {
                         classNameListThu[index] = className;
                         valueListThu[index] = jobs[jobIndex].jobName;
                     }
                     // Fri
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow5).add(4, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).add(4, "days").format('YYYY-MM-DD')) {
                         classNameListFri[index] = className;
                         valueListFri[index] = jobs[jobIndex].jobName;
                     }
                     // Sat
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow5).add(5, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).add(5, "days").format('YYYY-MM-DD')) {
                         classNameListSat[index] = className;
                         valueListSat[index] = jobs[jobIndex].jobName;
                     }
                     // Sun
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow5).add(6, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).add(6, "days").format('YYYY-MM-DD')) {
                         classNameListSun[index] = className;
                         valueListSun[index] = jobs[jobIndex].jobName;
                     }
@@ -1022,7 +1022,7 @@ const SalaryPersonal = ({
                 }
                 row5.push(amountWeek);
             }
-            if (moment(ele.dateFrom).format('MM-DD-YYYY') === moment(createDate.firstDayRow6).format('MM-DD-YYYY')) {
+            if (moment(ele.dateFrom).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).format('YYYY-MM-DD')) {
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
@@ -1037,37 +1037,37 @@ const SalaryPersonal = ({
                         className = "label label-warning";
                     }
                     // Mon
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow6).format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).format('YYYY-MM-DD')) {
                         classNameListMon[index] = className;
                         valueListMon[index] = jobs[jobIndex].jobName;
                     }
                     // Tue
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow6).add(1, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).add(1, "days").format('YYYY-MM-DD')) {
                         classNameListTue[index] = className;
                         valueListTue[index] = jobs[jobIndex].jobName;
                     }
                     // Wed
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow6).add(2, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).add(2, "days").format('YYYY-MM-DD')) {
                         classNameListWed[index] = className;
                         valueListWed[index] = jobs[jobIndex].jobName;
                     }
                     // Thu
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow6).add(3, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).add(3, "days").format('YYYY-MM-DD')) {
                         classNameListThu[index] = className;
                         valueListThu[index] = jobs[jobIndex].jobName;
                     }
                     // Fri
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow6).add(4, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).add(4, "days").format('YYYY-MM-DD')) {
                         classNameListFri[index] = className;
                         valueListFri[index] = jobs[jobIndex].jobName;
                     }
                     // Sat
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow6).add(5, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).add(5, "days").format('YYYY-MM-DD')) {
                         classNameListSat[index] = className;
                         valueListSat[index] = jobs[jobIndex].jobName;
                     }
                     // Sun
-                    if (moment(reg.date).format('MM-DD-YYYY') === moment(createDate.firstDayRow6).add(6, "days").format('MM-DD-YYYY')) {
+                    if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).add(6, "days").format('YYYY-MM-DD')) {
                         classNameListSun[index] = className;
                         valueListSun[index] = jobs[jobIndex].jobName;
                     }
