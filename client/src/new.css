@@ -18543,8 +18543,8 @@ pre code {
 	}
 }
 
-.label-blue {
-	background-color: #99ccff;
+.label-yellow {
+	background-color: #cc9900;
 }
 
 .label-pink {
@@ -18552,11 +18552,11 @@ pre code {
 }
 
 .label-green {
-	background-color: #99ff33;
+	background-color: #00cc00;
 }
 
 .label-aqua {
-	background-color: #00ffff;
+	background-color: #00ccff;
 }
 
 .label-violet {
@@ -18568,7 +18568,7 @@ pre code {
 }
 
 .label-blue {
-	background-color: #33cccc;
+	background-color: #006600;
 }
 
 
@@ -23218,6 +23218,13 @@ a.close.disabled {
 	position: relative;
 	flex: 1 1 auto;
 	padding: 3rem
+}
+
+.modal-body-shiftRegister {
+	position: relative;
+	flex: 1 1 auto;
+	padding-top: 1rem;
+	padding-left: 3rem;
 }
 
 .modal-footer {

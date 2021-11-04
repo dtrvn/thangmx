@@ -116,7 +116,7 @@ router.get("/:id", async (req, res) => {
 router.delete("/:id", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    console.log("id "+req.params.id);
+    // console.log("id "+req.params.id);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }

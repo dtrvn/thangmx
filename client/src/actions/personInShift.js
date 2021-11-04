@@ -46,6 +46,13 @@ export const addPersonInShift =
         let addShift0 = null;
         let addShift1 = null;
         let addShift2 = null;
+        let addShift3 = null;
+        let addShift4 = null;
+        let addShift5 = null;
+        let addShift6 = null;
+        let addShift7 = null;
+        let addShift8 = null;
+        let addShift9 = null;
         for (let i = 0; i < formData.oldData.length; i++) {
           if (formData.oldData[i] === formData.shiftId0 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo0) {
             addShift0 = "1";
@@ -56,14 +63,49 @@ export const addPersonInShift =
           if (formData.oldData[i] === formData.shiftId2 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo2) {
             addShift2 = "1";
           }
+          if (formData.oldData[i] === formData.shiftId3 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo3) {
+            addShift3 = "1";
+          }
+          if (formData.oldData[i] === formData.shiftId4 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo4) {
+            addShift4 = "1";
+          }
+          if (formData.oldData[i] === formData.shiftId5 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo5) {
+            addShift5 = "1";
+          }
+          if (formData.oldData[i] === formData.shiftId6 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo6) {
+            addShift6 = "1";
+          }
+          if (formData.oldData[i] === formData.shiftId7 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo7) {
+            addShift7 = "1";
+          }
+          if (formData.oldData[i] === formData.shiftId8 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo8) {
+            addShift8 = "1";
+          }
+          if (formData.oldData[i] === formData.shiftId9 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo9) {
+            addShift9 = "1";
+          }
         }
 
         dataAdd.shiftId0 = "0";
         dataAdd.shiftId1 = "0";
         dataAdd.shiftId2 = "0";
+        dataAdd.shiftId3 = "0";
+        dataAdd.shiftId4 = "0";
+        dataAdd.shiftId5 = "0";
+        dataAdd.shiftId6 = "0";
+        dataAdd.shiftId7 = "0";
+        dataAdd.shiftId8 = "0";
+        dataAdd.shiftId9 = "0";
         dataAdd.personNo0 = "0";
         dataAdd.personNo1 = "0";
         dataAdd.personNo2 = "0";
+        dataAdd.personNo3 = "0";
+        dataAdd.personNo4 = "0";
+        dataAdd.personNo5 = "0";
+        dataAdd.personNo6 = "0";
+        dataAdd.personNo7 = "0";
+        dataAdd.personNo8 = "0";
+        dataAdd.personNo9 = "0";
 
         if (addShift0 !== "1") {
           dataAdd.shiftId0 = formData.shiftId0;
@@ -77,58 +119,36 @@ export const addPersonInShift =
           dataAdd.shiftId2 = formData.shiftId2;
           dataAdd.personNo2 = formData.personNo2;
         }
-
-        // dataAdd.shiftId0 = formData.shiftId0;
-        // dataAdd.shiftId1 = formData.shiftId1;
-        // dataAdd.shiftId2 = formData.shiftId2;
-        // dataAdd.personNo0 = formData.personNo0;
-        // dataAdd.personNo1 = formData.personNo1;
-        // dataAdd.personNo2 = formData.personNo2;
+        if (addShift3 !== "1") {
+          dataAdd.shiftId3 = formData.shiftId3;
+          dataAdd.personNo3 = formData.personNo3;
+        }
+        if (addShift4 !== "1") {
+          dataAdd.shiftId4 = formData.shiftId4;
+          dataAdd.personNo4 = formData.personNo4;
+        }
+        if (addShift5 !== "1") {
+          dataAdd.shiftId5 = formData.shiftId5;
+          dataAdd.personNo5 = formData.personNo5;
+        }
+        if (addShift6 !== "1") {
+          dataAdd.shiftId6 = formData.shiftId6;
+          dataAdd.personNo6 = formData.personNo6;
+        }
+        if (addShift7 !== "1") {
+          dataAdd.shiftId7 = formData.shiftId7;
+          dataAdd.personNo7 = formData.personNo7;
+        }
+        if (addShift8 !== "1") {
+          dataAdd.shiftId8 = formData.shiftId8;
+          dataAdd.personNo8 = formData.personNo8;
+        }
+        if (addShift9 !== "1") {
+          dataAdd.shiftId9 = formData.shiftId9;
+          dataAdd.personNo9 = formData.personNo9;
+        }
 
         await axios.put("/api/personInShifts/personShift", dataAdd, config);
-
-        // dataAdd.shiftId = null;
-        // dataAdd.personNumber = null;
-
-        // // Check data không thay đổi
-        // let addShift0 = null;
-        // let addShift1 = null;
-        // let addShift2 = null;
-        // for (let i = 0; i < formData.oldData.length; i++) {
-        //   if (formData.oldData[i] === formData.shiftId0 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo0) {
-        //     addShift0 = "1";
-        //   }
-        //   if (formData.oldData[i] === formData.shiftId1 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo1) {
-        //     addShift1 = "1";
-        //   }
-        //   if (formData.oldData[i] === formData.shiftId2 && i % 2 === 0 && formData.oldData[i + 1] === formData.personNo2) {
-        //     addShift2 = "1";
-        //   }
-        // }
-
-        // // console.log("add shift "+addShift0+" - "+addShift1+" - "+addShift2);
-        // // Add Ca 1
-        // if (addShift0 !== "1") {
-        //   dataAdd.shiftId = formData.shiftId0;
-        //   dataAdd.personNumber = formData.personNo0;
-
-        //   await axios.put("/api/personInShifts/personShift", dataAdd, config);
-        // }
-
-        // // Add Ca 2
-        // if (addShift1 !== "1") {
-        //   dataAdd.shiftId = formData.shiftId1;
-        //   dataAdd.personNumber = formData.personNo1;
-        //   await axios.put("/api/personInShifts/personShift", dataAdd, config);
-        // }
-
-        // // Add Ca 3
-        // if (addShift2 !== "1") {
-        //   dataAdd.shiftId = formData.shiftId2;
-        //   dataAdd.personNumber = formData.personNo2;
-
-        //   await axios.put("/api/personInShifts/personShift", dataAdd, config);
-        // }
 
         dispatch(setAlert("Cập nhật thành công", "success"));
 
@@ -267,6 +287,26 @@ export const copyPersonInShifts =
         dataAdd.shiftId2 = formData.shiftId2;
         dataAdd.personNo2 = formData.personNo2;
 
+        dataAdd.shiftId3 = formData.shiftId3;
+        dataAdd.personNo3 = formData.personNo3;
+
+        dataAdd.shiftId4 = formData.shiftId4;
+        dataAdd.personNo4 = formData.personNo4;
+
+        dataAdd.shiftId5 = formData.shiftId5;
+        dataAdd.personNo5 = formData.personNo5;
+
+        dataAdd.shiftId6 = formData.shiftId6;
+        dataAdd.personNo6 = formData.personNo6;
+
+        dataAdd.shiftId7 = formData.shiftId7;
+        dataAdd.personNo7 = formData.personNo7;
+
+        dataAdd.shiftId8 = formData.shiftId8;
+        dataAdd.personNo8 = formData.personNo8;
+
+        dataAdd.shiftId9 = formData.shiftId9;
+        dataAdd.personNo9 = formData.personNo9;
 
         await axios.put("/api/personInShifts/personShift", dataAdd, config);
 

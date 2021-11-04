@@ -9,9 +9,20 @@ const ShiftSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  time: {
+    type: String,
+    required: true,
+  },
+  branchId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "branch",
+  },
+  position: {
+    type: Number,
+    required: true,
+  },
   date: {
     type: Date,
-    default: Date.now,
   },
 });
 

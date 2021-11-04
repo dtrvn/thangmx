@@ -14,40 +14,40 @@ import {
 // Create or update shift
 export const addShift =
   (formData, history, edit = false) =>
-  async (dispatch) => {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
+    async (dispatch) => {
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
 
-      const res = await axios.post("/api/shifts", formData, config);
+        const res = await axios.post("/api/shifts", formData, config);
 
-      if (edit) {
+        if (edit) {
+          dispatch({
+            type: UPDATE_SHIFT,
+            payload: res.data,
+          });
+        } else {
+          dispatch({
+            type: ADD_SHIFT,
+            payload: res.data,
+          });
+        }
+      } catch (err) {
+        const errors = err.response.data.errors;
+
+        if (errors) {
+          errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+        }
+
         dispatch({
-          type: UPDATE_SHIFT,
-          payload: res.data,
-        });
-      } else {
-        dispatch({
-          type: ADD_SHIFT,
-          payload: res.data,
+          type: SHIFT_ERROR,
+          payload: { msg: err.response.statusText, status: err.response.status },
         });
       }
-    } catch (err) {
-      const errors = err.response.data.errors;
-
-      if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
-      }
-
-      dispatch({
-        type: SHIFT_ERROR,
-        payload: { msg: err.response.statusText, status: err.response.status },
-      });
-    }
-  };
+    };
 
 // Get all Shifts
 export const getAllShifts = () => async (dispatch) => {
@@ -76,6 +76,42 @@ export const getShift = (id) => async (dispatch) => {
       payload: res.data,
     });
     return Promise.resolve(res.data);
+  } catch (err) {
+    dispatch({
+      type: SHIFT_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get shift by branchId, date
+export const getShiftForBranch = (branchId, dateFrom) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/shifts/${branchId}/${dateFrom}`);
+    dispatch({
+      type: GET_SHIFTS,
+      payload: res.data,
+    });
+    return Promise.resolve(res.data);
+  } catch (err) {
+    dispatch({
+      type: SHIFT_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get shift by dateFrom, dateTo for get Salary Personal
+export const getShiftForSalary = (dateFrom, dateTo) => async (dispatch) => {
+  try {
+    if (dateFrom && dateTo) {
+      const res = await axios.get(`/api/shifts/shiftForSalary/${dateFrom}/${dateTo}`);
+      dispatch({
+        type: GET_SHIFTS,
+        payload: res.data,
+      });
+      return Promise.resolve(res.data);
+    }
   } catch (err) {
     dispatch({
       type: SHIFT_ERROR,

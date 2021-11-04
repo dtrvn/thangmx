@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Moment from "react-moment";
 import moment from "moment";
-import { getAllShifts } from "../../actions/shift";
+import { getAllShifts, getShiftForBranch } from "../../actions/shift";
 import { getAllBranchs } from "../../actions/branch";
 import { getAllUsers } from "../../actions/user";
 import { getPersonInShift, getPreWeekPersonInShift, deletePersonInShift } from "../../actions/personInShift";
@@ -22,6 +22,7 @@ const ShiftRegisters = ({
   getAllBranchs,
   getAllJobs,
   getAllTypeUsers,
+  getShiftForBranch,
   getPersonInShift,
   getPreWeekPersonInShift,
   deletePersonInShift,
@@ -68,17 +69,31 @@ const ShiftRegisters = ({
     sunday: moment().startOf("isoWeek").add(6, "days"),
   });
 
+  useEffect(() => {
+    // console.log("vao day 1 "+JSON.stringify(branchs));
+    if (branchs.length > 0) {
+      // console.log("vao day");
+      branchs.map((ele, idx) => {
+        if (idx === activeTab) {
+          return branchId = ele._id
+        }
+      });
+      getShiftForBranch(branchId, moment(createDate.firstdayOfThisWeek).format('YYYY-MM-DD'));
+    }
+  }, [activeTab, createDate, branchs]);
+
 
   useEffect(() => {
-    console.log("lan 3");
-    getAllShifts();
+    // console.log("lan 3");
+    // getAllShifts();
     getAllUsers();
     getAllBranchs();
     getAllJobs();
     getAllTypeUsers();
     getNextWeekActive();
     // getPersonInShift(moment(createDate.firstdayOfThisWeek).format('YYYY-MM-DD'), moment(createDate.lastdayOfThisWeek).format('YYYY-MM-DD'));
-  }, [getAllShifts, getAllUsers, getAllBranchs, getAllJobs, getNextWeekActive, getAllTypeUsers]);
+    // }, [getAllShifts, getAllUsers, getAllBranchs, getAllJobs, getNextWeekActive, getAllTypeUsers]);
+  }, [getAllUsers, getAllBranchs, getAllJobs, getNextWeekActive, getAllTypeUsers]);
 
   // useEffect(() => {
   //   if (branchs.length >= 0) {
@@ -88,7 +103,7 @@ const ShiftRegisters = ({
 
 
   useEffect(() => {
-    console.log("lan 4");
+    // console.log("lan 4");
     if (nextWeekDB) {
       if (moment().startOf("isoWeek").format('YYYY-MM-DD') === moment(nextWeekDB.startDateNextWeek).format('YYYY-MM-DD')) {
         setHiddenButton(1);
@@ -284,12 +299,12 @@ const ShiftRegisters = ({
     sunday,
   } = createDate;
 
-  let elmShiftsTable = shifts.map((ele) => <td colspan="1">{ele.shiftName}</td>);
-  let elmShifts = shifts.map((ele) => <div className="Rtable-cell--content boder-cell">{ele.shiftName}</div>);
+  // let elmShiftsTable = shifts.map((ele) => <td colspan="1">{ele.shiftName}</td>);
+  // let elmShifts = shifts.map((ele) => <div className="Rtable-cell--content boder-cell">{ele.shiftName}</div>);
 
-  let shiftsSize = shifts.length;
-  let shiftsArray = [];
-  shifts.map((ele) => shiftsArray.push(ele._id));
+  // let shiftsSize = shifts.length;
+  // let shiftsArray = [];
+  // shifts.map((ele) => shiftsArray.push(ele._id));
 
   let getUsers = users.filter((ele) => ele.roles === "User");
 
@@ -457,7 +472,7 @@ const ShiftRegisters = ({
 };
 
 ShiftRegisters.propTypes = {
-  getAllShifts: PropTypes.func.isRequired,
+  // getAllShifts: PropTypes.func.isRequired,
   getAllUsers: PropTypes.func.isRequired,
   getPersonInShift: PropTypes.func.isRequired,
   getPreWeekPersonInShift: PropTypes.func.isRequired,
@@ -488,7 +503,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  getAllShifts,
+  // getAllShifts,
   getAllUsers,
   getPersonInShift,
   getPreWeekPersonInShift,
@@ -497,6 +512,7 @@ export default connect(mapStateToProps, {
   getAllJobs,
   getAllTypeUsers,
   getShiftRegisters,
+  getShiftForBranch,
   deleteShiftRegisterNextWeek,
   getNextWeekActive,
   addNextWeekActive,

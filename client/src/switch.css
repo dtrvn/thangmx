@@ -123,3 +123,297 @@
   .react-switch-label-2:active .react-switch-button-2 {
     width: 60px;
   }
+
+  /*Switch shift 4*/
+  .react-switch-checkbox-3 {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  .react-switch-label-3 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 80px;
+    height: 38px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+  }
+  
+  .react-switch-label-3 .react-switch-button-3 {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 35px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+  }
+  
+  .react-switch-checkbox-3:checked + .react-switch-label-3 .react-switch-button-3 {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+  
+  .react-switch-label-3:active .react-switch-button-3 {
+    width: 60px;
+  }
+
+  /*Switch shift 5*/
+  .react-switch-checkbox-4 {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  .react-switch-label-4 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 80px;
+    height: 38px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+  }
+  
+  .react-switch-label-4 .react-switch-button-4 {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 35px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+  }
+  
+  .react-switch-checkbox-4:checked + .react-switch-label-4 .react-switch-button-4 {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+  
+  .react-switch-label-4:active .react-switch-button-4 {
+    width: 60px;
+  }
+
+  /*Switch shift 6*/
+  .react-switch-checkbox-5 {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  .react-switch-label-5 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 80px;
+    height: 38px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+  }
+  
+  .react-switch-label-5 .react-switch-button-5 {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 35px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+  }
+  
+  .react-switch-checkbox-5:checked + .react-switch-label-5 .react-switch-button-5 {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+  
+  .react-switch-label-5:active .react-switch-button-5 {
+    width: 60px;
+  }
+
+  /*Switch shift 7*/
+  .react-switch-checkbox-6 {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  .react-switch-label-6 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 80px;
+    height: 38px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+  }
+  
+  .react-switch-label-6 .react-switch-button-6 {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 35px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+  }
+  
+  .react-switch-checkbox-6:checked + .react-switch-label-6 .react-switch-button-6 {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+  
+  .react-switch-label-6:active .react-switch-button-6 {
+    width: 60px;
+  }
+
+  /*Switch shift 8*/
+  .react-switch-checkbox-7 {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  .react-switch-label-7 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 80px;
+    height: 38px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+  }
+  
+  .react-switch-label-7 .react-switch-button-7 {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 35px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+  }
+  
+  .react-switch-checkbox-7:checked + .react-switch-label-7 .react-switch-button-7 {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+  
+  .react-switch-label-7:active .react-switch-button-7 {
+    width: 60px;
+  }
+
+  /*Switch shift 9*/
+  .react-switch-checkbox-8 {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  .react-switch-label-8 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 80px;
+    height: 38px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+  }
+  
+  .react-switch-label-8 .react-switch-button-8 {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 35px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+  }
+  
+  .react-switch-checkbox-8:checked + .react-switch-label-8 .react-switch-button-8 {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+  
+  .react-switch-label-8:active .react-switch-button-8 {
+    width: 60px;
+  }
+
+  /*Switch shift 10*/
+  .react-switch-checkbox-9 {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+  
+  .react-switch-label-9 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 80px;
+    height: 38px;
+    background: grey;
+    border-radius: 100px;
+    position: relative;
+    transition: background-color .2s;
+  }
+  
+  .react-switch-label-9 .react-switch-button-9 {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 35px;
+    border-radius: 45px;
+    transition: 0.2s;
+    background: #fff;
+    box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+  }
+  
+  .react-switch-checkbox-9:checked + .react-switch-label-9 .react-switch-button-9 {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+  }
+  
+  .react-switch-label-9:active .react-switch-button-9 {
+    width: 60px;
+  }

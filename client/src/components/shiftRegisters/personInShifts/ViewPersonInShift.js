@@ -17,7 +17,6 @@ const ViewPersonInShift = ({
     history,
     addPersonInShift,
 }) => {
-    // console.log("personInShift "+JSON.stringify(personInShift));
     var initialFormState = initialFormState = {
         id: null,
         branchId: branchId,
@@ -27,9 +26,23 @@ const ViewPersonInShift = ({
         shiftId0: "",
         shiftId1: "",
         shiftId2: "",
+        shiftId3: "",
+        shiftId4: "",
+        shiftId5: "",
+        shiftId6: "",
+        shiftId7: "",
+        shiftId8: "",
+        shiftId9: "",
         personNo0: "",
         personNo1: "",
         personNo2: "",
+        personNo3: "",
+        personNo4: "",
+        personNo5: "",
+        personNo6: "",
+        personNo7: "",
+        personNo8: "",
+        personNo9: "",
         oldData: [],
     };
 
@@ -47,28 +60,18 @@ const ViewPersonInShift = ({
         })
     }
 
-    let name0, name1, name2 = "";
-    let id0, id1, id2 = null;
-    let elementList = [];
-    // let createName = null;
+    let name0, name1, name2, name3, name4, name5, name6, name7, name8, name9 = "";
+    let id0, id1, id2, id3, id4, id5, id6, id7, id8, id9 = null;
+    let elementList1 = [];
+    let elementList2 = [];
+    let elementList3 = [];
+    let elementList4 = [];
     let getIndex = null;
     let labelName = null;
-    // let valueInput = null;
 
     useEffect(() => {
         shifts.map((ele, idx) => {
             getIndex = personNo.indexOf(ele._id);
-            // if (getIndex >= 0) {
-            //     if (idx === 0) {
-            //         name0 = personNo[getIndex + 1];
-            //     }
-            //     if (idx === 1) {
-            //         name1 = personNo[getIndex + 1];
-            //     }
-            //     if (idx === 2) {
-            //         name2 = personNo[getIndex + 1];
-            //     }
-            // }
             if (idx === 0) {
                 getIndex >= 0 ? name0 = personNo[getIndex + 1] : name0 = " ";
                 id0 = ele._id;
@@ -81,19 +84,36 @@ const ViewPersonInShift = ({
                 getIndex >= 0 ? name2 = personNo[getIndex + 1] : name2 = " ";
                 id2 = ele._id;
             }
+            if (idx === 3) {
+                getIndex >= 0 ? name3 = personNo[getIndex + 1] : name3 = " ";
+                id3 = ele._id;
+            }
+            if (idx === 4) {
+                getIndex >= 0 ? name4 = personNo[getIndex + 1] : name4 = " ";
+                id4 = ele._id;
+            }
+            if (idx === 5) {
+                getIndex >= 0 ? name5 = personNo[getIndex + 1] : name5 = " ";
+                id5 = ele._id;
+            }
+            if (idx === 6) {
+                getIndex >= 0 ? name6 = personNo[getIndex + 1] : name6 = " ";
+                id6 = ele._id;
+            }
+            if (idx === 7) {
+                getIndex >= 0 ? name7 = personNo[getIndex + 1] : name7 = " ";
+                id7 = ele._id;
+            }
+            if (idx === 8) {
+                getIndex >= 0 ? name8 = personNo[getIndex + 1] : name8 = " ";
+                id8 = ele._id;
+            }
+            if (idx === 9) {
+                getIndex >= 0 ? name9 = personNo[getIndex + 1] : name9 = " ";
+                id9 = ele._id;
+            }
         })
 
-        // if (personNo.length === 0) {
-        //     setFormData({
-        //         ...formData,
-        //         shiftId0: "",
-        //         shiftId1: "",
-        //         shiftId2: "",
-        //         personNo0: "",
-        //         personNo1: "",
-        //         personNo2: "",
-        //     })
-        // } else {
         setFormData({
             ...formData,
             id: getId,
@@ -101,30 +121,35 @@ const ViewPersonInShift = ({
             shiftId0: id0,
             shiftId1: id1,
             shiftId2: id2,
+            shiftId3: id3,
+            shiftId4: id4,
+            shiftId5: id5,
+            shiftId6: id6,
+            shiftId7: id7,
+            shiftId8: id8,
+            shiftId9: id9,
             personNo0: name0,
             personNo1: name1,
             personNo2: name2,
+            personNo3: name3,
+            personNo4: name4,
+            personNo5: name5,
+            personNo6: name6,
+            personNo7: name7,
+            personNo8: name8,
+            personNo9: name9,
             oldData: personNo,
         })
-        // }
     }, [personInShift]);
 
     const onChange = (e) =>
         setFormData({ ...formData, [e.target.name]: e.target.value });
 
     shifts.map((ele, idx) => {
-        // getIndex = personNo.indexOf(ele._id);
-        // createName = "shift" + idx;
-        // if (getIndex >= 0) {
-        //     valueInput = personNo[getIndex + 1];
-        // } else {
-        // valueInput = "0";
-        // }
         if (idx === 0) {
             labelName = "input-group-text label-success";
-            // formData.personNo0 = valueInput;
-            elementList.push(
-                <div className="col-md-3">
+            elementList1.push(
+                <div className="col-md-4">
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <span className={labelName}>{ele.shiftName}</span>
@@ -137,9 +162,8 @@ const ViewPersonInShift = ({
         }
         if (idx === 1) {
             labelName = "input-group-text label-info";
-            // formData.personNo1 = valueInput;
-            elementList.push(
-                <div className="col-md-3">
+            elementList1.push(
+                <div className="col-md-4">
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <span className={labelName}>{ele.shiftName}</span>
@@ -152,9 +176,8 @@ const ViewPersonInShift = ({
         }
         if (idx === 2) {
             labelName = "input-group-text label-warning";
-            // formData.personNo2 = valueInput;
-            elementList.push(
-                <div className="col-md-3">
+            elementList1.push(
+                <div className="col-md-4">
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <span className={labelName}>{ele.shiftName}</span>
@@ -165,13 +188,105 @@ const ViewPersonInShift = ({
                 </div>
             );
         }
+        if (idx === 3) {
+            labelName = "input-group-text";
+            elementList2.push(
+                <div className="col-md-4">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className={labelName} style={{ backgroundColor: "#cc9900", color: "white" }}>{ele.shiftName}</span>
+                        </div>
+                        <input type="text"
+                            name="personNo3" value={formData.personNo3} onChange={(e) => onChange(e)} />
+                    </div>
+                </div>
+            );
+        }
+        if (idx === 4) {
+            labelName = "input-group-text";
+            elementList2.push(
+                <div className="col-md-4">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className={labelName} style={{ backgroundColor: "#ff33cc", color: "white" }}>{ele.shiftName}</span>
+                        </div>
+                        <input type="text"
+                            name="personNo4" value={formData.personNo4} onChange={(e) => onChange(e)} />
+                    </div>
+                </div>
+            );
+        }
+        if (idx === 5) {
+            labelName = "input-group-text";
+            elementList2.push(
+                <div className="col-md-4">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className={labelName} style={{ backgroundColor: "#00cc00", color: "white" }}>{ele.shiftName}</span>
+                        </div>
+                        <input type="text"
+                            name="personNo5" value={formData.personNo5} onChange={(e) => onChange(e)} />
+                    </div>
+                </div>
+            );
+        }
+        if (idx === 6) {
+            labelName = "input-group-text";
+            elementList3.push(
+                <div className="col-md-4">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className={labelName} style={{ backgroundColor: "#00ccff", color: "white" }}>{ele.shiftName}</span>
+                        </div>
+                        <input type="text"
+                            name="personNo6" value={formData.personNo6} onChange={(e) => onChange(e)} />
+                    </div>
+                </div>
+            );
+        }
+        if (idx === 7) {
+            labelName = "input-group-text";
+            elementList3.push(
+                <div className="col-md-4">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className={labelName} style={{ backgroundColor: "#9933ff", color: "white" }}>{ele.shiftName}</span>
+                        </div>
+                        <input type="text"
+                            name="personNo7" value={formData.personNo7} onChange={(e) => onChange(e)} />
+                    </div>
+                </div>
+            );
+        }
+        if (idx === 8) {
+            labelName = "input-group-text";
+            elementList3.push(
+                <div className="col-md-4">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className={labelName} style={{ backgroundColor: "#ff6600", color: "white" }}>{ele.shiftName}</span>
+                        </div>
+                        <input type="text"
+                            name="personNo8" value={formData.personNo8} onChange={(e) => onChange(e)} />
+                    </div>
+                </div>
+            );
+        }
+        if (idx === 9) {
+            labelName = "input-group-text";
+            elementList4.push(
+                <div className="col-md-4">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <span className={labelName} style={{ backgroundColor: "#006600", color: "white" }}>{ele.shiftName}</span>
+                        </div>
+                        <input type="text"
+                            name="personNo9" value={formData.personNo9} onChange={(e) => onChange(e)} />
+                    </div>
+                </div>
+            );
+        }
     })
-
-    // const onaddPersonInShift = () => {
-    //     console.log("input " + formData.personNo0);
-    //     console.log("input1 " + formData.personNo1);
-    //     console.log("input2 " + formData.personNo2);
-    // }
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -180,64 +295,26 @@ const ViewPersonInShift = ({
 
     return (
         <Fragment>
-            {/* <label class="control-label mt-3">{" "}(<Moment format="DD/MM">{personInShifts.date}</Moment>)</label> */}
-            {/* <div class="row"> */}
-            {/* <div className="col-lg-2">
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text label-success">Ca 1</span>
-                        </div>
-                        <input type="text" className="form-control" aria-label="Text input with checkbox" />
-                    </div>
-                </div> */}
-            {/* {JSON.stringify(formData)} */}
-
             <form
-                class="form row"
+                class="form"
                 onSubmit={(e) => onSubmit(e)}
             >
-                {elementList}
-                {/* <input
-                        type="text"
-                        placeholder="* Loại nhân viên"
-                        name="personNo0"
-                        value={formData.personNo0}
-                        onChange={(e) => onChange(e)}
-                    />
-                    <input
-                        type="text"
-                        placeholder="* Loại nhân viên"
-                        name="personNo1"
-                        value={formData.personNo1}
-                        onChange={(e) => onChange(e)}
-                    />
-                    <input
-                        type="text"
-                        placeholder="* Loại nhân viên"
-                        name="personNo2"
-                        value={formData.personNo2}
-                        onChange={(e) => onChange(e)}
-                    /> */}
+                <div className="row">
+                    {elementList1}
+                    {elementList2}
+                    {elementList3}
+                    {elementList4}
+                </div>
 
-                <div className="col-md-3">
+                <div className="row">
                     <button
                         type="submit"
                         class="btn btn-info"
-                    // onClick={() => onaddPersonInShift()}
                     >
                         <i class="fas fa-plus"></i>{"  "}<span className="hide-sm">Cập nhật</span>
                     </button>
                 </div>
             </form>
-            {/* </div> */}
-            {/* <div className="jq-toast-wrap top-right">
-                <div className="jq-toast-single jq-has-icon jq-icon-success" style={{ textAlign: 'left', display: 'none' }}>
-                    <span className="jq-toast-loader jq-toast-loaded" style={{ WebkitTransition: 'width 3.1s ease-in', OTransition: 'width 3.1s ease-in', transition: 'width 3.1s ease-in', backgroundColor: '#ff6849' }} />
-                    <span className="close-jq-toast-single">×</span>
-                    <h2 className="jq-toast-heading">Welcome to Material Pro admin</h2>
-                    Use the predefined ones, or specify a custom position object.
-                </div>
-            </div> */}
         </Fragment>
 
     )
@@ -253,9 +330,7 @@ ViewPersonInShift.propTypes = {
     addPersonInShift: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-    // personInShift: state.personInShift,
-});
+const mapStateToProps = (state) => ({});
 
 export default connect(mapStateToProps, { addPersonInShift })(
     ViewPersonInShift

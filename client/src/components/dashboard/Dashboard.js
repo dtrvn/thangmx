@@ -31,7 +31,7 @@ const Dashboard = ({
   job: { jobs },
   branch: { branchs },
   typeUser: { typeUsers },
-  permitShiftRegist: { permitShiftRegists } ,
+  permitShiftRegist: { permitShiftRegists },
 }) => {
   useEffect(() => {
     // getCurrentUser();
@@ -80,6 +80,10 @@ const Dashboard = ({
                   >
                     <i className="fas fa-key"></i> Đổi mật khẩu
                   </button>
+                  <Link to={`/modifer-shift`} className="btn btn-success"
+                    style={{ marginLeft: "10px" }}>
+                    <i className="fas fa-users"></i> Điều chỉnh ca
+                  </Link>
                 </div>
                 <div className="col-md-6 col-sm-6 col-xs-12">
                   {displayChangePass && <ChangePassForm />}
@@ -123,10 +127,10 @@ const Dashboard = ({
               <div class="col-lg-6">
                 <div class="card">
                   <div className="card-header">
-                    <h4 class="m-b-0">Ca làm việc</h4>
+                    <h4 class="m-b-0">Số ca được phép đăng kí</h4>
                   </div>
                   <div class="card-body">
-                    <Shift />
+                    <PermissionShiftRegist branchs={branchs} />
                   </div>
                 </div>
               </div>
@@ -141,18 +145,18 @@ const Dashboard = ({
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-lg-6">
+            {/* <div class="row">
+              <div class="col-lg-12">
                 <div class="card">
                   <div className="card-header">
-                    <h4 class="m-b-0">Số ca được phép đăng kí</h4>
+                    <h4 class="m-b-0">Ca làm việc</h4>
                   </div>
                   <div class="card-body">
-                    <PermissionShiftRegist branchs={branchs}/>
+                    <Shift />
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </Fragment>
         )}
       </Fragment>

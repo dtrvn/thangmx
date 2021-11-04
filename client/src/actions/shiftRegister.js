@@ -319,6 +319,27 @@ export const updateShiftRegister =
         if (formData.shiftFlag2 !== "0") {
           flagCheckUpdate = "1";
         }
+        if (formData.shiftFlag3 !== "0") {
+          flagCheckUpdate = "1";
+        }
+        if (formData.shiftFlag4 !== "0") {
+          flagCheckUpdate = "1";
+        }
+        if (formData.shiftFlag5 !== "0") {
+          flagCheckUpdate = "1";
+        }
+        if (formData.shiftFlag6 !== "0") {
+          flagCheckUpdate = "1";
+        }
+        if (formData.shiftFlag7 !== "0") {
+          flagCheckUpdate = "1";
+        }
+        if (formData.shiftFlag8 !== "0") {
+          flagCheckUpdate = "1";
+        }
+        if (formData.shiftFlag9 !== "0") {
+          flagCheckUpdate = "1";
+        }
         if (flagCheckUpdate === "") {
           // dispatch(setAlertShiftRegister("Chưa có thay đổi", "warning"));
           dispatch(setAlert("Chưa có thay đổi", "warning"));
@@ -333,12 +354,19 @@ export const updateShiftRegister =
             let countShift0 = 0;
             let countShift1 = 0;
             let countShift2 = 0;
+            let countShift3 = 0;
+            let countShift4 = 0;
+            let countShift5 = 0;
+            let countShift6 = 0;
+            let countShift7 = 0;
+            let countShift8 = 0;
+            let countShift9 = 0;
 
             const res1 = await axios.get(`/api/shiftRegisters2/${formData.branchId}/${formData.dateFrom}/${formData.dateTo}`);
             // console.log("res1 " + JSON.stringify(res1.data));
             res1.data.map((ele) => {
               ele.register.map((reg) => {
-                if (moment(reg.date).format('MM-DD-YYYY') === formData.date) {
+                if (moment(reg.date).format('YYYY-MM-DD') === formData.date) {
                   // console.log("shiftId "+reg.shiftId);
                   getIndex = formData.listShifts.indexOf(reg.shiftId);
 
@@ -350,6 +378,27 @@ export const updateShiftRegister =
                   }
                   if (getIndex === 2) {
                     countShift2 = countShift2 + 1;
+                  }
+                  if (getIndex === 3) {
+                    countShift3 = countShift3 + 1;
+                  }
+                  if (getIndex === 4) {
+                    countShift4 = countShift4 + 1;
+                  }
+                  if (getIndex === 5) {
+                    countShift5 = countShift5 + 1;
+                  }
+                  if (getIndex === 6) {
+                    countShift6 = countShift6 + 1;
+                  }
+                  if (getIndex === 7) {
+                    countShift7 = countShift7 + 1;
+                  }
+                  if (getIndex === 8) {
+                    countShift8 = countShift8 + 1;
+                  }
+                  if (getIndex === 9) {
+                    countShift9 = countShift9 + 1;
                   }
                 }
               })
@@ -374,6 +423,27 @@ export const updateShiftRegister =
             if (formData.shiftFlag2 === "2") {
               countShift2 = countShift2 + 1;
             }
+            if (formData.shiftFlag3 === "2") {
+              countShift3 = countShift3 + 1;
+            }
+            if (formData.shiftFlag4 === "2") {
+              countShift4 = countShift4 + 1;
+            }
+            if (formData.shiftFlag5 === "2") {
+              countShift5 = countShift5 + 1;
+            }
+            if (formData.shiftFlag6 === "2") {
+              countShift6 = countShift6 + 1;
+            }
+            if (formData.shiftFlag7 === "2") {
+              countShift7 = countShift7 + 1;
+            }
+            if (formData.shiftFlag8 === "2") {
+              countShift8 = countShift8 + 1;
+            }
+            if (formData.shiftFlag9 === "2") {
+              countShift9 = countShift9 + 1;
+            }
 
             let flagUpdate = "";
             if (countShift0 > formData.personInShift0) {
@@ -390,6 +460,41 @@ export const updateShiftRegister =
               flagUpdate = "1";
               // dispatch(setAlertShiftRegister(`${formData.listShiftsName[2]} đã đủ số lượng đăng kí`, "danger"));
               dispatch(setAlert(`${formData.listShiftsName[2]} đã đủ số lượng đăng kí`, "error"));
+            }
+            if (countShift3 > formData.personInShift3) {
+              flagUpdate = "1";
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[2]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[3]} đã đủ số lượng đăng kí`, "error"));
+            }
+            if (countShift4 > formData.personInShift4) {
+              flagUpdate = "1";
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[4]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[4]} đã đủ số lượng đăng kí`, "error"));
+            }
+            if (countShift5 > formData.personInShift5) {
+              flagUpdate = "1";
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[5]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[5]} đã đủ số lượng đăng kí`, "error"));
+            }
+            if (countShift6 > formData.personInShift6) {
+              flagUpdate = "1";
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[6]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[6]} đã đủ số lượng đăng kí`, "error"));
+            }
+            if (countShift7 > formData.personInShift7) {
+              flagUpdate = "1";
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[7]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[7]} đã đủ số lượng đăng kí`, "error"));
+            }
+            if (countShift8 > formData.personInShift8) {
+              flagUpdate = "1";
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[8]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[8]} đã đủ số lượng đăng kí`, "error"));
+            }
+            if (countShift9 > formData.personInShift9) {
+              flagUpdate = "1";
+              // dispatch(setAlertShiftRegister(`${formData.listShiftsName[9]} đã đủ số lượng đăng kí`, "danger"));
+              dispatch(setAlert(`${formData.listShiftsName[9]} đã đủ số lượng đăng kí`, "error"));
             }
 
             if (flagUpdate === "") {

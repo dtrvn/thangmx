@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { addShift } from "../../actions/shift";
 
 const AddShiftForm = ({ addShift, editing, currentShift, history }) => {
-  const initialFormState = { id: null, shiftName: "", shiftTime: "" };
+  const initialFormState = { id: null, shiftName: "", shiftTime: "", time: "" };
 
   const [formData, setFormData] = useState(initialFormState);
 
@@ -13,7 +13,7 @@ const AddShiftForm = ({ addShift, editing, currentShift, history }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const clearForm = () => {
-    setFormData({ ...formData, shiftName: "", shiftTime: "" });
+    setFormData({ ...formData, shiftName: "", shiftTime: "", time: "" });
   };
 
   return (
@@ -27,7 +27,7 @@ const AddShiftForm = ({ addShift, editing, currentShift, history }) => {
         }}
       >
         <div className="form-group add-flex" >
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input
               type="text"
               placeholder="* Tên ca"
@@ -39,10 +39,10 @@ const AddShiftForm = ({ addShift, editing, currentShift, history }) => {
             />
 
           </div>
-          <div class="col-md-4" >
+          <div class="col-md-3" >
             <input
               type="text"
-              placeholder="* Thời gian làm"
+              placeholder="* Số giờ"
               name="shiftTime"
               value={formData.shiftTime}
               onChange={(e) => onChange(e)}
@@ -50,7 +50,18 @@ const AddShiftForm = ({ addShift, editing, currentShift, history }) => {
               required
             />
           </div>
-          <div class="col-md-6" >
+          <div class="col-md-3" >
+            <input
+              type="text"
+              placeholder="* Thời gian làm"
+              name="time"
+              value={formData.time}
+              onChange={(e) => onChange(e)}
+              style={{ fontSize: '14px' }}
+              required
+            />
+          </div>
+          <div class="col-md-3" >
             <button type="submit" class="btn btn-info"><i class="fas fa-plus"></i>
               <span className="hide-sm"> Thêm</span>
             </button>

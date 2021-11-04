@@ -252,7 +252,7 @@ router.get("/salaryPersonal/:userId/:dateFrom/:dateTo", auth, async (req, res) =
     const shiftRegister2 = await ShiftRegister2.find({
       $and: [{ userId: req.params.userId }, { dateFrom: { $gte: req.params.dateFrom} }, { dateTo: { $lte: req.params.dateTo} }],
     });
-
+    // .sort({ date: 1 })
     if (!shiftRegister2) {
       return res.status(404).json({ msg: "Shift Registers not found" });
     }
@@ -280,18 +280,53 @@ router.put(
       registerId0,
       registerId1,
       registerId2,
+      registerId3,
+      registerId4,
+      registerId5,
+      registerId6,
+      registerId7,
+      registerId8,
+      registerId9,
       shiftId0,
       shiftId1,
       shiftId2,
+      shiftId3,
+      shiftId4,
+      shiftId5,
+      shiftId6,
+      shiftId7,
+      shiftId8,
+      shiftId9,
       jobId0,
       jobId1,
       jobId2,
+      jobId3,
+      jobId4,
+      jobId5,
+      jobId6,
+      jobId7,
+      jobId8,
+      jobId9,
       cost0,
       cost1,
       cost2,
+      cost3,
+      cost4,
+      cost5,
+      cost6,
+      cost7,
+      cost8,
+      cost9,
       shiftFlag0,
       shiftFlag1,
       shiftFlag2,
+      shiftFlag3,
+      shiftFlag4,
+      shiftFlag5,
+      shiftFlag6,
+      shiftFlag7,
+      shiftFlag8,
+      shiftFlag9,
     } = req.body;
 
     try {
@@ -303,6 +338,13 @@ router.put(
         const newRegister0 = {};
         const newRegister1 = {};
         const newRegister2 = {};
+        const newRegister3 = {};
+        const newRegister4 = {};
+        const newRegister5 = {};
+        const newRegister6 = {};
+        const newRegister7 = {};
+        const newRegister8 = {};
+        const newRegister9 = {};
 
         // Add ca 1
         newRegister0.shiftId = shiftId0;
@@ -377,6 +419,174 @@ router.put(
           } else {
             // Add or Update
             shiftRegister.register.unshift(newRegister2);
+            await shiftRegister.save();
+          }
+        }
+
+        // Add ca 4
+        newRegister3.shiftId = shiftId3;
+        newRegister3.jobId = jobId3;
+        newRegister3.date = date;
+        newRegister3.cost = cost3;
+        if (shiftFlag3 !== "0") {
+          const removeIndex3 = shiftRegister.register
+            .map((item) => item._id)
+            .indexOf(registerId3);
+          if (removeIndex3 >= 0) {
+            shiftRegister.register.splice(removeIndex3, 1);
+            await shiftRegister.save();
+          }
+
+          if (shiftFlag3 === "3") {
+            // Delete
+            // Đã xoá ở trên rồi
+          } else {
+            // Add or Update
+            shiftRegister.register.unshift(newRegister3);
+            await shiftRegister.save();
+          }
+        }
+
+        // Add ca 5
+        newRegister4.shiftId = shiftId4;
+        newRegister4.jobId = jobId4;
+        newRegister4.date = date;
+        newRegister4.cost = cost4;
+        if (shiftFlag4 !== "0") {
+          const removeIndex4 = shiftRegister.register
+            .map((item) => item._id)
+            .indexOf(registerId4);
+          if (removeIndex4 >= 0) {
+            shiftRegister.register.splice(removeIndex4, 1);
+            await shiftRegister.save();
+          }
+
+          if (shiftFlag4 === "3") {
+            // Delete
+            // Đã xoá ở trên rồi
+          } else {
+            // Add or Update
+            shiftRegister.register.unshift(newRegister4);
+            await shiftRegister.save();
+          }
+        }
+
+        // Add ca 6
+        newRegister5.shiftId = shiftId5;
+        newRegister5.jobId = jobId5;
+        newRegister5.date = date;
+        newRegister5.cost = cost5;
+        if (shiftFlag5 !== "0") {
+          const removeIndex5 = shiftRegister.register
+            .map((item) => item._id)
+            .indexOf(registerId5);
+          if (removeIndex5 >= 0) {
+            shiftRegister.register.splice(removeIndex5, 1);
+            await shiftRegister.save();
+          }
+
+          if (shiftFlag5 === "3") {
+            // Delete
+            // Đã xoá ở trên rồi
+          } else {
+            // Add or Update
+            shiftRegister.register.unshift(newRegister5);
+            await shiftRegister.save();
+          }
+        }
+
+        // Add ca 7
+        newRegister6.shiftId = shiftId6;
+        newRegister6.jobId = jobId6;
+        newRegister6.date = date;
+        newRegister6.cost = cost6;
+        if (shiftFlag6 !== "0") {
+          const removeIndex6 = shiftRegister.register
+            .map((item) => item._id)
+            .indexOf(registerId6);
+          if (removeIndex6 >= 0) {
+            shiftRegister.register.splice(removeIndex6, 1);
+            await shiftRegister.save();
+          }
+
+          if (shiftFlag6 === "3") {
+            // Delete
+            // Đã xoá ở trên rồi
+          } else {
+            // Add or Update
+            shiftRegister.register.unshift(newRegister6);
+            await shiftRegister.save();
+          }
+        }
+
+        // Add ca 8
+        newRegister7.shiftId = shiftId7;
+        newRegister7.jobId = jobId7;
+        newRegister7.date = date;
+        newRegister7.cost = cost7;
+        if (shiftFlag7 !== "0") {
+          const removeIndex7 = shiftRegister.register
+            .map((item) => item._id)
+            .indexOf(registerId7);
+          if (removeIndex7 >= 0) {
+            shiftRegister.register.splice(removeIndex7, 1);
+            await shiftRegister.save();
+          }
+
+          if (shiftFlag7 === "3") {
+            // Delete
+            // Đã xoá ở trên rồi
+          } else {
+            // Add or Update
+            shiftRegister.register.unshift(newRegister7);
+            await shiftRegister.save();
+          }
+        }
+
+        // Add ca 9
+        newRegister8.shiftId = shiftId8;
+        newRegister8.jobId = jobId8;
+        newRegister8.date = date;
+        newRegister8.cost = cost8;
+        if (shiftFlag8 !== "0") {
+          const removeIndex8 = shiftRegister.register
+            .map((item) => item._id)
+            .indexOf(registerId8);
+          if (removeIndex8 >= 0) {
+            shiftRegister.register.splice(removeIndex8, 1);
+            await shiftRegister.save();
+          }
+
+          if (shiftFlag8 === "3") {
+            // Delete
+            // Đã xoá ở trên rồi
+          } else {
+            // Add or Update
+            shiftRegister.register.unshift(newRegister8);
+            await shiftRegister.save();
+          }
+        }
+
+        // Add ca 10
+        newRegister9.shiftId = shiftId9;
+        newRegister9.jobId = jobId9;
+        newRegister9.date = date;
+        newRegister9.cost = cost9;
+        if (shiftFlag9 !== "0") {
+          const removeIndex9 = shiftRegister.register
+            .map((item) => item._id)
+            .indexOf(registerId9);
+          if (removeIndex9 >= 0) {
+            shiftRegister.register.splice(removeIndex9, 1);
+            await shiftRegister.save();
+          }
+
+          if (shiftFlag9 === "3") {
+            // Delete
+            // Đã xoá ở trên rồi
+          } else {
+            // Add or Update
+            shiftRegister.register.unshift(newRegister9);
             await shiftRegister.save();
           }
         }

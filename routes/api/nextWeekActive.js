@@ -12,7 +12,7 @@ router.post(
     "/",
     auth,
     async (req, res) => {
-        console.log("tren server "+req.body.currentFirstWeek);
+        // console.log("tren server "+req.body.currentFirstWeek);
         // const { startDateNextWeek, endDateNextWeek } = req.body;
         const { currentFirstWeek, currentLastWeek } = req.body;
         // console.log("tren server "+JSON.stringify(formData));

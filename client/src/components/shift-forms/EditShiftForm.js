@@ -19,12 +19,13 @@ const EditShiftForm = ({
 
   const shiftName = formData.shiftName;
   const shiftTime = formData.shiftTime;
+  const time = formData.time;
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const clearForm = () => {
-    setFormData({ ...formData, shiftName: "", shiftTime: "" });
+    setFormData({ ...formData, shiftName: "", shiftTime: "", time: "" });
     setEditing(false);
   };
 
@@ -39,7 +40,7 @@ const EditShiftForm = ({
         }}
       >
         <div className="form-group add-flex" >
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input
               type="text"
               placeholder="* Tên ca"
@@ -51,10 +52,10 @@ const EditShiftForm = ({
             />
 
           </div>
-          <div class="col-md-4" >
+          <div class="col-md-3" >
             <input
               type="text"
-              placeholder="* Thời gian làm"
+              placeholder="* Số giờ"
               name="shiftTime"
               value={formData.shiftTime}
               onChange={(e) => onChange(e)}
@@ -62,7 +63,18 @@ const EditShiftForm = ({
               required
             />
           </div>
-          <div class="col-md-6" >
+          <div class="col-md-3" >
+            <input
+              type="text"
+              placeholder="* Thời gian làm"
+              name="time"
+              value={formData.time}
+              onChange={(e) => onChange(e)}
+              style={{ fontSize: '14px' }}
+              required
+            />
+          </div>
+          <div class="col-md-3" >
             <button type="submit" class="btn btn-info"><i class="fas fa-save"></i>
               <span className="hide-sm"> Lưu</span>
             </button>

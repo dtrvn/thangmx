@@ -5,7 +5,7 @@ import { Link, withRouter, Redirect } from "react-router-dom";
 import Moment from "react-moment";
 import moment from "moment";
 import { getShiftRegisters } from "../../actions/shiftRegister";
-import { getAllShifts } from "../../actions/shift";
+import { getShiftForSalary } from "../../actions/shift";
 import { getAllJobs } from "../../actions/job";
 import { getAllUsers } from "../../actions/user";
 import { getShiftRegisterViewSalary } from "../../actions/shiftRegister";
@@ -16,7 +16,7 @@ const SalaryPersonal = ({
     dateFrom,
     dateTo,
     currentDay,
-    getAllShifts,
+    getShiftForSalary,
     getAllJobs,
     getAllUsers,
     getShiftRegisterViewSalary,
@@ -57,9 +57,14 @@ const SalaryPersonal = ({
 
     useEffect(() => {
         getAllUsers();
-        getAllShifts();
         getAllJobs();
-    }, [getAllUsers, getAllShifts, getAllJobs]);
+    }, [getAllUsers, getAllJobs]);
+
+    useEffect(() => {
+        if (createDate.firstDayOfFirstWeekInMonth) {
+            getShiftForSalary(createDate.firstDayOfFirstWeekInMonth, createDate.lastDayOfLastWeekInMonth);
+        }
+    }, [createDate.firstDayOfFirstWeekInMonth])
 
     useEffect(() => {
         // console.log("user 2");
@@ -84,8 +89,8 @@ const SalaryPersonal = ({
         }
         setCreateDate({
             ...createDate,
-            firstDayOfFirstWeekInMonth: moment(currentDay).startOf('month').startOf("isoWeek").format('YYYY-MM-DD'),
-            lastDayOfLastWeekInMonth: moment(currentDay).endOf('month').startOf("isoWeek").add(6, "days").format('YYYY-MM-DD'),
+            firstDayOfFirstWeekInMonth: moment(currentDay).startOf('month').format('YYYY-MM-DD'),
+            lastDayOfLastWeekInMonth: moment(currentDay).endOf('month').format('YYYY-MM-DD'),
             firstDayRow1: moment(currentDay).startOf('month').startOf("isoWeek"),
             lastDayRow1: moment(currentDay).startOf('month').startOf("isoWeek").add(6, "days"),
             firstDayRow2: moment(currentDay).startOf('month').startOf("isoWeek").add(7, "days"),
@@ -102,13 +107,14 @@ const SalaryPersonal = ({
             currentMonth: moment(currentDay).format('M'),
             currentDay: currentDay,
         });
+
         if (shiftRegister.length > 0) {
             // Row 1
             let nextDay = moment(createDate.firstDayRow1).format('D');
             createDate.listDay.push(nextDay);
             let getMonth = moment(createDate.firstDayRow1).format('M');
             if (getMonth === createDate.currentMonth) {
-                createDate.listDay.push(" ");
+                createDate.listDay.push("black");
             } else {
                 createDate.listDay.push("#b2cae2");
             }
@@ -280,6 +286,8 @@ const SalaryPersonal = ({
     let valueListSat = [];
     let valueListSun = [];
 
+    let shiftMax = 0;
+
     const resetData = () => {
         classNameListMon = [];
         classNameListTue = [];
@@ -302,7 +310,8 @@ const SalaryPersonal = ({
         eleFri = [];
         eleSat = [];
         eleSun = [];
-        for (let i = 0; i < shifts.length; i++) {
+        // for (let i = 0; i < shifts.length; i++) {
+        for (let i = 0; i < shiftMax; i++) {
             classNameListMon.push(" ");
             valueListMon.push("0");
 
@@ -326,6 +335,23 @@ const SalaryPersonal = ({
         }
     }
 
+    // Tìm tuần có số ca lớn nhất trong tháng
+    if (shifts.length > 0) {
+        let saveDate = null;
+        let count = 0;
+        shifts.map((ele) => {
+            if (saveDate === ele.date) {
+                count = count + 1;
+            } else {
+                if (count > shiftMax) {
+                    shiftMax = count;
+                }
+                count = 1;
+            }
+            saveDate = ele.date;
+        })
+    }
+
     if (shiftRegister.length > 0 && jobs.length > 0 && shifts.length > 0) {
         shiftRegister.map((ele) => {
             amountWeek = 0;
@@ -334,6 +360,7 @@ const SalaryPersonal = ({
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
+                    index = shifts[index].position;
                     jobIndex = jobs.findIndex(x => x._id === reg.jobId);
                     if (index === 0) {
                         className = "label label-success";
@@ -343,6 +370,27 @@ const SalaryPersonal = ({
                     }
                     if (index === 2) {
                         className = "label label-warning";
+                    }
+                    if (index === 3) {
+                        className = "label label-yellow";
+                    }
+                    if (index === 4) {
+                        className = "label label-pink";
+                    }
+                    if (index === 5) {
+                        className = "label label-green";
+                    }
+                    if (index === 6) {
+                        className = "label label-aqua";
+                    }
+                    if (index === 7) {
+                        className = "label label-violet";
+                    }
+                    if (index === 8) {
+                        className = "label label-organge";
+                    }
+                    if (index === 9) {
+                        className = "label label-blue";
                     }
                     // Mon
                     if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow1).format('YYYY-MM-DD')) {
@@ -473,6 +521,7 @@ const SalaryPersonal = ({
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
+                    index = shifts[index].position;
                     jobIndex = jobs.findIndex(x => x._id === reg.jobId);
                     if (index === 0) {
                         className = "label label-success";
@@ -482,6 +531,27 @@ const SalaryPersonal = ({
                     }
                     if (index === 2) {
                         className = "label label-warning";
+                    }
+                    if (index === 3) {
+                        className = "label label-yellow";
+                    }
+                    if (index === 4) {
+                        className = "label label-pink";
+                    }
+                    if (index === 5) {
+                        className = "label label-green";
+                    }
+                    if (index === 6) {
+                        className = "label label-aqua";
+                    }
+                    if (index === 7) {
+                        className = "label label-violet";
+                    }
+                    if (index === 8) {
+                        className = "label label-organge";
+                    }
+                    if (index === 9) {
+                        className = "label label-blue";
                     }
                     // Mon
                     if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow2).format('YYYY-MM-DD')) {
@@ -612,6 +682,7 @@ const SalaryPersonal = ({
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
+                    index = shifts[index].position;
                     jobIndex = jobs.findIndex(x => x._id === reg.jobId);
                     if (index === 0) {
                         className = "label label-success";
@@ -621,6 +692,27 @@ const SalaryPersonal = ({
                     }
                     if (index === 2) {
                         className = "label label-warning";
+                    }
+                    if (index === 3) {
+                        className = "label label-yellow";
+                    }
+                    if (index === 4) {
+                        className = "label label-pink";
+                    }
+                    if (index === 5) {
+                        className = "label label-green";
+                    }
+                    if (index === 6) {
+                        className = "label label-aqua";
+                    }
+                    if (index === 7) {
+                        className = "label label-violet";
+                    }
+                    if (index === 8) {
+                        className = "label label-organge";
+                    }
+                    if (index === 9) {
+                        className = "label label-blue";
                     }
                     // Mon
                     if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow3).format('YYYY-MM-DD')) {
@@ -750,6 +842,7 @@ const SalaryPersonal = ({
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
+                    index = shifts[index].position;
                     jobIndex = jobs.findIndex(x => x._id === reg.jobId);
                     if (index === 0) {
                         className = "label label-success";
@@ -759,6 +852,27 @@ const SalaryPersonal = ({
                     }
                     if (index === 2) {
                         className = "label label-warning";
+                    }
+                    if (index === 3) {
+                        className = "label label-yellow";
+                    }
+                    if (index === 4) {
+                        className = "label label-pink";
+                    }
+                    if (index === 5) {
+                        className = "label label-green";
+                    }
+                    if (index === 6) {
+                        className = "label label-aqua";
+                    }
+                    if (index === 7) {
+                        className = "label label-violet";
+                    }
+                    if (index === 8) {
+                        className = "label label-organge";
+                    }
+                    if (index === 9) {
+                        className = "label label-blue";
                     }
                     // Mon
                     if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow4).format('YYYY-MM-DD')) {
@@ -888,6 +1002,7 @@ const SalaryPersonal = ({
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
+                    index = shifts[index].position;
                     jobIndex = jobs.findIndex(x => x._id === reg.jobId);
                     if (index === 0) {
                         className = "label label-success";
@@ -897,6 +1012,27 @@ const SalaryPersonal = ({
                     }
                     if (index === 2) {
                         className = "label label-warning";
+                    }
+                    if (index === 3) {
+                        className = "label label-yellow";
+                    }
+                    if (index === 4) {
+                        className = "label label-pink";
+                    }
+                    if (index === 5) {
+                        className = "label label-green";
+                    }
+                    if (index === 6) {
+                        className = "label label-aqua";
+                    }
+                    if (index === 7) {
+                        className = "label label-violet";
+                    }
+                    if (index === 8) {
+                        className = "label label-organge";
+                    }
+                    if (index === 9) {
+                        className = "label label-blue";
                     }
                     // Mon
                     if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow5).format('YYYY-MM-DD')) {
@@ -1026,6 +1162,7 @@ const SalaryPersonal = ({
                 ele.register.map((reg) => {
                     amountWeek = amountWeek + reg.cost;
                     index = shifts.findIndex(x => x._id === reg.shiftId);
+                    index = shifts[index].position;
                     jobIndex = jobs.findIndex(x => x._id === reg.jobId);
                     if (index === 0) {
                         className = "label label-success";
@@ -1035,6 +1172,27 @@ const SalaryPersonal = ({
                     }
                     if (index === 2) {
                         className = "label label-warning";
+                    }
+                    if (index === 3) {
+                        className = "label label-yellow";
+                    }
+                    if (index === 4) {
+                        className = "label label-pink";
+                    }
+                    if (index === 5) {
+                        className = "label label-green";
+                    }
+                    if (index === 6) {
+                        className = "label label-aqua";
+                    }
+                    if (index === 7) {
+                        className = "label label-violet";
+                    }
+                    if (index === 8) {
+                        className = "label label-organge";
+                    }
+                    if (index === 9) {
+                        className = "label label-blue";
                     }
                     // Mon
                     if (moment(reg.date).format('YYYY-MM-DD') === moment(createDate.firstDayRow6).format('YYYY-MM-DD')) {
@@ -2133,7 +2291,7 @@ SalaryPersonal.propTypes = {
     setViewSalaryAllMemberScreen: PropTypes.func.isRequired,
     setViewSalaryPersonalScreen: PropTypes.func.isRequired,
     getShiftRegisters: PropTypes.func.isRequired,
-    getAllShifts: PropTypes.func.isRequired,
+    getShiftForSalary: PropTypes.func.isRequired,
     getAllJobs: PropTypes.func.isRequired,
     getAllUsers: PropTypes.func.isRequired,
     getShiftRegisterViewSalary: PropTypes.func.isRequired,
@@ -2147,5 +2305,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-    getShiftRegisterViewSalary, getShiftRegisters, getAllShifts, getAllJobs, getAllUsers
+    getShiftRegisterViewSalary, getShiftRegisters, getShiftForSalary, getAllJobs, getAllUsers
 })(SalaryPersonal);

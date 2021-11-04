@@ -15,6 +15,7 @@ import UpdateDeleteUserModal from "./update-deleteUser/UpdateDeleteUserModal";
 import AddUserForm from "./addUser-forms/AddUserForm";
 import AddManagerModal from "./addUpdateDeleteManager/AddManagerModal";
 import ExportExcel from "./exportExcelFile/ExportExcel";
+import { getShiftForBranch } from "../../actions/shift";
 
 const TabContent = ({
     activeTab,
@@ -40,6 +41,7 @@ const TabContent = ({
     getPreWeekPersonInShift,
     getPersonInShiftDate,
     getShiftRegisterManagers,
+    // getShiftForBranch,
     copyPersonInShifts,
     getAllPermitShifts,
     setValueLoader,
@@ -244,7 +246,7 @@ const TabContent = ({
                 className = "label label-warning";
             }
             if (index === 3) {
-                className = "label label-blue";
+                className = "label label-yellow";
             }
             if (index === 4) {
                 className = "label label-pink";
@@ -315,7 +317,7 @@ const TabContent = ({
             className = "label label-warning";
         }
         if (idx === 3) {
-            className = "label label-blue";
+            className = "label label-yellow";
         }
         if (idx === 4) {
             className = "label label-pink";
@@ -352,7 +354,7 @@ const TabContent = ({
             className = "label label-warning";
         }
         if (idx === 3) {
-            className = "label label-blue";
+            className = "label label-yellow";
         }
         if (idx === 4) {
             className = "label label-pink";
@@ -389,7 +391,7 @@ const TabContent = ({
             className = "label label-warning";
         }
         if (idx === 3) {
-            className = "label label-blue";
+            className = "label label-yellow";
         }
         if (idx === 4) {
             className = "label label-pink";
@@ -426,7 +428,7 @@ const TabContent = ({
             className = "label label-warning";
         }
         if (idx === 3) {
-            className = "label label-blue";
+            className = "label label-yellow";
         }
         if (idx === 4) {
             className = "label label-pink";
@@ -463,7 +465,7 @@ const TabContent = ({
             className = "label label-warning";
         }
         if (idx === 3) {
-            className = "label label-blue";
+            className = "label label-yellow";
         }
         if (idx === 4) {
             className = "label label-pink";
@@ -500,7 +502,7 @@ const TabContent = ({
             className = "label label-warning";
         }
         if (idx === 3) {
-            className = "label label-blue";
+            className = "label label-yellow";
         }
         if (idx === 4) {
             className = "label label-pink";
@@ -537,7 +539,7 @@ const TabContent = ({
             className = "label label-warning";
         }
         if (idx === 3) {
-            className = "label label-blue";
+            className = "label label-yellow";
         }
         if (idx === 4) {
             className = "label label-pink";
@@ -700,7 +702,7 @@ const TabContent = ({
     let saveUserId = [];
     let totalAmount = 0;
     let checkViewListFlag = 0;
-    if (shiftRegisters.length > 0 && shifts.length > 0 && jobs.length > 0) {
+    if (shiftRegisters.length >= 0 && shifts.length >= 0 && jobs.length >= 0) {
         shiftRegisters.map((ele) => {
             getUsers = users.find(({ _id }) => _id === ele.userId);
             saveUserId.push(ele.userId);
@@ -721,7 +723,7 @@ const TabContent = ({
                     className = "label label-warning";
                 }
                 if (index === 3) {
-                    className = "label label-blue";
+                    className = "label label-yellow";
                 }
                 if (index === 4) {
                     className = "label label-pink";
@@ -1828,7 +1830,18 @@ const TabContent = ({
                             data.personNo9 = per.personNumber;
                         }
                     })
-                    copyPersonInShifts(data);
+                    if (data.shiftId0
+                        || data.shiftId1
+                        || data.shiftId2
+                        || data.shiftId3
+                        || data.shiftId4
+                        || data.shiftId5
+                        || data.shiftId6
+                        || data.shiftId7
+                        || data.shiftId8
+                        || data.shiftId9) {
+                        copyPersonInShifts(data);
+                    }
                 }
                 setTimeout(() => {
                     // Thứ 3
@@ -1889,7 +1902,18 @@ const TabContent = ({
                                 data.personNo9 = per.personNumber;
                             }
                         })
-                        copyPersonInShifts(data);
+                        if (data.shiftId0
+                            || data.shiftId1
+                            || data.shiftId2
+                            || data.shiftId3
+                            || data.shiftId4
+                            || data.shiftId5
+                            || data.shiftId6
+                            || data.shiftId7
+                            || data.shiftId8
+                            || data.shiftId9) {
+                            copyPersonInShifts(data);
+                        }
                     }
                 }, 500);
 
@@ -1952,7 +1976,18 @@ const TabContent = ({
                                 data.personNo9 = per.personNumber;
                             }
                         })
-                        copyPersonInShifts(data);
+                        if (data.shiftId0
+                            || data.shiftId1
+                            || data.shiftId2
+                            || data.shiftId3
+                            || data.shiftId4
+                            || data.shiftId5
+                            || data.shiftId6
+                            || data.shiftId7
+                            || data.shiftId8
+                            || data.shiftId9) {
+                            copyPersonInShifts(data);
+                        }
                     }
                 }, 1000);
 
@@ -2015,7 +2050,18 @@ const TabContent = ({
                                 data.personNo9 = per.personNumber;
                             }
                         })
-                        copyPersonInShifts(data);
+                        if (data.shiftId0
+                            || data.shiftId1
+                            || data.shiftId2
+                            || data.shiftId3
+                            || data.shiftId4
+                            || data.shiftId5
+                            || data.shiftId6
+                            || data.shiftId7
+                            || data.shiftId8
+                            || data.shiftId9) {
+                            copyPersonInShifts(data);
+                        }
                     }
                 }, 1500);
 
@@ -2078,7 +2124,18 @@ const TabContent = ({
                                 data.personNo9 = per.personNumber;
                             }
                         })
-                        copyPersonInShifts(data);
+                        if (data.shiftId0
+                            || data.shiftId1
+                            || data.shiftId2
+                            || data.shiftId3
+                            || data.shiftId4
+                            || data.shiftId5
+                            || data.shiftId6
+                            || data.shiftId7
+                            || data.shiftId8
+                            || data.shiftId9) {
+                            copyPersonInShifts(data);
+                        }
                     }
                 }, 2000);
 
@@ -2141,7 +2198,18 @@ const TabContent = ({
                                 data.personNo9 = per.personNumber;
                             }
                         })
-                        copyPersonInShifts(data);
+                        if (data.shiftId0
+                            || data.shiftId1
+                            || data.shiftId2
+                            || data.shiftId3
+                            || data.shiftId4
+                            || data.shiftId5
+                            || data.shiftId6
+                            || data.shiftId7
+                            || data.shiftId8
+                            || data.shiftId9) {
+                            copyPersonInShifts(data);
+                        }
                     }
                 }, 2500);
 
@@ -2205,7 +2273,18 @@ const TabContent = ({
                             }
                         })
                         data.flagCheckLastRecord = "1";
-                        copyPersonInShifts(data);
+                        if (data.shiftId0
+                            || data.shiftId1
+                            || data.shiftId2
+                            || data.shiftId3
+                            || data.shiftId4
+                            || data.shiftId5
+                            || data.shiftId6
+                            || data.shiftId7
+                            || data.shiftId8
+                            || data.shiftId9) {
+                            copyPersonInShifts(data);
+                        }
                     }
                 }, 4000);
             })
@@ -2747,14 +2826,13 @@ const TabContent = ({
                                     <i class="far fa-copy"></i>{"  "}Sao chép số người trong ca tuần trước
                                 </button>
                             ) : ""}
-                            {/* <button
-                                type="button"
-                                class="btn btn-sm btn-warning"
-                                onClick={() => exportExcelFile()}
-                            >
-                                <i class="fas fa-trash-alt"></i>{"  "}Output Excel
-                            </button> */}
-                            {branchs && branchs.length > 0 ? (
+
+                            {/* <Link to={`/modifer-shift/${createBranchId}/${moment(startDate).format('YYYY-MM-DD')}`} className="btn btn-success"
+                                style={{ marginLeft: "10px" }}>
+                                <i className="fas fa-users"></i> Điều chỉnh ca
+                            </Link> */}
+
+                            {branchs.length > 0 && shifts.length >= 0? (
                                 <ExportExcel shiftRegisters={shiftRegisters}
                                     monday={monday}
                                     tuesday={tuesday}
@@ -3086,6 +3164,7 @@ TabContent.propTypes = {
     setShowShiftRegistersModal: PropTypes.func.isRequired,
     setShowShiftRegistersUserModal: PropTypes.func.isRequired,
     setShowAddManagerModal: PropTypes.func.isRequired,
+    // getShiftForBranch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -3094,6 +3173,7 @@ const mapStateToProps = (state) => ({
     personInShift: state.personInShift,
     auth: state.auth,
     permitShiftRegist: state.permitShiftRegist,
+    // shift: state.shift,
 });
 
 export default connect(mapStateToProps,
@@ -3106,6 +3186,7 @@ export default connect(mapStateToProps,
         getPersonInShift,
         copyPersonInShifts,
         getAllPermitShifts,
+        // getShiftForBranch,
         getShiftRegisterManagers,
         setValueLoader,
         viewPersonInShiftArlet,
